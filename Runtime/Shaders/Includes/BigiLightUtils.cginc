@@ -75,19 +75,7 @@ namespace b_light
 		half3 ret = 0;
 		ret += max(0, ShadeSH9(half4(worldNormal, 1))); 
 		
-		if (ret.r <= minAmbient && ret.g <= minAmbient && ret.b <= minAmbient)
-		{
-			if (ret.r < Epsilon && ret.g < Epsilon && ret.b < Epsilon)
-			{
-				ret = max(ret, half3(minAmbient, minAmbient, minAmbient));
-			}
-			else
-			{
-				const half avg = (ret.r + ret.g + ret.b)/3.0;
-				const half mult = avg / minAmbient;
-				ret = ret * half3(ret.r * mult, ret.g * mult, ret.b * mult);
-			}
-		}
+		
 		ret *= clamp(ambientOcclusion, 0.75, 1.0);
 		return ret;
 	}
@@ -216,7 +204,7 @@ namespace b_light
 
 		const float lightIntensity = GetWorldLightIntensity(fadedAttenuation, worldLightPos, worldNormal);
 		const fixed3 diff = lightIntensity * lightColor;
-		const fixed4 total = fixed4(
+		fixed4 total = fixed4(
 			doStep(diff)
 			+ doStep(ambient)
 			#ifdef UNITY_PASS_FORWARDBASE
@@ -226,6 +214,25 @@ namespace b_light
 			#endif
 			, 1.0
 		);
+
+		#ifdef UNITY_PASS_FORWARDBASE
+		if(minAmbient >= Epsilon)
+		{
+			if (total.r <= minAmbient && total.g <= minAmbient && total.b <= minAmbient)
+			{
+				if (total.r < Epsilon && total.g < Epsilon && total.b < Epsilon)
+				{
+					total = max(total, half4(minAmbient, minAmbient, minAmbient,1.0));
+				}
+				else
+				{
+					const half avg = (total.r + total.g + total.b)/3.0;
+					const half mult = avg / minAmbient;
+					total = total + half4(total.r * mult, total.g * mult, total.b * mult,1.0);
+				}
+			}
+		}
+		#endif
 		return clamp(total, -10.0, 5.0);
 	}
 
