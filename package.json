@@ -9,7 +9,8 @@
   "unity": "2022.3",
   "description": "Collection of shaders by bigibas123",
   "vpmDependencies": {
-    "lygia": ">=1.1.7"
+    "lygia": ">=1.1.7",
+    "com.llealloo.audiolink": ">=0.2.6"
   },
   "url": "https://github.com/bigibas123/tk.dingemans.bigibas123.bigishader.git",
   "legacyFolders": {},
