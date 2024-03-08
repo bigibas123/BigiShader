@@ -216,22 +216,7 @@ namespace b_light
 		);
 
 		#ifdef UNITY_PASS_FORWARDBASE
-		if(minAmbient >= Epsilon)
-		{
-			if (total.r <= minAmbient && total.g <= minAmbient && total.b <= minAmbient)
-			{
-				if (total.r < Epsilon && total.g < Epsilon && total.b < Epsilon)
-				{
-					total = max(total, half4(minAmbient, minAmbient, minAmbient,1.0));
-				}
-				else
-				{
-					const half avg = (total.r + total.g + total.b)/3.0;
-					const half mult = avg / minAmbient;
-					total = total + half4(total.r * mult, total.g * mult, total.b * mult,1.0);
-				}
-			}
-		}
+		total = max(total, half4(minAmbient, minAmbient, minAmbient,1.0));
 		#endif
 		return clamp(total, -10.0, 5.0);
 	}
