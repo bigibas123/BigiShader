@@ -5,7 +5,6 @@ Shader "Bigi/LogoPlane" {
 		_AL_General_Intensity("Audiolink Intensity",Range(0.0,1.0)) = 0.0
 		_MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.01
 	}
-	CustomEditor "tk.dingemans.bigibas123.BigiShaderEditor.BigiShaderEditor"
 	SubShader {
 		Blend SrcAlpha OneMinusSrcAlpha
 		Tags {
