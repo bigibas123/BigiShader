@@ -35,9 +35,9 @@ Shader "Bigi/LogoPlane" {
 		#include "./Includes/SoundUtilsDefines.cginc"
 
 
-		void setLightVars()
+		void setVars()
 		{
-			_LightSmoothness = 1.0;
+			_LightSmoothness = 0.2;
 			_LightThreshold = 0.0;
 			_AddLightIntensity = 1.0;
 			_VertLightIntensity = 1.0;
@@ -45,21 +45,24 @@ Shader "Bigi/LogoPlane" {
 			_MonoChrome = 0.0;
 			_Voronoi = 0.0;
 			_OutlineWidth = 0.0;
-			_MonoChrome = 0.0;
-			_Voronoi = 0.0;
-			_LightSmoothness = 0.2;
-			_LightThreshold = 0.0;
+			_EmissionStrength = 1.0;
+			_Reflectivity = 0.1;
+			_DMX_Weight = 0.0;
+			_DMX_Group = 0.0;
+			_Transmissivity = 0.2;
+			_AL_Theme_Weight = _AL_General_Intensity;
+			_AL_TC_BassReactive = 1.0;
 		}
 
 		v2f vert(appdata v)
 		{
-			setLightVars();
+			setVars();
 			return bigi_toon_vert(v);
 		}
 
 		fragOutput frag(v2f i)
 		{
-			setLightVars();
+			setVars();
 			fragOutput o;
 			UNITY_INITIALIZE_OUTPUT(fragOutput, o);
 			UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i)
@@ -68,16 +71,15 @@ Shader "Bigi/LogoPlane" {
 
 
 			BIGI_GETLIGHT_NOAO(lighting);
+			fixed4 normalColor;
+			#ifdef UNITY_PASS_FORWARDBASE
+			normalColor = orig_color * lighting;
+			#else
+			normalColor.rgb = lighting.rgb;
+			normalColor.a = orig_color.a * lighting.a;
+			#endif
 
-			const fixed4 normalColor = orig_color * lighting;
-
-			GET_SOUND_SETTINGS(soundSettings)
-
-			soundSettings.AL_Theme_Weight = _AL_General_Intensity;
-			soundSettings.AL_TC_BassReactive = 1.0;
-
-			GET_SOUND_COLOR_CALL(soundSettings, sound)
-
+			GET_SOUND_COLOR(sound);
 
 			o.color = lerp(normalColor,fixed4(sound.rgb, normalColor.a), sound.a);
 			//o.color = orig_color;
@@ -85,6 +87,32 @@ Shader "Bigi/LogoPlane" {
 			return o;
 		}
 		ENDCG
+
+		Pass {
+			ColorMask 0
+			Cull Off
+			ZWrite On
+			ZTest Less
+			CGPROGRAM
+			#pragma vertex vertd alpha
+			#pragma fragment fragd alpha
+			v2f vertd(appdata v)
+			{
+				return vert(v);
+			}
+
+			fragOutput fragd(v2f i)
+			{
+				fragOutput o;
+				UNITY_INITIALIZE_OUTPUT(fragOutput, o);
+				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i)
+				const fixed4 orig_color = GET_TEX_COLOR(GETUV);
+				clip(orig_color.a - Epsilon);
+				o.color = orig_color;
+				return o;
+			}
+			ENDCG
+		}
 
 		Pass {
 			Name "TransparentForwardBaseBack"
@@ -181,6 +209,7 @@ Shader "Bigi/LogoPlane" {
 
 			v2fm vertm(appdata_full v)
 			{
+				setVars();
 				v2fm o;
 				UNITY_SETUP_INSTANCE_ID(v);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
@@ -207,19 +236,14 @@ Shader "Bigi/LogoPlane" {
 
 			half4 fragm(v2fm i) : SV_Target
 			{
+				setVars();
 				UnityMetaInput metaIN;
 				UNITY_INITIALIZE_OUTPUT(UnityMetaInput, metaIN);
 				const fixed4 orig_color = GET_TEX_COLOR(GETUV);
 				clip(orig_color.a - Epsilon);
 				const fixed4 normalColor = orig_color;
 
-				GET_SOUND_SETTINGS(soundSettings)
-				
-
-				soundSettings.AL_Theme_Weight = _AL_General_Intensity;
-				soundSettings.AL_TC_BassReactive = 1.0;
-
-				GET_SOUND_COLOR_CALL(soundSettings, sound)
+				GET_SOUND_COLOR(sound);
 
 
 				metaIN.Albedo = normalColor.rgb * normalColor.a;
