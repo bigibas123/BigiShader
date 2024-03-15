@@ -22,11 +22,13 @@ Shader "Bigi/LogoPlane" {
 
 
 		#define BIGI_OTHER_TEXTURE_ID_DEFINED
-		UNITY_INSTANCING_BUFFER_START(logoplaneparams)
-			UNITY_DEFINE_INSTANCED_PROP(int, _OtherTextureId)
-		UNITY_INSTANCING_BUFFER_END(logoplaneparams)
+		// UNITY_INSTANCING_BUFFER_START(logoplaneparams)
+		// 	UNITY_DEFINE_INSTANCED_PROP(int, _OtherTextureId)
+		// UNITY_INSTANCING_BUFFER_END(logoplaneparams)
 
-		#define OTHER_TEXTURE_ID_REF UNITY_ACCESS_INSTANCED_PROP(logoplaneparams, _OtherTextureId)
+		// #define OTHER_TEXTURE_ID_REF UNITY_ACCESS_INSTANCED_PROP(logoplaneparams, _OtherTextureId)
+		uniform int _OtherTextureId;
+		#define OTHER_TEXTURE_ID_REF _OtherTextureId
 
 		#include "./Includes/BigiShaderParams.cginc"
 		#include "./Includes/BigiShaderTextures.cginc"

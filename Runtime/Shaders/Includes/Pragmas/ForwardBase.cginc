@@ -5,7 +5,6 @@
 
 //#pragma multi_compile_fwdbase
 #pragma multi_compile DIRECTIONAL VERTEXLIGHT_ON LIGHTPROBE_SH SHADOWS_SCREEN SHADOWS_SHADOWMASK
-#pragma multi_compile_instancing
 #pragma multi_compile _ VERTEXLIGHT_ON
 
 
