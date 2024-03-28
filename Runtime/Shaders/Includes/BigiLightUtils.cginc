@@ -7,61 +7,12 @@
 #ifndef Epsilon
 #define Epsilon UNITY_HALF_MIN
 #endif
-#if !defined(LIGHTMAP_ON) && defined(SHADOWS_SCREEN)
-#if defined(SHADOWS_SHADOWMASK) && !defined(UNITY_NO_SCREENSPACE_SHADOWS)
-        #define ADDITIONAL_MASKED_DIRECTIONAL_SHADOWS 1
-#endif
-#endif
-
-// #include <Packages/at.pimaker.ltcgi/Shaders/LTCGI_structs.cginc>
-//
-// namespace b_light
-// {
-// 	namespace b_ltci
-// 	{
-// 		struct ltci_accumulator_struct
-// 		{
-// 			// let your imagination run wild on what to accumulate here...
-// 			float3 diffuse;
-// 			float3 specular;
-// 		};
-//
-// 		void callback_diffuse(inout ltci_accumulator_struct acc, in ltcgi_output output);
-// 		void callback_specular(inout ltci_accumulator_struct acc, in ltcgi_output output);
-// 		// tell LTCGI that we want the V2 API, and which constructs to use
-// 		#define LTCGI_V2_CUSTOM_INPUT b_light::b_ltci::ltci_accumulator_struct
-// 		#define LTCGI_V2_DIFFUSE_CALLBACK b_light::b_ltci::callback_diffuse
-// 		#define LTCGI_V2_SPECULAR_CALLBACK b_light::b_ltci::callback_specular
-//
-// 		void callback_diffuse(inout ltci_accumulator_struct acc, in ltcgi_output output)
-// 		{
-// 			acc.diffuse += output.intensity * output.color;
-// 		}
-//
-// 		void callback_specular(inout ltci_accumulator_struct acc, in ltcgi_output output)
-// 		{
-// 			acc.specular += output.intensity * output.color;
-// 		}
-//
-// 		float3 get_camera_pos()
-// 		{
-// 			float3 worldCam;
-// 			worldCam.x = unity_CameraToWorld[0][3];
-// 			worldCam.y = unity_CameraToWorld[1][3];
-// 			worldCam.z = unity_CameraToWorld[2][3];
-// 			return worldCam;
-// 		}
-// 	}
-// }
-
-// #include <Packages/at.pimaker.ltcgi/Shaders/LTCGI.cginc>
-
 
 namespace b_light
 {
 	// A macro instead of a function because this works on more types without having to overload it a bunch of times
 	// ReSharper disable once CppInconsistentNaming
-	# define doStep(val) smoothstep(lightthreshold, lightsmoothness+lightthreshold, val)
+	#define doStep(val) smoothstep(lightthreshold, lightsmoothness+lightthreshold, val)
 
 
 	half3 GetAmbient(
@@ -73,9 +24,9 @@ namespace b_light
 	{
 		//Maybe do lightmapping properly sometime, not today though because it broke a bunch of stuff.
 		half3 ret = 0;
-		ret += max(0, ShadeSH9(half4(worldNormal, 1))); 
-		
-		
+		ret += max(0, ShadeSH9(half4(worldNormal, 1)));
+
+
 		ret *= clamp(ambientOcclusion, 0.75, 1.0);
 		return ret;
 	}
@@ -114,31 +65,7 @@ namespace b_light
 		#endif
 		return attenuation;
 	}
-
-
-	// half3 GetLTCGI(
-	// 	in const float3 worldPos,
-	// 	in const float3 worldNormal
-	// 	#ifdef LIGHTMAP_ON
-	// 	,in const float2 lightmapUv
-	// 	#endif
-	// )
-	// {
-	// 	b_ltci::ltci_accumulator_struct acc = (b_ltci::ltci_accumulator_struct)0;
-	// 	LTCGI_Contribution(
-	// 		acc, // our accumulator
-	// 		worldPos, // world position of the shaded point
-	// 		worldNormal, // world space normal
-	// 		normalize(b_ltci::get_camera_pos() - worldPos), // view vector to shaded point, normalized
-	// 		1.0f, // roughness
-	// 		#ifdef LIGHTMAP_ON
-	// 		lightmapUv // shadowmap coordinates (the normal Unity ones, they should be in sync with LTCGI maps)
-	// 		#else
-	// 		float2(0.0, 0.0)
-	// 		#endif
-	// 	);
-	// 	return acc.diffuse + acc.specular;
-	// }
+	
 
 	fixed4 GetLighting_real(
 		const in float3 worldLightPos,
@@ -173,18 +100,6 @@ namespace b_light
 				minAmbient,
 				ambientOcclusion
 			);
-		#ifdef UNITY_PASS_FORWARDBASE
-
-	
-		
-		// const half3 ltcgi = GetLTCGI(
-		// 	worldPos,
-		// 	worldNormal
-		// #ifdef LIGHTMAP_ON
-		// 		,lightmapUv
-		// #endif
-		// );
-		#endif
 
 		const float fadedAttenuation = fade_shadow(
 			worldNormal,
@@ -193,25 +108,20 @@ namespace b_light
 			#endif
 			shadowAttenuation
 		);
-
-		#ifdef UNITY_PASS_FORWARDBASE
+		
 		float3 worldViewDir = normalize(UnityWorldSpaceViewDir(worldPos));
 		half3 worldReflectionDir = reflect(-worldViewDir, worldNormal);
 		half4 reflectionData = UNITY_SAMPLE_TEXCUBE(unity_SpecCube0, worldReflectionDir);
 		half3 reflectionColor = DecodeHDR(reflectionData, unity_SpecCube0_HDR);
 		reflectionColor *= reflectivity;
-		#endif
 
 		const float lightIntensity = GetWorldLightIntensity(fadedAttenuation, worldLightPos, worldNormal);
 		const fixed3 diff = lightIntensity * lightColor;
 		fixed4 total = fixed4(
 			doStep(diff)
 			+ doStep(ambient)
-			#ifdef UNITY_PASS_FORWARDBASE
 			+ doStep(reflectionColor)
-            + doStep(vertex)
-			//+ doStep(ltcgi)
-			#endif
+			+ doStep(vertex)
 			, 1.0
 		);
 
@@ -287,7 +197,7 @@ namespace b_light
 				lightthreshold
 			) * transmissivity;
 		}
-		return ret;
+		return clamp(ret, -10.0, 5.0);
 	}
 
 	//Unity.cginc Shade4PointLights 
@@ -339,12 +249,12 @@ namespace b_light
 	{
 		float3 ret = 0;
 
-		#ifdef VERTEXLIGHT_ON
-        ret += bigi_Shade4PointLights (
-            lightPosX, lightPosY, lightPosZ,
-            lightColor0, lightColor1, lightColor2, lightColor3,
-            lightAttenSq, pos, normal);
-		#endif
+		//#ifdef VERTEXLIGHT_ON
+		ret += bigi_Shade4PointLights(
+			lightPosX, lightPosY, lightPosZ,
+			lightColor0, lightColor1, lightColor2, lightColor3,
+			lightAttenSq, pos, normal);
+		//#endif
 
 		return ret;
 	}
