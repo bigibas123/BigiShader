@@ -1,0 +1,6 @@
+changelog:
+  exclude:
+  categories:
+    - title: Changes
+      labels:
+        - "*"
