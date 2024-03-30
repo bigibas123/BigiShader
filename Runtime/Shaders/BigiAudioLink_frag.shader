@@ -37,7 +37,7 @@ Shader "Bigi/AudioLink_frag" {
 
 	}
 
-	CustomEditor "tk.dingemans.bigibas123.bigishader.BigiShaderEditor"
+	CustomEditor "cc.dingemans.bigibas123.bigishader.BigiShaderEditor"
 	SubShader {
 		Blend SrcAlpha OneMinusSrcAlpha
 		Tags {
