@@ -40,7 +40,7 @@ namespace tk.dingemans.bigibas123.bigishader
 				{
 					bool usingArray = m.HasProperty(TextureArrayEnabledID) && m.GetFloat(TextureArrayEnabledID) > 0.1;
 					var t = m.GetTexture(usingArray ? MainTextureArrayID : MainTextureID);
-					bool usingAlpha = isAlphaFormat(t.graphicsFormat);
+					var usingAlpha = t is null || isAlphaFormat(t.graphicsFormat);
 					if (usingAlpha)
 					{
 						m.SetFloat(AlphaEnabledID, 1);
