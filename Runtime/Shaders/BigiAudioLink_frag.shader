@@ -71,24 +71,24 @@ Shader "Bigi/AudioLink_frag" {
 
 			#include "./Includes/ToonVert.cginc"
 			#include "./Includes/LightUtilsDefines.cginc"
-			#ifdef NORMAL_MAPPING
-            #include "./Includes/NormalUtils.cginc"
-			#endif
+			#include "./Includes/NormalUtils.cginc"
 
 			#include "./Includes/BigiEffects.cginc"
 
 			fragOutput frag(v2f i)
 			{
 				const fixed4 orig_color = GET_TEX_COLOR(GETUV);
-				#ifdef DO_ALPHA_PLS
-                clip(orig_color.a - (1.0-Epsilon));
-				#endif
+				if (_UsesAlpha)
+				{
+					clip(orig_color.a - (1.0 - Epsilon));
+				}
 				fragOutput o;
 				UNITY_SETUP_INSTANCE_ID(i);
 				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-				#ifdef NORMAL_MAPPING
-                i.normal = b_normalutils::recalculate_normals(i.normal, GET_NORMAL(GETUV), i.tangent, i.bitangent);
-				#endif
+				if (_UsesNormalMap)
+				{
+					i.normal = b_normalutils::recalculate_normals(i.normal, GET_NORMAL(GETUV), i.tangent, i.bitangent);
+				}
 
 				BIGI_GETLIGHT_DEFAULT(lighting);
 
@@ -125,46 +125,47 @@ Shader "Bigi/AudioLink_frag" {
 
 			#include "./Includes/ToonVert.cginc"
 			#include "./Includes/LightUtilsDefines.cginc"
-			#ifdef NORMAL_MAPPING
-            #include "./Includes/NormalUtils.cginc"
-			#endif
+			#include "./Includes/NormalUtils.cginc"
 			#include "./Includes/BigiEffects.cginc"
 
 			v2f vert(appdata v)
 			{
-				#ifdef DO_ALPHA_PLS
-                return bigi_toon_vert(v);
-				#else
+				if (_UsesAlpha)
+				{
+					return bigi_toon_vert(v);
+				}
 				v2f o;
 				UNITY_INITIALIZE_OUTPUT(v2f, o);
 				return o;
-				#endif
 			}
 
 			fragOutput frag(v2f i)
 			{
-				#ifdef DO_ALPHA_PLS
-                const fixed4 orig_color = GET_TEX_COLOR(GETUV);
-                clip((orig_color.a - (1.0-Epsilon)) * -1.0);
-                fragOutput o;
-                UNITY_SETUP_INSTANCE_ID(i);
-                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-				#ifdef NORMAL_MAPPING
-                i.normal = b_normalutils::recalculate_normals(i.normal, GET_NORMAL(GETUV), i.tangent, i.bitangent);
-				#endif
+				if (_UsesAlpha)
+				{
+					const fixed4 orig_color = GET_TEX_COLOR(GETUV);
+					clip((orig_color.a - (1.0 - Epsilon)) * -1.0);
+					fragOutput o;
+					UNITY_SETUP_INSTANCE_ID(i);
+					UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
+					if (_UsesNormalMap)
+					{
+						i.normal = b_normalutils::recalculate_normals(i.normal, GET_NORMAL(GETUV), i.tangent,
+							i.bitangent);
+					}
 
-                BIGI_GETLIGHT_DEFAULT(lighting);
+					BIGI_GETLIGHT_DEFAULT(lighting);
 
-                const fixed4 mask = GET_MASK_COLOR(GETUV);
-                o.color = b_effects::apply_effects(GETUV, mask, orig_color, lighting, i.staticTexturePos);
-                UNITY_APPLY_FOG(i.fogCoord, o.color);
-                return o;
-				#else
+					const fixed4 mask = GET_MASK_COLOR(GETUV);
+					o.color = b_effects::apply_effects(GETUV, mask, orig_color, lighting, i.staticTexturePos);
+					UNITY_APPLY_FOG(i.fogCoord, o.color);
+
+					return o;
+				}
 				discard;
 				fragOutput o;
 				UNITY_INITIALIZE_OUTPUT(fragOutput, o);
 				return o;
-				#endif
 			}
 			ENDCG
 		}
@@ -195,9 +196,7 @@ Shader "Bigi/AudioLink_frag" {
 			#include "./Includes/LightUtilsDefines.cginc"
 			#include "./Includes/BigiEffects.cginc"
 			#include "./Includes/BigiShaderParams.cginc"
-			#ifdef NORMAL_MAPPING
-            #include "./Includes/NormalUtils.cginc"
-			#endif
+			#include "./Includes/NormalUtils.cginc"
 
 			fragOutput frag(v2f i)
 			{
@@ -206,9 +205,10 @@ Shader "Bigi/AudioLink_frag" {
 				fragOutput o;
 				UNITY_SETUP_INSTANCE_ID(i);
 				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-				#ifdef NORMAL_MAPPING
-                i.normal = b_normalutils::recalculate_normals(i.normal, GET_NORMAL(GETUV), i.tangent, i.bitangent);
-				#endif
+				if (_UsesNormalMap)
+				{
+					i.normal = b_normalutils::recalculate_normals(i.normal, GET_NORMAL(GETUV), i.tangent, i.bitangent);
+				}
 				BIGI_GETLIGHT_DEFAULT(lighting);
 
 				const fixed4 orig_color = GET_TEX_COLOR(GETUV);
@@ -274,8 +274,8 @@ Shader "Bigi/AudioLink_frag" {
 
 				GET_SOUND_COLOR(scol);
 				o.soundColor = scol;
-				
-				float4 heightPos = v.vertex * 10.0 + float4(0.0,7.0,0.0,0.0);
+
+				float4 heightPos = v.vertex * 10.0 + float4(0.0, 7.0, 0.0, 0.0);
 				float3 offset = v.normal.xyz * (_OutlineWidth * 0.01) * b_sound::GetWaves(length(heightPos));
 
 				o.pos = UnityObjectToClipPos(v.vertex + offset);
@@ -367,9 +367,9 @@ Shader "Bigi/AudioLink_frag" {
 
 
 				metaIN.Albedo = b_effects::apply_effects(GETUV, mask_color, orig_color, half4(1.0, 1.0, 1.0, 1.0),
-																i.staticTexturePos).rgb;
+														i.staticTexturePos).rgb;
 				metaIN.Emission = b_effects::get_meta_emissions(orig_color, mask_color, _EmissionStrength) * 5.0;
-				metaIN.SpecularColor = half3(0.0,0.0,0.0); 
+				metaIN.SpecularColor = half3(0.0, 0.0, 0.0);
 
 				#if defined(EDITOR_VISUALIZATION)
                     metaIN.VizUV = i.vizUV;
@@ -380,8 +380,6 @@ Shader "Bigi/AudioLink_frag" {
 			}
 			ENDCG
 		}
-
-		//UsePass "Legacy Shaders/VertexLit/SHADOWCASTER"
 
 		Pass {
 			Name "ShadowPass"
@@ -399,7 +397,7 @@ Shader "Bigi/AudioLink_frag" {
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
 
-			#include_with_pragmas "./Includes/Pragmas/Meta.cginc"
+			#include_with_pragmas "./Includes/Pragmas/ShadowCaster.cginc"
 
 			#include "./Includes/BigiShaderParams.cginc"
 			#include <UnityCG.cginc>

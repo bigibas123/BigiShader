@@ -21,6 +21,9 @@ uniform half _AL_TC_BassReactive;
 //Both
 uniform float _OutlineWidth;
 
+uniform float _UsesNormalMap;
+uniform float _UsesAlpha;
+
 #endif
 
 
