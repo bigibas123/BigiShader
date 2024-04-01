@@ -5,6 +5,7 @@
 
 #pragma multi_compile_fwdbase
 #pragma multi_compile _ VERTEXLIGHT_ON
+#define FORWARD_BASE_PASS
 
 
 #endif

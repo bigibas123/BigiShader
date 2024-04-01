@@ -53,7 +53,7 @@ Shader "Bigi/AudioLink_frag" {
 				"LightMode" = "ForwardBase"
 				"LTCGI"="ALWAYS"
 			}
-			Cull [_Cull]
+			Cull Off
 			ZWrite On
 			ZTest Less
 			Blend One OneMinusSrcAlpha
@@ -90,11 +90,11 @@ Shader "Bigi/AudioLink_frag" {
 					i.normal = b_normalutils::recalculate_normals(i.normal, GET_NORMAL(GETUV), i.tangent, i.bitangent);
 				}
 
-				BIGI_GETLIGHT_DEFAULT(lighting);
+				BIGI_GETLIGHT_DEFAULT(lit_color);
 
 
 				const fixed4 mask = GET_MASK_COLOR(GETUV);
-				o.color = b_effects::apply_effects(GETUV, mask, orig_color, lighting, i.staticTexturePos);
+				o.color = b_effects::apply_effects(GETUV, mask, lit_color, i.staticTexturePos);
 				UNITY_APPLY_FOG(i.fogCoord, o.color);
 				return o;
 			}
@@ -107,7 +107,7 @@ Shader "Bigi/AudioLink_frag" {
 				"RenderType" = "Transparent"
 				"Queue" = "Transparent"
 			}
-			Cull [_Cull]
+			Cull Off
 			ZWrite Off
 			ZTest LEqual
 			Blend SrcAlpha OneMinusSrcAlpha
@@ -154,10 +154,10 @@ Shader "Bigi/AudioLink_frag" {
 							i.bitangent);
 					}
 
-					BIGI_GETLIGHT_DEFAULT(lighting);
+					BIGI_GETLIGHT_DEFAULT(lit_color);
 
 					const fixed4 mask = GET_MASK_COLOR(GETUV);
-					o.color = b_effects::apply_effects(GETUV, mask, orig_color, lighting, i.staticTexturePos);
+					o.color = b_effects::apply_effects(GETUV, mask, lit_color, i.staticTexturePos);
 					UNITY_APPLY_FOG(i.fogCoord, o.color);
 
 					return o;
@@ -175,7 +175,7 @@ Shader "Bigi/AudioLink_frag" {
 			Tags {
 				"LightMode" = "ForwardAdd"
 			}
-			Cull [_Cull]
+			Cull Off
 			ZWrite Off
 			ZTest LEqual
 			Blend SrcAlpha One
@@ -188,10 +188,9 @@ Shader "Bigi/AudioLink_frag" {
 			CGPROGRAM
 			#pragma vertex bigi_toon_vert
 			#pragma fragment frag
-
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
 
-
+			
 			#include "./Includes/ToonVert.cginc"
 			#include "./Includes/LightUtilsDefines.cginc"
 			#include "./Includes/BigiEffects.cginc"
@@ -209,12 +208,12 @@ Shader "Bigi/AudioLink_frag" {
 				{
 					i.normal = b_normalutils::recalculate_normals(i.normal, GET_NORMAL(GETUV), i.tangent, i.bitangent);
 				}
-				BIGI_GETLIGHT_DEFAULT(lighting);
+				
+				BIGI_GETLIGHT_DEFAULT(lit_color);
 
-				const fixed4 orig_color = GET_TEX_COLOR(GETUV);
 
 				const fixed4 mask = GET_MASK_COLOR(GETUV);
-				o.color = b_effects::apply_effects(GETUV, mask, orig_color * lighting, 1, i.staticTexturePos);
+				o.color = b_effects::apply_effects(GETUV, mask, lit_color, i.staticTexturePos);
 				o.color = o.color * _AddLightIntensity;
 				UNITY_APPLY_FOG(i.fogCoord, o.color);
 				return o;
@@ -300,93 +299,11 @@ Shader "Bigi/AudioLink_frag" {
 		}
 
 		Pass {
-			Name "META"
-			Tags {
-				"LightMode" = "Meta"
-			}
-			CGPROGRAM
-			#pragma vertex vert
-			#pragma fragment frag
-
-			#include_with_pragmas "./Includes/Pragmas/Global.cginc"
-
-			#include "UnityCG.cginc"
-			#include "UnityMetaPass.cginc"
-			#include "./Includes/BigiEffects.cginc"
-			#include "./Includes/BigiShaderTextures.cginc"
-			#include "./Includes/BigiShaderParams.cginc"
-
-			struct v2f
-			{
-				UNITY_POSITION(pos);
-				float2 uv : TEXCOORD0;
-				float2 uvIllum : TEXCOORD1;
-				#ifdef EDITOR_VISUALIZATION
-                float2 vizUV : TEXCOORD2;
-                float4 lightCoord : TEXCOORD3;
-				#endif
-				float4 staticTexturePos : TEXCOORD4;
-				UNITY_VERTEX_OUTPUT_STEREO
-			};
-
-			float4 _Illum_ST;
-
-			v2f vert(appdata_full v)
-			{
-				v2f o;
-				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-				o.pos = UnityMetaVertexPosition(v.vertex, v.texcoord1.xy, v.texcoord2.xy, unity_LightmapST,
-												unity_DynamicLightmapST);
-				o.uv = DO_TRANSFORM(v.texcoord);
-				o.uvIllum = TRANSFORM_TEX(v.texcoord, _Illum);
-				#ifdef EDITOR_VISUALIZATION
-                    o.vizUV = 0;
-                    o.lightCoord = 0;
-                    if (unity_VisualizationMode == EDITORVIZ_TEXTURE)
-                        o.vizUV = UnityMetaVizUV(unity_EditorViz_UVIndex, v.texcoord.xy, v.texcoord1.xy, v.texcoord2.xy, unity_EditorViz_Texture_ST);
-                    else if (unity_VisualizationMode == EDITORVIZ_SHOWLIGHTMASK)
-                    {
-                        o.vizUV = v.texcoord1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
-                        o.lightCoord = mul(unity_EditorViz_WorldToLight, mul(unity_ObjectToWorld, float4(v.vertex.xyz, 1)));
-                    }
-				#endif
-				o.staticTexturePos = ComputeScreenPos(o.pos);
-				return o;
-			}
-
-			sampler2D _Illum;
-
-			half4 frag(v2f i) : SV_Target
-			{
-				UnityMetaInput metaIN;
-				UNITY_INITIALIZE_OUTPUT(UnityMetaInput, metaIN);
-
-				fixed4 orig_color = GET_TEX_COLOR(GETUV);
-				fixed4 mask_color = GET_MASK_COLOR(GETUV);
-
-
-				metaIN.Albedo = b_effects::apply_effects(GETUV, mask_color, orig_color, half4(1.0, 1.0, 1.0, 1.0),
-														i.staticTexturePos).rgb;
-				metaIN.Emission = b_effects::get_meta_emissions(orig_color, mask_color, _EmissionStrength) * 5.0;
-				metaIN.SpecularColor = half3(0.0, 0.0, 0.0);
-
-				#if defined(EDITOR_VISUALIZATION)
-                    metaIN.VizUV = i.vizUV;
-                    metaIN.LightCoord = i.lightCoord;
-				#endif
-
-				return UnityMetaFragment(metaIN);
-			}
-			ENDCG
-		}
-
-		Pass {
 			Name "ShadowPass"
 			Tags {
 				"LightMode"="ShadowCaster"
 			}
-			Cull [_Cull]
+			Cull Off
 			ZWrite On
 			ZTest LEqual
 			Stencil {

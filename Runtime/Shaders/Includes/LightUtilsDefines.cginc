@@ -3,72 +3,44 @@
 
 #include "./BigiShaderParams.cginc"
 #include "./BigiLightUtils.cginc"
+#include "./BigiShaderTextures.cginc"
+#include <UnityPBSLighting.cginc>
 #include <AutoLight.cginc>
 #include <UnityLightingCommon.cginc>
 
-#ifndef BIGI_LIGHT_MACROS
-#define BIGI_LIGHT_MACROS
-#if defined(POINT) || defined(SPOT)
-#define GET_LIGHT_DIR() normalize(_WorldSpaceLightPos0.xyz - i.worldPos)
-#else
-#define GET_LIGHT_DIR() _WorldSpaceLightPos0.xyz
-#endif
-
-#ifndef B_LIGHTMAP_ARG
-	#ifdef LIGHTMAP_ON
-		#define B_LIGHTMAP_ARG i.lightmapUV,
-	#else
-		#define B_LIGHTMAP_ARG 
-	#endif
-#endif
-
-#ifndef B_DYNAMIC_LIGHTMAP_ARG
-	#ifdef DYNAMICLIGHTMAP_ON
-		#define B_DYNAMIC_LIGHTMAP_ARG i.dynamicLightmapUV,
-	#else
-		#define B_DYNAMIC_LIGHTMAP_ARG
-	#endif
-#endif
 
 
-#endif
+/*
+_Reflectivity
+_MinAmbient
+_LightSmoothness
+_LightThreshold
+_Transmissivity
+==========
+BIGI_GETLIGHT_DEFAULT(outName)
+BIGI_GETLIGHT_NOAO(outName)
+==========
+GET_AO(GETUV)
+UNITY_LIGHT_ATTENUATION(shadowAtt,i,i.worldPos)
+*/
 
+#define BIGI_GETLIGHT_DEFAULT(outName) UNITY_LIGHT_ATTENUATION(shadowAtt, i, i.worldPos.xyz);\
+    const fixed4 outName = b_light::get_lighting(\
+    i.normal,\
+    GET_TEX_COLOR(GETUV),\
+    i.worldPos,\
+    i.vertexLighting,\
+    shadowAtt\
+    )
 
-#define BIGI_GETLIGHT_DEFAULT(outName) UNITY_LIGHT_ATTENUATION(shadowAtt,i,i.worldPos); \
-const fixed4 outName = b_light::GetLighting( \
-GET_LIGHT_DIR(), \
-i.worldPos, \
-i.normal, \
-shadowAtt, \
-_LightColor0, \
-i.vertexLighting, \
-_Reflectivity, \
-B_LIGHTMAP_ARG \
-B_DYNAMIC_LIGHTMAP_ARG \
-_MinAmbient, \
-GET_AO(GETUV), \
-_LightSmoothness, \
-_LightThreshold, \
-_Transmissivity \
-)
-
-#define BIGI_GETLIGHT_NOAO(outName) UNITY_LIGHT_ATTENUATION(shadowAtt,i,i.worldPos); \
-const fixed4 outName = b_light::GetLighting( \
-GET_LIGHT_DIR(), \
-i.worldPos, \
-i.normal, \
-shadowAtt, \
-_LightColor0, \
-i.vertexLighting, \
-_Reflectivity, \
-B_LIGHTMAP_ARG \
-B_DYNAMIC_LIGHTMAP_ARG \
-_MinAmbient, \
-1.0, \
-_LightSmoothness, \
-_LightThreshold, \
-_Transmissivity \
-)
+#define BIGI_GETLIGHT_NOAO(outName) UNITY_LIGHT_ATTENUATION(shadowAtt, i, i.worldPos.xyz);\
+    const fixed4 outName = b_light::get_lighting(\
+    i.normal,\
+    GET_TEX_COLOR(GETUV),\
+    i.worldPos,\
+    i.vertexLighting,\
+    shadowAtt\
+    )
 
 
 #ifdef VERTEXLIGHT_ON

@@ -45,7 +45,7 @@ uniform float _LightThreshold;
 
 uniform float _Rounding;
 #define GET_UV(origuv,iposw) _Rounding > Epsilon ? origuv/iposw : origuv
-#define GETUV GET_UV(i.uv,i.pos.w)
+#define GETUV GET_UV(i.uv[0],i.pos.w)
 
 #endif
 

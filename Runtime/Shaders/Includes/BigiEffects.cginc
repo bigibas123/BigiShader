@@ -60,13 +60,12 @@ namespace b_effects
         return mix.totalColor;
     }
 
-    fixed4 apply_effects(in half2 uv, in fixed4 mask, in fixed4 orig_color, in fixed4 lighting,
+    fixed4 apply_effects(in half2 uv, in fixed4 mask, in fixed4 orig_color,
                          in float4 staticTexturePos)
     {
-        const float3 fixedLighting = lighting.rgb * lighting.a;
         BEffectsTracker mix;
         mix.totalWeight = 1.0;
-        mix.totalColor = orig_color.rgb * fixedLighting;
+        mix.totalColor = orig_color.rgb;
         //AudioLink
         {
             GET_SOUND_COLOR(soundC);
@@ -89,7 +88,8 @@ namespace b_effects
         {
             if (_Voronoi > Epsilon)
             {
-                doMixProperly(mix, get_voronoi(uv) * fixedLighting, _Voronoi, mix.totalWeight + _Voronoi);
+                //TODO move somewhere earlier so it respects lighting
+                doMixProperly(mix, get_voronoi(uv), _Voronoi, mix.totalWeight + _Voronoi);
             }
         }
 

@@ -2,6 +2,9 @@
 #define BIGI_LIGHT_UTILS_H
 
 #include <UnityCG.cginc>
+#include <UnityLightingCommon.cginc>
+#include <UnityPBSLighting.cginc>
+#include <AutoLight.cginc>
 
 
 #ifndef Epsilon
@@ -14,191 +17,66 @@ namespace b_light
 	// ReSharper disable once CppInconsistentNaming
 	#define doStep(val) smoothstep(lightthreshold, lightsmoothness+lightthreshold, val)
 
-
-	half3 GetAmbient(
-		in const float3 worldPos,
-		in const float3 worldNormal,
-		in const float minAmbient,
-		in const float4 ambientOcclusion
-	)
+	struct world_info
 	{
-		//Maybe do lightmapping properly sometime, not today though because it broke a bunch of stuff.
-		half3 ret = 0;
-		ret += max(0, ShadeSH9(half4(worldNormal, 1)));
+		float3 worldLightDir;
+		float4 worldLightColor;
+		float3 viewDir;
+	};
 
-
-		ret *= clamp(ambientOcclusion, 0.75, 1.0);
-		return ret;
-	}
-
-	fixed3 GetWorldLightIntensity(
-		const in half shadowAttenuation,
-		const in float3 worldLightPos,
-		const in float3 worldNormal
-	)
+	world_info setup_world(in float3 worldPos, in fixed attenuation)
 	{
-		const float nl = max(0, dot(worldNormal, worldLightPos.xyz));
-		const float lightIntensity = nl * shadowAttenuation;
-		return lightIntensity;
-	}
-
-	half fade_shadow(
-		in const float3 worldNormal,
-		#ifdef LIGHTMAP_ON
-        in const float2 lightmapUv,
-		#endif
-		in half attenuation
-	)
-	{
-		#if defined(HANDLE_SHADOWS_BLENDING_IN_GI) || defined(ADDITIONAL_MASKED_DIRECTIONAL_SHADOWS)
-        float viewZ = dot(_WorldSpaceCameraPos - worldNormal, UNITY_MATRIX_V[2].xyz);
-        float shadowFadeDistance = UnityComputeShadowFadeDistance(worldNormal, viewZ);
-        float shadowFade = UnityComputeShadowFade(shadowFadeDistance);
-		#ifdef LIGHTMAP_ON
-        float bakedAttenuation = UnitySampleBakedOcclusion(lightmapUv,worldNormal);
-		#else
-        float bakedAttenuation = 0;
-		#endif
-        attenuation = UnityMixRealtimeAndBakedShadows(
-            attenuation, bakedAttenuation, shadowFade
-        );
-		#endif
-		return attenuation;
-	}
-	
-
-	fixed4 GetLighting_real(
-		const in float3 worldLightPos,
-		const in float3 worldPos,
-		const in float3 worldNormal,
-		const in half shadowAttenuation,
-		const in half4 lightColor,
-		const in bool secondPass,
-		in float3 vertex,
-		const in float reflectivity,
-		#ifdef LIGHTMAP_ON
-        const in float2 lightmapUv,
-		#endif
-		#ifdef DYNAMICLIGHTMAP_ON
-		const in float2 dynamicLightmapUV,
-		#endif
-		const in float minAmbient,
-		const in float4 ambientOcclusion,
-		const in float lightsmoothness,
-		const in float lightthreshold
-	)
-	{
-		if (secondPass)
-		{
-			vertex = 0;
-		}
-
-		const half3 ambient =
-			GetAmbient(
-				worldPos,
-				worldNormal,
-				minAmbient,
-				ambientOcclusion
-			);
-
-		const float fadedAttenuation = fade_shadow(
-			worldNormal,
-			#ifdef LIGHTMAP_ON
-			lightmapUv,
-			#endif
-			shadowAttenuation
-		);
+		world_info wi;
 		
-		float3 worldViewDir = normalize(UnityWorldSpaceViewDir(worldPos));
-		half3 worldReflectionDir = reflect(-worldViewDir, worldNormal);
-		half4 reflectionData = UNITY_SAMPLE_TEXCUBE(unity_SpecCube0, worldReflectionDir);
-		half3 reflectionColor = DecodeHDR(reflectionData, unity_SpecCube0_HDR);
-		reflectionColor *= reflectivity;
-
-		const float lightIntensity = GetWorldLightIntensity(fadedAttenuation, worldLightPos, worldNormal);
-		const fixed3 diff = lightIntensity * lightColor;
-		fixed4 total = fixed4(
-			doStep(diff)
-			+ doStep(ambient)
-			+ doStep(reflectionColor)
-			+ doStep(vertex)
-			, 1.0
-		);
-
-		#ifdef UNITY_PASS_FORWARDBASE
-		total = max(total, half4(minAmbient, minAmbient, minAmbient,1.0));
+		#if defined(POINT)  || defined(POINT_COOKIE) || defined(SPOT)
+		wi.worldLightDir = normalize(_WorldSpaceLightPos0.xyz - worldPos);
+		#else
+		wi.worldLightDir = _WorldSpaceLightPos0.xyz;
 		#endif
-		return clamp(total, -10.0, 5.0);
+		
+		wi.worldLightColor = _LightColor0.rgba * attenuation;
+		wi.viewDir = normalize(_WorldSpaceCameraPos - worldPos);
+		return wi;
 	}
 
-
-	fixed4 GetLighting(
-		const in float3 worldLightPos,
-		const in float3 worldPos,
-		const in float3 worldNormal,
-		const in half shadowAttenuation,
-		const in half4 lightColor,
-		const in float3 vertex,
-		const in float reflectivity,
-		#ifdef LIGHTMAP_ON
-		const in float2 lightmapUv,
-		#endif
-		#ifdef DYNAMICLIGHTMAP_ON
-		const in float2 dynamicLightmapUV,
-		#endif
-		const in float minAmbient,
-		const in float4 ambientOcclusion,
-		const in float lightsmoothness,
-		const in float lightthreshold,
-		const in float transmissivity
-	)
+	
+	UnityLight CreateLight(const in world_info wi, const in float3 normal)
 	{
-		fixed4 ret = 0;
-		ret += GetLighting_real(
-			worldLightPos,
-			worldPos,
-			worldNormal,
-			shadowAttenuation,
-			lightColor,
-			false,
-			vertex,
-			reflectivity,
-			#ifdef LIGHTMAP_ON
-		lightmapUv,
-			#endif
-			#ifdef DYNAMICLIGHTMAP_ON
-		dynamicLightmapUV,
-			#endif
-			minAmbient,
-			ambientOcclusion,
-			lightsmoothness,
-			lightthreshold
-		);
-		if (transmissivity > Epsilon)
-		{
-			ret += GetLighting_real(
-				worldLightPos,
-				worldPos,
-				worldNormal * -1,
-				shadowAttenuation,
-				lightColor,
-				true,
-				vertex,
-				reflectivity,
-				#ifdef LIGHTMAP_ON
-				lightmapUv,
-				#endif
-				#ifdef DYNAMICLIGHTMAP_ON
-				dynamicLightmapUV,
-				#endif
-				0.0,
-				ambientOcclusion,
-				lightsmoothness,
-				lightthreshold
-			) * transmissivity;
-		}
-		return clamp(ret, -10.0, 5.0);
+		UnityLight light;
+		light.color = wi.worldLightColor;
+		light.dir = wi.worldLightDir;
+		light.ndotl = DotClamped(normal, wi.worldLightDir);
+		return light;
 	}
+
+	UnityIndirect CreateIndirectLight(in float3 vertexLightColor, in float3 normal) {
+		UnityIndirect indirectLight;
+		indirectLight.diffuse = vertexLightColor;
+		indirectLight.specular = 0;
+		
+		#if defined(FORWARD_BASE_PASS)
+			indirectLight.diffuse += max(0, ShadeSH9(float4(normal, 1)));
+		#endif
+		return indirectLight;
+	}
+
+	float4 get_lighting(in float3 normal, in float4 albedo, in float3 worldPos, in float3 vertexLightColor, in fixed attenuation)
+	{
+		normal = normalize(normal);
+		const world_info wi = setup_world(worldPos, attenuation);
+		
+
+		float4 unity_pbs_output = UNITY_BRDF_PBS(
+			albedo, float3(0.0, 0.0, 0.0),
+			1.0, 1.0,
+			normal, wi.viewDir,
+			CreateLight(wi, normal), CreateIndirectLight(vertexLightColor, normal)
+		);
+
+
+		return saturate(unity_pbs_output);
+	}
+
 
 	//Unity.cginc Shade4PointLights 
 	float3 bigi_Shade4PointLights(
