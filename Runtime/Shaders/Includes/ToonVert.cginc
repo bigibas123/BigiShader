@@ -35,7 +35,8 @@ struct v2f
 {
 	UNITY_POSITION(pos); //float4 pos : SV_POSITION;
 
-	float4 uv[2] : TEXCOORD0;
+	float4 uv : TEXCOORD0;
+	float4 uv1 : TEXCOORD1;
 	float3 normal : TEXCOORD2;
 	float4 tangent : TEXCOORD3;
 	float4 worldPos : TEXCOORD4;
@@ -78,8 +79,8 @@ v2f bigi_toon_vert(appdata v)
 	{
 		o.localPos = round_val(v.vertex);
 		o.pos = UnityObjectToClipPos(o.localPos);
-		o.uv[0] = float4(DO_TRANSFORM(v.uv0.xy), v.uv1.xy);
-		o.uv[1] = float4(v.uv2.xy, v.uv3.xy);
+		o.uv.xy = (DO_TRANSFORM(v.uv0)) * o.pos.w;
+		o.uv1 = float4(v.uv1,v.uv2);
 		o.normal = UnityObjectToWorldNormal(round_val(float4(v.normal, 1.0)).xyz);
 		float4 rounded_tangent = round_val(v.tangent);
 		o.tangent.xyz = UnityObjectToWorldDir(rounded_tangent).xyz;
@@ -89,8 +90,8 @@ v2f bigi_toon_vert(appdata v)
 	{
 		o.localPos = v.vertex;
 		o.pos = UnityObjectToClipPos(o.localPos);
-		o.uv[0] = float4(DO_TRANSFORM(v.uv0.xy), v.uv1.xy);
-		o.uv[1] = float4(v.uv2.xy, v.uv3.xy);
+		o.uv.xy = DO_TRANSFORM(v.uv0);
+		o.uv1 = float4(v.uv1,v.uv2);
 		o.normal = UnityObjectToWorldNormal(v.normal);
 		o.tangent.xyz = UnityObjectToWorldDir(v.tangent);
 		o.tangent.w = v.tangent.w;
