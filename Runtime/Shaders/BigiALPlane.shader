@@ -42,12 +42,12 @@ Shader "Bigi/ALTest" {
 				UNITY_SETUP_INSTANCE_ID(i);
 				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
 				UNITY_INITIALIZE_OUTPUT(fragOutput, o);
-				i.uv.y = (1.0f - (i.uv.y));
+				i.uv[0].y = (1.0f - (i.uv[0].y));
 				float2 squarepos;
-				squarepos.x = i.uv.x % 0.5f * 2.0f;
-				squarepos.y = i.uv.y % 0.5f * 2.0f;
+				squarepos.x = i.uv[0].x % 0.5f * 2.0f;
+				squarepos.y = i.uv[0].y % 0.5f * 2.0f;
 
-				if (i.uv.x < 0.5 && i.uv.y < 0.5)
+				if (i.uv[0].x < 0.5 && i.uv[0].y < 0.5)
 				{
 					float2 gridlocf = squarepos * float2(18, 6);
 					uint2 gridloc = gridlocf;
@@ -85,7 +85,7 @@ Shader "Bigi/ALTest" {
 					}
 					o.color.a = 1.0;
 				}
-				else if (i.uv.x > 0.5 && i.uv.y < 0.5)
+				else if (i.uv[0].x > 0.5 && i.uv[0].y < 0.5)
 				{
 					float2 gridlocf = squarepos * float2(4, 32);
 					uint band = gridlocf.x;
@@ -107,7 +107,7 @@ Shader "Bigi/ALTest" {
 				{
 					squarepos.y -= 0.5;
 					half3 al = AudioLinkLerp(
-						ALPASS_AUTOCORRELATOR + float2((abs(1. - i.uv.x * 2.)) * AUDIOLINK_WIDTH, 0)).rgb;
+						ALPASS_AUTOCORRELATOR + float2((abs(1. - i.uv[0].x * 2.)) * AUDIOLINK_WIDTH, 0)).rgb;
 					o.color = half4(
 						smoothstep(0.02, 0.0, abs(((al.r * 0.25) - squarepos.y))),
 						smoothstep(0.02, 0.0, abs(((al.g * 0.25) - squarepos.y))),
@@ -152,8 +152,7 @@ Shader "Bigi/ALTest" {
 
 			fragOutput frag(v2f i)
 			{
-				clip(_AddLightIntensity - Epsilon);
-				fixed4 orig_color = GET_TEX_COLOR(i.uv);
+				fixed4 orig_color = GET_TEX_COLOR(i.uv[0]);
 				clip(orig_color.a - Epsilon);
 				fragOutput o;
 				UNITY_SETUP_INSTANCE_ID(i);
@@ -161,7 +160,7 @@ Shader "Bigi/ALTest" {
 				UNITY_INITIALIZE_OUTPUT(fragOutput, o);
 
 				BIGI_GETLIGHT_DEFAULT(lighting);
-				o.color = half4(lighting * _AddLightIntensity) * orig_color;
+				o.color = half4(lighting) * orig_color;
 				//o.color = float4(1.0,1.0,1.0,1.0);
 				UNITY_APPLY_FOG(i.fogCoord, o.color);
 				return o;

@@ -16,19 +16,14 @@ Shader "Bigi/LogoPlane" {
 		#define MULTI_TEXTURE
 		#endif
 
-		#define OTHER_BIGI_TEXTURES
+		
 		#include <UnityCG.cginc>
 		uniform float _AL_General_Intensity;
-
-
-		#define BIGI_OTHER_TEXTURE_ID_DEFINED
-		// UNITY_INSTANCING_BUFFER_START(logoplaneparams)
-		// 	UNITY_DEFINE_INSTANCED_PROP(int, _OtherTextureId)
-		// UNITY_INSTANCING_BUFFER_END(logoplaneparams)
-
-		// #define OTHER_TEXTURE_ID_REF UNITY_ACCESS_INSTANCED_PROP(logoplaneparams, _OtherTextureId)
+		
 		uniform int _OtherTextureId;
 		#define OTHER_TEXTURE_ID_REF _OtherTextureId
+		#define BIGI_OTHER_TEXTURE_ID_DEFINED
+		#define OTHER_BIGI_TEXTURES
 
 		#include "./Includes/BigiShaderParams.cginc"
 		#include "./Includes/BigiShaderTextures.cginc"
@@ -41,8 +36,6 @@ Shader "Bigi/LogoPlane" {
 		{
 			_LightSmoothness = 0.2;
 			_LightThreshold = 0.0;
-			_AddLightIntensity = 1.0;
-			_VertLightIntensity = 1.0;
 			_Rounding = 0.0;
 			_MonoChrome = 0.0;
 			_Voronoi = 0.0;
@@ -84,6 +77,7 @@ Shader "Bigi/LogoPlane" {
 			GET_SOUND_COLOR(sound);
 
 			o.color = lerp(normalColor,fixed4(sound.rgb, normalColor.a), sound.a);
+			o.color.a = orig_color.a;
 			//o.color = orig_color;
 			UNITY_APPLY_FOG(i.fogCoord, o.color);
 			return o;

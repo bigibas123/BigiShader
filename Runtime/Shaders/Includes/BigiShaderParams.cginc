@@ -1,7 +1,7 @@
 #ifndef BIGI_SHADER_PARAMS
 #define BIGI_SHADER_PARAMS
 
-#include "./BigiShaderTextures.cginc"
+//#include "./BigiShaderTextures.cginc"
 
 //#include <UnityShaderVariables.cginc>
 
@@ -31,8 +31,6 @@ uniform float _UsesAlpha;
 #define BIGI_UNIFORMS_LIGHTING
 //Other
 uniform half _EmissionStrength;
-uniform float _AddLightIntensity;
-uniform float _VertLightIntensity;
 uniform float _MinAmbient;
 uniform float _Transmissivity;
 uniform float _Reflectivity;
@@ -45,7 +43,7 @@ uniform float _LightThreshold;
 
 uniform float _Rounding;
 #define GET_UV(origuv,iposw) _Rounding > Epsilon ? origuv/iposw : origuv
-#define GETUV GET_UV(i.uv[0],i.pos.w)
+#define GETUV GET_UV(i.uv[0].xy,i.pos.w)
 
 #endif
 
@@ -55,8 +53,9 @@ uniform float _Rounding;
 
 #include <HLSLSupport.cginc>
 
-struct fragOutput {
-    fixed4 color : SV_Target;
+struct fragOutput
+{
+	fixed4 color : SV_Target;
 };
 #endif
 

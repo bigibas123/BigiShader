@@ -22,24 +22,26 @@ namespace b_light
 		float3 worldLightDir;
 		float4 worldLightColor;
 		float3 viewDir;
+		float3 worldPos;
 	};
 
 	world_info setup_world(in float3 worldPos, in fixed attenuation)
 	{
 		world_info wi;
-		
+
 		#if defined(POINT)  || defined(POINT_COOKIE) || defined(SPOT)
 		wi.worldLightDir = normalize(_WorldSpaceLightPos0.xyz - worldPos);
 		#else
 		wi.worldLightDir = _WorldSpaceLightPos0.xyz;
 		#endif
-		
+
 		wi.worldLightColor = _LightColor0.rgba * attenuation;
 		wi.viewDir = normalize(_WorldSpaceCameraPos - worldPos);
+		wi.worldPos = worldPos;
 		return wi;
 	}
 
-	
+
 	UnityLight CreateLight(const in world_info wi, const in float3 normal)
 	{
 		UnityLight light;
@@ -49,32 +51,108 @@ namespace b_light
 		return light;
 	}
 
-	UnityIndirect CreateIndirectLight(in float3 vertexLightColor, in float3 normal) {
+	float3 BoxProjection(
+		float3 direction, float3 position,
+		float4 cubemapPosition, float3 boxMin, float3 boxMax
+	)
+	{
+		#if UNITY_SPECCUBE_BOX_PROJECTION
+		UNITY_BRANCH
+		if (cubemapPosition.w > 0) {
+			float3 factors =
+				((direction > 0 ? boxMax : boxMin) - position) / direction;
+			float scalar = min(min(factors.x, factors.y), factors.z);
+			direction = direction * scalar + (position - cubemapPosition);
+		}
+		#endif
+		return direction;
+	}
+
+	UnityIndirect CreateIndirectLight(in world_info wi, in float3 vertexLightColor, in float3 normal,
+									const in fixed minAmbient)
+	{
 		UnityIndirect indirectLight;
 		indirectLight.diffuse = vertexLightColor;
 		indirectLight.specular = 0;
-		
+
 		#if defined(FORWARD_BASE_PASS)
-			indirectLight.diffuse += max(0, ShadeSH9(float4(normal, 1)));
+		indirectLight.diffuse += max(0, ShadeSH9(float4(normal, 1)));
+
+		float3 reflectionDir = reflect(-wi.viewDir, normal);
+		Unity_GlossyEnvironmentData envData;
+		//envData.roughness = 1 - _Smoothness;
+		envData.roughness = 0.00;
+		envData.reflUVW = BoxProjection(
+			reflectionDir, wi.worldPos,
+			unity_SpecCube0_ProbePosition,
+			unity_SpecCube0_BoxMin, unity_SpecCube0_BoxMax
+		);
+		float3 probe0 = Unity_GlossyEnvironment(
+			UNITY_PASS_TEXCUBE(unity_SpecCube0), unity_SpecCube0_HDR, envData
+		);
+		envData.reflUVW = BoxProjection(
+			reflectionDir, wi.worldPos,
+			unity_SpecCube1_ProbePosition,
+			unity_SpecCube1_BoxMin, unity_SpecCube1_BoxMax
+		);
+		#if UNITY_SPECCUBE_BLENDING
+		float interpolator = unity_SpecCube0_BoxMin.w;
+		UNITY_BRANCH
+		if (interpolator < 0.99999) {
+			float3 probe1 = Unity_GlossyEnvironment(
+				UNITY_PASS_TEXCUBE_SAMPLER(unity_SpecCube1, unity_SpecCube0),
+				unity_SpecCube0_HDR, envData
+			);
+			indirectLight.specular = lerp(probe1, probe0, interpolator);
+		}
+		else {
+			indirectLight.specular = probe0;
+		}
+		#else
+		indirectLight.specular = probe0;
 		#endif
+		#endif
+		indirectLight.diffuse = max(indirectLight.diffuse, minAmbient);
 		return indirectLight;
 	}
 
-	float4 get_lighting(in float3 normal, in float4 albedo, in float3 worldPos, in float3 vertexLightColor, in fixed attenuation)
+	float4 _get_lighting(in float3 normal, in float3 worldPos, in float3 vertexLightColor, in fixed attenuation,
+						in fixed minAmbient)
 	{
+		float3 albedo = float4(1.0, 1.0, 1.0, 1.0);
+		float3 specularTint = float3(1.0, 1.0, 1.0);
+		albedo *= 1.0;
+		specularTint *= 0.05;
+
 		normal = normalize(normal);
 		const world_info wi = setup_world(worldPos, attenuation);
-		
 
-		float4 unity_pbs_output = UNITY_BRDF_PBS(
-			albedo, float3(0.0, 0.0, 0.0),
-			1.0, 1.0,
-			normal, wi.viewDir,
-			CreateLight(wi, normal), CreateIndirectLight(vertexLightColor, normal)
+		float oneMinusReflectivity;
+		albedo = EnergyConservationBetweenDiffuseAndSpecular(
+			albedo, specularTint, oneMinusReflectivity
 		);
 
+		float4 unity_pbs_output = UNITY_BRDF_PBS(
+			albedo, specularTint,
+			oneMinusReflectivity, 1.0,
+			normal, wi.viewDir,
+			CreateLight(wi, normal), CreateIndirectLight(wi, vertexLightColor, normal, minAmbient)
+		);
 
-		return saturate(unity_pbs_output);
+		float4 output = saturate(unity_pbs_output);
+		//output = max(minAmbient,output);
+		return output;
+	}
+
+	float4 get_lighting(in float3 normal, in float3 worldPos, in float3 vertexLightColor, in fixed attenuation,
+						in fixed minAmbient, in fixed transmissivity)
+	{
+		float4 total = _get_lighting(normal, worldPos, vertexLightColor, attenuation, minAmbient);
+		if (transmissivity > Epsilon)
+		{
+			total += _get_lighting(normal * -1.0, worldPos, vertexLightColor, attenuation, 0) * transmissivity;
+		}
+		return total;
 	}
 
 
