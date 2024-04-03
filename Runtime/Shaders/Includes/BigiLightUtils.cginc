@@ -122,7 +122,7 @@ namespace b_light
 		float3 albedo = float4(1.0, 1.0, 1.0, 1.0);
 		float3 specularTint = float3(1.0, 1.0, 1.0);
 		albedo *= 1.0;
-		specularTint *= 0.05;
+		specularTint *= 0.00;
 
 		normal = normalize(normal);
 		const world_info wi = setup_world(worldPos, attenuation);
@@ -134,7 +134,7 @@ namespace b_light
 
 		float4 unity_pbs_output = UNITY_BRDF_PBS(
 			albedo, specularTint,
-			oneMinusReflectivity, 1.0,
+			oneMinusReflectivity, 0.0,
 			normal, wi.viewDir,
 			CreateLight(wi, normal), CreateIndirectLight(wi, vertexLightColor, normal, minAmbient)
 		);
