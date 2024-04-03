@@ -1,25 +1,18 @@
 ﻿#ifndef BIGI_LIGHTUTILDEFINES_H
 #define BIGI_LIGHTUTILDEFINES_H
 
-#include "./BigiShaderParams.cginc"
-#include "./BigiLightUtils.cginc"
-#include "./BigiShaderTextures.cginc"
+
 #include <UnityPBSLighting.cginc>
 #include <AutoLight.cginc>
 #include <UnityLightingCommon.cginc>
+#include "./BigiShaderParams.cginc"
+#include "./BigiLightUtils.cginc"
+#include "./BigiShaderTextures.cginc"
 
 
 
 /*
 _Reflectivity
-_LightSmoothness
-_LightThreshold
-==========
-BIGI_GETLIGHT_DEFAULT(outName)
-BIGI_GETLIGHT_NOAO(outName)
-==========
-GET_AO(GETUV)
-UNITY_LIGHT_ATTENUATION(shadowAtt,i,i.worldPos)
 */
 
 #define BIGI_GETLIGHT_DEFAULT(outName) UNITY_LIGHT_ATTENUATION(shadowAtt, i, i.worldPos.xyz);\
@@ -27,9 +20,13 @@ UNITY_LIGHT_ATTENUATION(shadowAtt,i,i.worldPos)
     i.normal,\
     i.worldPos,\
     i.vertexLighting,\
+    GET_AO(GETUV),\
+    _OcclusionStrength,\
     shadowAtt,\
     _MinAmbient,\
-    _Transmissivity\
+    _Transmissivity,\
+    _LightSmoothness,\
+    _LightThreshold\
     )
 
 #define BIGI_GETLIGHT_NOAO(outName) UNITY_LIGHT_ATTENUATION(shadowAtt, i, i.worldPos.xyz);\
@@ -37,9 +34,13 @@ UNITY_LIGHT_ATTENUATION(shadowAtt,i,i.worldPos)
     i.normal,\
     i.worldPos,\
     i.vertexLighting,\
+    fixed4(1.0,1.0,1.0,1.0),\
+    0.0,\
     shadowAtt,\
     _MinAmbient,\
-    _Transmissivity\
+    _Transmissivity,\
+    _LightSmoothness,\
+    _LightThreshold\
     )
 
 

@@ -34,6 +34,7 @@ uniform half _EmissionStrength;
 uniform float _MinAmbient;
 uniform float _Transmissivity;
 uniform float _Reflectivity;
+uniform float _OcclusionStrength;
 
 //Effects
 uniform float _MonoChrome;

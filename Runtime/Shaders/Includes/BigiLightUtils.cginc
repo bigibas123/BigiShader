@@ -15,7 +15,7 @@ namespace b_light
 {
 	// A macro instead of a function because this works on more types without having to overload it a bunch of times
 	// ReSharper disable once CppInconsistentNaming
-	#define doStep(val) smoothstep(lightthreshold, lightsmoothness+lightthreshold, val)
+	#define doStep(val) smoothstep(lightThreshold, lightSmoothness+lightThreshold, val)
 
 	struct world_info
 	{
@@ -112,7 +112,7 @@ namespace b_light
 		indirectLight.specular = probe0;
 		#endif
 		#endif
-		indirectLight.diffuse = max(indirectLight.diffuse, minAmbient);
+		//indirectLight.diffuse = max(indirectLight.diffuse, minAmbient);
 		return indirectLight;
 	}
 
@@ -144,14 +144,24 @@ namespace b_light
 		return output;
 	}
 
-	float4 get_lighting(in float3 normal, in float3 worldPos, in float3 vertexLightColor, in fixed attenuation,
-						in fixed minAmbient, in fixed transmissivity)
+	float4 get_lighting(in float3 normal, in float3 worldPos, in float3 vertexLightColor, in fixed4 ambientOcclusion,
+						in fixed occlusionStrength, in fixed attenuation,
+						in fixed minAmbient, in fixed transmissivity, in fixed lightSmoothness, in fixed lightThreshold)
 	{
+		attenuation = attenuation * lerp(1, ambientOcclusion.g, occlusionStrength);
 		float4 total = _get_lighting(normal, worldPos, vertexLightColor, attenuation, minAmbient);
 		if (transmissivity > Epsilon)
 		{
 			total += _get_lighting(normal * -1.0, worldPos, vertexLightColor, attenuation, 0) * transmissivity;
 		}
+
+		total = doStep(total);
+		total.rgba = float4(
+			max(minAmbient, total.r),
+			max(minAmbient, total.g),
+			max(minAmbient, total.b),
+			max(minAmbient, total.a)
+		);
 		return total;
 	}
 
