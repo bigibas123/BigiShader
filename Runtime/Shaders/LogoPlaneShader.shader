@@ -63,8 +63,9 @@ Shader "Bigi/LogoPlane" {
 			fragOutput o;
 			UNITY_INITIALIZE_OUTPUT(fragOutput, o);
 			UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i)
-			const fixed4 orig_color = GET_TEX_COLOR(GETUV);
+			fixed4 orig_color = GET_TEX_COLOR(GETUV);
 			clip(orig_color.a - Epsilon);
+			orig_color.a *= orig_color.a;
 
 
 			BIGI_GETLIGHT_NOAO(lighting);
