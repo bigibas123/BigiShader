@@ -13,10 +13,13 @@ Shader "Bigi/AudioLink_frag" {
 		[Header(Lighting)]
 		_LightSmoothness ("Shadow smoothness",Range(0.0,1.0)) = 1.0
 		_LightThreshold ("Shadow Start point", Range(0.0,1.0)) = 0.0
-		_OcclusionStrength("Occlusion Strength", Range(0, 1.0)) = 1.0
 		_MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.005
+
+		[Header(MapEffects)]
+		_OcclusionStrength("Occlusion Strength", Range(0, 1.0)) = 1.0
 		_Transmissivity ("Transmission of light through the material", Range(0.0,1.0)) = 0.000
-		_Reflectivity ("Reflectivity of the material", Range(0.0,1.0)) = 0.000
+		_Smoothness ("Smoothness", Range(0.0,1.0)) = 0.000
+		_SpecularIntensity ("Specular intensity", Range(0.0,1.0)) = 0.000
 
 		[Header(Audiolink world theme colors)]
 		_AL_Theme_Weight("Weight", Range(0.0, 1.0)) = 1.0
@@ -42,7 +45,7 @@ Shader "Bigi/AudioLink_frag" {
 		Tags {
 			"VRCFallback" = "ToonCutout" "LTCGI"="ALWAYS"
 		}
-		
+
 		Pass {
 			Name "OpaqueForwardBase"
 			Tags {
@@ -103,6 +106,7 @@ Shader "Bigi/AudioLink_frag" {
 			Tags {
 				"RenderType" = "Transparent"
 				"Queue" = "Transparent"
+				"LightMode" = "ForwardBase"
 			}
 			Cull Off
 			ZWrite Off
@@ -162,7 +166,7 @@ Shader "Bigi/AudioLink_frag" {
 				{
 					discard;
 					fragOutput o;
-						UNITY_INITIALIZE_OUTPUT(fragOutput, o);
+					UNITY_INITIALIZE_OUTPUT(fragOutput, o);
 					return o;
 				}
 			}
@@ -209,7 +213,7 @@ Shader "Bigi/AudioLink_frag" {
 
 				BIGI_GETLIGHT_DEFAULT(lighting);
 
-				o.color = lighting * orig_color;
+				o.color = b_effects::apply_effects(GETUV, fixed4(0, 0, 0, 0), orig_color, lighting, i.staticTexturePos);
 				UNITY_APPLY_FOG(i.fogCoord, o.color);
 				return o;
 			}
@@ -222,6 +226,7 @@ Shader "Bigi/AudioLink_frag" {
 			Tags {
 				"Queue" = "Overlay"
 				"RenderType" = "TransparentCutout"
+				"Lightmode" = "Always"
 			}
 			Cull Off
 			ZWrite Off
@@ -262,31 +267,46 @@ Shader "Bigi/AudioLink_frag" {
 			v2f vert(appdata v)
 			{
 				v2f o;
-				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-				UNITY_TRANSFER_INSTANCE_ID(v, o);
+					UNITY_SETUP_INSTANCE_ID(v);
+					UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+					UNITY_TRANSFER_INSTANCE_ID(v, o);
+				if (AudioLinkIsAvailable())
+				{
+					
 
-				GET_SOUND_COLOR(scol);
-				o.soundColor = scol;
+					GET_SOUND_COLOR(scol);
+					o.soundColor = scol;
 
-				float4 heightPos = v.vertex * 10.0 + float4(0.0, 7.0, 0.0, 0.0);
-				float3 offset = v.normal.xyz * (_OutlineWidth * 0.01) * b_sound::GetWaves(length(heightPos));
+					float4 heightPos = v.vertex * 10.0 + float4(0.0, 7.0, 0.0, 0.0);
+					float3 offset = v.normal.xyz * (_OutlineWidth * 0.01) * b_sound::GetWaves(length(heightPos));
 
-				o.pos = UnityObjectToClipPos(v.vertex + offset);
-				o.pos = lerp(0.0, o.pos, smoothstep(0.0,Epsilon, _OutlineWidth));
+					o.pos = UnityObjectToClipPos(v.vertex + offset);
+					o.pos = lerp(0.0, o.pos, smoothstep(0.0,Epsilon, _OutlineWidth));
+				}else
+				{
+					o.pos = float4(0,0,0,0);
+					o.soundColor = half4(0,0,0,0);
+				}
 
 				return o;
 			}
 
 			fragOutput frag(v2f i)
 			{
-				clip(_OutlineWidth - Epsilon);
-				clip(i.soundColor.a - Epsilon);
 				fragOutput o;
 				UNITY_SETUP_INSTANCE_ID(i);
 				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-				o.color = half4(i.soundColor.rgb * i.soundColor.a, smoothstep(0.0, 0.05, i.soundColor.a));
-				clip(o.color.a - Epsilon);
+				if (AudioLinkIsAvailable())
+				{
+					clip(_OutlineWidth - Epsilon);
+					clip(i.soundColor.a - Epsilon);
+					o.color = half4(i.soundColor.rgb * i.soundColor.a, smoothstep(0.0, 0.05, i.soundColor.a));
+					clip(o.color.a - Epsilon);
+				}else
+				{
+					discard;
+					o.color = fixed4(0,0,0,0);
+				}
 				return o;
 			}
 			ENDCG

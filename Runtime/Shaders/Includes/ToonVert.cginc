@@ -42,7 +42,7 @@ struct v2f
 	float4 worldPos : TEXCOORD4;
 	float4 localPos : TEXCOORD5;
 	float4 lightmapUV : TEXCOORD6;
-	float2 fogCoord: TEXCOORD7;
+	UNITY_FOG_COORDS(7)
 	UNITY_LIGHTING_COORDS(9,8)
 	float3 bitangent : TEXCOORD10;
 	float4 staticTexturePos : TEXCOORD11;
@@ -116,9 +116,13 @@ v2f bigi_toon_vert(appdata v)
 	
 	#if defined(LIGHTMAP_ON)
 	o.lightmapUV.xy = v.uv1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
+	#else
+	o.lightmapUV.xy = 0.0;
 	#endif
 	#ifdef DYNAMICLIGHTMAP_ON
 	o.lightmapUV.zw = v.uv2.xy * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
+	#else
+	o.lightmapUV.zw = 0.0;
 	#endif
 
 	#ifdef VERTEXLIGHT_ON

@@ -11,10 +11,6 @@
 
 
 
-/*
-_Reflectivity
-*/
-
 #define BIGI_GETLIGHT_DEFAULT(outName) UNITY_LIGHT_ATTENUATION(shadowAtt, i, i.worldPos.xyz);\
     const fixed4 outName = b_light::get_lighting(\
     i.normal,\
@@ -26,7 +22,9 @@ _Reflectivity
     _MinAmbient,\
     _Transmissivity,\
     _LightSmoothness,\
-    _LightThreshold\
+    _LightThreshold,\
+    _Smoothness,\
+    _SpecularIntensity\
     )
 
 #define BIGI_GETLIGHT_NOAO(outName) UNITY_LIGHT_ATTENUATION(shadowAtt, i, i.worldPos.xyz);\
@@ -40,7 +38,9 @@ _Reflectivity
     _MinAmbient,\
     _Transmissivity,\
     _LightSmoothness,\
-    _LightThreshold\
+    _LightThreshold,\
+    _Smoothness,\
+    _SpecularIntensity\
     )
 
 

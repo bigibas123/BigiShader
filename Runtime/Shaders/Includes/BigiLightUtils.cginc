@@ -69,7 +69,7 @@ namespace b_light
 	}
 
 	UnityIndirect CreateIndirectLight(in world_info wi, in float3 vertexLightColor, in float3 normal,
-									const in fixed minAmbient)
+									const in half minAmbient, in half smoothness)
 	{
 		UnityIndirect indirectLight;
 		indirectLight.diffuse = vertexLightColor;
@@ -80,8 +80,7 @@ namespace b_light
 
 		float3 reflectionDir = reflect(-wi.viewDir, normal);
 		Unity_GlossyEnvironmentData envData;
-		//envData.roughness = 1 - _Smoothness;
-		envData.roughness = 0.00;
+		envData.roughness = 1 - smoothness;
 		envData.reflUVW = BoxProjection(
 			reflectionDir, wi.worldPos,
 			unity_SpecCube0_ProbePosition,
@@ -116,13 +115,13 @@ namespace b_light
 		return indirectLight;
 	}
 
-	float4 _get_lighting(in float3 normal, in float3 worldPos, in float3 vertexLightColor, in fixed attenuation,
-						in fixed minAmbient)
+	float4 _get_lighting(in float3 normal, in float3 worldPos, in float3 vertexLightColor, in half attenuation,
+						in half minAmbient, in half smoothness, in half specularity)
 	{
 		float3 albedo = float4(1.0, 1.0, 1.0, 1.0);
 		float3 specularTint = float3(1.0, 1.0, 1.0);
 		albedo *= 1.0;
-		specularTint *= 0.00;
+		specularTint *= specularity;
 
 		normal = normalize(normal);
 		const world_info wi = setup_world(worldPos, attenuation);
@@ -134,9 +133,9 @@ namespace b_light
 
 		float4 unity_pbs_output = UNITY_BRDF_PBS(
 			albedo, specularTint,
-			oneMinusReflectivity, 0.0,
+			oneMinusReflectivity, smoothness,
 			normal, wi.viewDir,
-			CreateLight(wi, normal), CreateIndirectLight(wi, vertexLightColor, normal, minAmbient)
+			CreateLight(wi, normal), CreateIndirectLight(wi, vertexLightColor, normal, minAmbient, smoothness)
 		);
 
 		float4 output = saturate(unity_pbs_output);
@@ -145,14 +144,17 @@ namespace b_light
 	}
 
 	float4 get_lighting(in float3 normal, in float3 worldPos, in float3 vertexLightColor, in fixed4 ambientOcclusion,
-						in fixed occlusionStrength, in fixed attenuation,
-						in fixed minAmbient, in fixed transmissivity, in fixed lightSmoothness, in fixed lightThreshold)
+						in half occlusionStrength, in half attenuation,
+						in half minAmbient, in half transmissivity, in half lightSmoothness, in half lightThreshold,
+						in half smoothness, in half specularity)
 	{
 		attenuation = attenuation * lerp(1, ambientOcclusion.g, occlusionStrength);
-		float4 total = _get_lighting(normal, worldPos, vertexLightColor, attenuation, minAmbient);
+		float4 total = _get_lighting(normal, worldPos, vertexLightColor, attenuation, minAmbient, smoothness,
+									specularity);
 		if (transmissivity > Epsilon)
 		{
-			total += _get_lighting(normal * -1.0, worldPos, vertexLightColor, attenuation, 0) * transmissivity;
+			total += _get_lighting(normal * -1.0, worldPos, vertexLightColor, attenuation, 0, smoothness, specularity) *
+				transmissivity;
 		}
 
 		total = doStep(total);

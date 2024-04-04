@@ -36,6 +36,8 @@ Shader "Bigi/LogoPlane" {
 		{
 			_LightSmoothness = 0.2;
 			_LightThreshold = 0.0;
+			_Smoothness = 0.0;
+			_SpecularIntensity = 0.0;
 			_Rounding = 0.0;
 			_MonoChrome = 0.0;
 			_Voronoi = 0.0;
