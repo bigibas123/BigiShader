@@ -20,7 +20,7 @@ struct appdata
 	float4 vertex : POSITION;
 	float3 normal : NORMAL;
 	float4 tangent : TANGENT;
-	float4 texcoord : TEXCOORD0;
+	float4 uv0 : TEXCOORD0;
 	float4 color : COLOR;
 	float2 uv1 : TEXCOORD1; //Lightmap Uvs
 	float2 uv2 : TEXCOORD2; //Realtime lightmap Uvs
@@ -35,21 +35,20 @@ struct v2f
 {
 	UNITY_POSITION(pos); //float4 pos : SV_POSITION;
 
-	float3 normal : NORMAL; //(World) Normal
-	half2 uv : TEXCOORD0; //texture coordinates
-	UNITY_LIGHTING_COORDS(1, 2)
-	UNITY_FOG_COORDS(3)
-	float4 staticTexturePos : TEXCOORD4;
-	float3 worldPos: TEXCOORD5;
-	float3 tangent : TEXCOORD6; // vect in left direction of texture coordinates
-	float3 bitangent : TEXCOORD7; // vect in up direction of texture coordinates
-	float3 vertexLighting : TEXCOORD8;
-	#if defined(LIGHTMAP_ON) || defined(ADDITIONAL_MASKED_DIRECTIONAL_SHADOWS)
-	float2 lightmapUV : TEXCOORD9;
-	#endif
-	#if defined(DYNAMICLIGHTMAP_ON)
-	float2 dynamicLightmapUV : TEXCOORD10;
-	#endif
+	float4 uv : TEXCOORD0;
+	float4 uv1 : TEXCOORD1;
+	float3 normal : TEXCOORD2;
+	float4 tangent : TEXCOORD3;
+	float4 worldPos : TEXCOORD4;
+	float4 localPos : TEXCOORD5;
+	float4 lightmapUV : TEXCOORD6;
+	UNITY_FOG_COORDS(7)
+	UNITY_LIGHTING_COORDS(9,8)
+	float3 bitangent : TEXCOORD10;
+	float4 staticTexturePos : TEXCOORD11;
+	float3 vertexLighting : TEXCOORD12;
+	
+
 	UNITY_VERTEX_INPUT_INSTANCE_ID
 	UNITY_VERTEX_OUTPUT_STEREO
 };
@@ -78,17 +77,24 @@ v2f bigi_toon_vert(appdata v)
 
 	if (_Rounding > Epsilon)
 	{
-		o.pos = UnityObjectToClipPos(round_val(v.vertex));
-		o.uv = (DO_TRANSFORM(v.texcoord)) * o.pos.w;
+		o.localPos = round_val(v.vertex);
+		o.pos = UnityObjectToClipPos(o.localPos);
+		o.uv.xy = (DO_TRANSFORM(v.uv0)) * o.pos.w;
+		o.uv1 = float4(v.uv1,v.uv2);
 		o.normal = UnityObjectToWorldNormal(round_val(float4(v.normal, 1.0)).xyz);
-		o.tangent = UnityObjectToWorldDir(round_val(v.tangent));
+		float4 rounded_tangent = round_val(v.tangent);
+		o.tangent.xyz = UnityObjectToWorldDir(rounded_tangent).xyz;
+		o.tangent.w = rounded_tangent.w;
 	}
 	else
 	{
-		o.pos = UnityObjectToClipPos(v.vertex);
-		o.uv = (DO_TRANSFORM(v.texcoord));
+		o.localPos = v.vertex;
+		o.pos = UnityObjectToClipPos(o.localPos);
+		o.uv.xy = DO_TRANSFORM(v.uv0);
+		o.uv1 = float4(v.uv1,v.uv2);
 		o.normal = UnityObjectToWorldNormal(v.normal);
-		o.tangent = UnityObjectToWorldDir(v.tangent);
+		o.tangent.xyz = UnityObjectToWorldDir(v.tangent);
+		o.tangent.w = v.tangent.w;
 	}
 	const float tangentSign = v.tangent.w * unity_WorldTransformParams.w;
 	o.bitangent = cross(o.normal, o.tangent) * tangentSign;
@@ -106,15 +112,17 @@ v2f bigi_toon_vert(appdata v)
 	//TODO make this object space relative or something?
 	// Update: Orels has a shader that I can checkout: https://shaders.orels.sh/docs/ui/layered-parallax
 
-	o.worldPos = UnityObjectToWorldDir(v.vertex);
-
-	#if defined(LIGHTMAP_ON) || defined(ADDITIONAL_MASKED_DIRECTIONAL_SHADOWS)
-		o.lightmapUV = v.uv1 * unity_LightmapST.xy + unity_LightmapST.zw;
+	o.worldPos = mul(unity_ObjectToWorld, o.localPos);
+	
+	#if defined(LIGHTMAP_ON)
+	o.lightmapUV.xy = v.uv1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
+	#else
+	o.lightmapUV.xy = 0.0;
 	#endif
-
 	#ifdef DYNAMICLIGHTMAP_ON
-	o.dynamicLightmapUV =
-		v.uv2 * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
+	o.lightmapUV.zw = v.uv2.xy * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
+	#else
+	o.lightmapUV.zw = 0.0;
 	#endif
 
 	#ifdef VERTEXLIGHT_ON

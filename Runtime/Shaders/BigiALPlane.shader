@@ -42,7 +42,7 @@ Shader "Bigi/ALTest" {
 				UNITY_SETUP_INSTANCE_ID(i);
 				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
 				UNITY_INITIALIZE_OUTPUT(fragOutput, o);
-				i.uv.y = (1.0f - (i.uv.y));
+				i.uv = (1.0f - (i.uv.y));
 				float2 squarepos;
 				squarepos.x = i.uv.x % 0.5f * 2.0f;
 				squarepos.y = i.uv.y % 0.5f * 2.0f;
@@ -152,7 +152,6 @@ Shader "Bigi/ALTest" {
 
 			fragOutput frag(v2f i)
 			{
-				clip(_AddLightIntensity - Epsilon);
 				fixed4 orig_color = GET_TEX_COLOR(i.uv);
 				clip(orig_color.a - Epsilon);
 				fragOutput o;
@@ -161,7 +160,7 @@ Shader "Bigi/ALTest" {
 				UNITY_INITIALIZE_OUTPUT(fragOutput, o);
 
 				BIGI_GETLIGHT_DEFAULT(lighting);
-				o.color = half4(lighting * _AddLightIntensity) * orig_color;
+				o.color = half4(lighting) * orig_color;
 				//o.color = float4(1.0,1.0,1.0,1.0);
 				UNITY_APPLY_FOG(i.fogCoord, o.color);
 				return o;
