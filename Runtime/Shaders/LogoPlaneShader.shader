@@ -49,6 +49,9 @@ Shader "Bigi/LogoPlane" {
 			_Transmissivity = 0.2;
 			_AL_Theme_Weight = _AL_General_Intensity;
 			_AL_TC_BassReactive = 1.0;
+			#ifdef UNITY_PASS_FORWARDBASE
+			_VRSLGIStrength = 0.25;
+			#endif
 		}
 
 		v2f vert(appdata v)
