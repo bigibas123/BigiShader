@@ -1,7 +1,6 @@
 Shader "Bigi/AudioLink_frag" {
 	Properties {
 		[MainTexture] _MainTex ("Texture", 2D) = "black" {}
-		[Enum(UnityEngine.Rendering.CullMode)] _Cull("Cull", Float) = 0
 		[Toggle(DO_ALPHA_PLS)] _UsesAlpha("Is transparent", Float) = 1
 		_Spacey ("Spacey Texture", 2D) = "black" {}
 		_EmissionStrength ("Emission strength", Range(0.0,2.0)) = 1.0
@@ -14,7 +13,8 @@ Shader "Bigi/AudioLink_frag" {
 		_LightSmoothness ("Shadow smoothness",Range(0.0,1.0)) = 1.0
 		_LightThreshold ("Shadow Start point", Range(0.0,1.0)) = 0.0
 		_MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.005
-
+		_VRSLGIStrength ("VRSL-GI Strength", Range(0.0,1.0)) = 0.5
+		
 		[Header(MapEffects)]
 		_OcclusionStrength("Occlusion Strength", Range(0, 1.0)) = 1.0
 		_Transmissivity ("Transmission of light through the material", Range(0.0,1.0)) = 0.000
@@ -59,9 +59,9 @@ Shader "Bigi/AudioLink_frag" {
 			ZTest Less
 			Blend One OneMinusSrcAlpha
 			Stencil {
-				Ref 32
+				Ref 180 //148 + 32 // 1011 0100 // VRSLGI + Own stencil bit
 				Comp Always
-				WriteMask 32
+				WriteMask 180
 				Pass Replace
 			}
 			CGPROGRAM
@@ -113,9 +113,9 @@ Shader "Bigi/AudioLink_frag" {
 			ZTest LEqual
 			Blend SrcAlpha OneMinusSrcAlpha
 			Stencil {
-				Ref 32
+				Ref 180 //148 + 32 // 1011 0100 // VRSLGI + Own stencil bit
 				Comp Always
-				WriteMask 32
+				WriteMask 180
 				Pass Replace
 			}
 			CGPROGRAM
@@ -183,9 +183,9 @@ Shader "Bigi/AudioLink_frag" {
 			ZTest LEqual
 			Blend SrcAlpha One
 			Stencil {
-				Ref 32
+				Ref 180 //148 + 32 // 1011 0100 // VRSLGI + Own stencil bit
 				Comp Always
-				WriteMask 32
+				WriteMask 180
 				Pass Replace
 			}
 			CGPROGRAM

@@ -6,6 +6,9 @@
 #include <UnityPBSLighting.cginc>
 #include <AutoLight.cginc>
 
+#ifdef UNITY_PASS_FORWARDBASE
+#include "./External/VRSL/VRSLGI-ParameterSettings.cginc"
+#endif
 
 #ifndef Epsilon
 #define Epsilon UNITY_HALF_MIN
@@ -116,7 +119,8 @@ namespace b_light
 	}
 
 	float4 _get_lighting(in float3 normal, in float3 worldPos, in float3 vertexLightColor, in half attenuation,
-						in half minAmbient, in half smoothness, in half specularity)
+						in half minAmbient, in half smoothness, in half specularity, in fixed ambientOcclusion,
+						float2 shadowmapUV)
 	{
 		float3 albedo = float4(1.0, 1.0, 1.0, 1.0);
 		float3 specularTint = float3(1.0, 1.0, 1.0);
@@ -137,32 +141,35 @@ namespace b_light
 			normal, wi.viewDir,
 			CreateLight(wi, normal), CreateIndirectLight(wi, vertexLightColor, normal, minAmbient, smoothness)
 		);
-
-		float4 output = saturate(unity_pbs_output);
+		float4 output = unity_pbs_output;
+		#ifdef UNITY_PASS_FORWARDBASE
+		b_vrslgi::setParams();
+		output += float4(VRSLGI(wi.worldPos, normal, smoothness, wi.viewDir, albedo,
+								float2(oneMinusReflectivity, smoothness), shadowmapUV, ambientOcclusion), 1.0);
+		#endif
 		//output = max(minAmbient,output);
-		return output;
+		return saturate(output);
 	}
 
 	float4 get_lighting(in float3 normal, in float3 worldPos, in float3 vertexLightColor, in fixed4 ambientOcclusion,
-						in half occlusionStrength, in half attenuation,
+						in half occlusionStrength, in half attenuation, in float2 shadowMapUv,
 						in half minAmbient, in half transmissivity, in half lightSmoothness, in half lightThreshold,
 						in half smoothness, in half specularity)
 	{
 		attenuation = attenuation * lerp(1, ambientOcclusion.g, occlusionStrength);
 		float4 total = _get_lighting(normal, worldPos, vertexLightColor, attenuation, minAmbient, smoothness,
-									specularity);
+									specularity, ambientOcclusion.r, shadowMapUv);
 		if (transmissivity > Epsilon)
 		{
-			total += _get_lighting(normal * -1.0, worldPos, vertexLightColor, attenuation, 0, smoothness, specularity) *
+			total += _get_lighting(normal * -1.0, worldPos, vertexLightColor, attenuation, 0, smoothness, specularity,
+									ambientOcclusion.r, shadowMapUv) *
 				transmissivity;
 		}
 
 		total = doStep(total);
 		total.rgba = float4(
-			max(minAmbient, total.r),
-			max(minAmbient, total.g),
-			max(minAmbient, total.b),
-			max(minAmbient, total.a)
+			clamp(total.rgb, minAmbient, 5.0),
+			clamp(total.a, 1.0, 1.0)
 		);
 		return total;
 	}

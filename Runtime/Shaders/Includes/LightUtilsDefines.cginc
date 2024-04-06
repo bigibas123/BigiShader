@@ -19,6 +19,7 @@
     GET_AO(GETUV),\
     _OcclusionStrength,\
     shadowAtt,\
+    i.lightmapUV,\
     _MinAmbient,\
     _Transmissivity,\
     _LightSmoothness,\
@@ -35,6 +36,7 @@
     fixed4(1.0,1.0,1.0,1.0),\
     0.0,\
     shadowAtt,\
+    i.lightmapUV,\
     _MinAmbient,\
     _Transmissivity,\
     _LightSmoothness,\
