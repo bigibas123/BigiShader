@@ -59,9 +59,9 @@ Shader "Bigi/AudioLink_frag" {
 			ZTest Less
 			Blend One OneMinusSrcAlpha
 			Stencil {
-				Ref 16
+				Ref 32
 				Comp Always
-				WriteMask 16
+				WriteMask 32
 				Pass Replace
 			}
 			CGPROGRAM
@@ -113,9 +113,9 @@ Shader "Bigi/AudioLink_frag" {
 			ZTest LEqual
 			Blend SrcAlpha OneMinusSrcAlpha
 			Stencil {
-				Ref 16
+				Ref 32
 				Comp Always
-				WriteMask 16
+				WriteMask 32
 				Pass Replace
 			}
 			CGPROGRAM
@@ -183,9 +183,9 @@ Shader "Bigi/AudioLink_frag" {
 			ZTest LEqual
 			Blend SrcAlpha One
 			Stencil {
-				Ref 16
+				Ref 32
 				Comp Always
-				WriteMask 16
+				WriteMask 32
 				Pass Replace
 			}
 			CGPROGRAM
@@ -234,7 +234,7 @@ Shader "Bigi/AudioLink_frag" {
 			AlphaToMask On
 			Stencil {
 				Ref 0
-				ReadMask 16
+				ReadMask 32
 				WriteMask 0
 				Comp GEqual
 			}
@@ -321,10 +321,6 @@ Shader "Bigi/AudioLink_frag" {
 			Cull Off
 			ZWrite On
 			ZTest LEqual
-			Stencil {
-				Comp Always
-				Pass IncrSat
-			}
 			CGPROGRAM
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
