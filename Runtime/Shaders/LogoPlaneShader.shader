@@ -16,10 +16,10 @@ Shader "Bigi/LogoPlane" {
 		#define MULTI_TEXTURE
 		#endif
 
-		
+
 		#include <UnityCG.cginc>
 		uniform float _AL_General_Intensity;
-		
+
 		uniform int _OtherTextureId;
 		#define OTHER_TEXTURE_ID_REF _OtherTextureId
 		#define BIGI_OTHER_TEXTURE_ID_DEFINED
@@ -34,7 +34,7 @@ Shader "Bigi/LogoPlane" {
 
 		void setVars()
 		{
-			_LightSmoothness = 0.2;
+			_LightSmoothness = 1.0;
 			_LightThreshold = 0.0;
 			_Smoothness = 0.0;
 			_SpecularIntensity = 0.0;
@@ -43,7 +43,7 @@ Shader "Bigi/LogoPlane" {
 			_Voronoi = 0.0;
 			_OutlineWidth = 0.0;
 			_EmissionStrength = 1.0;
-			_Reflectivity = 0.1;
+			_Reflectivity = 0.0;
 			_DMX_Weight = 0.0;
 			_DMX_Group = 0.0;
 			_Transmissivity = 0.2;
@@ -61,7 +61,7 @@ Shader "Bigi/LogoPlane" {
 		{
 			setVars();
 			fragOutput o;
-			UNITY_INITIALIZE_OUTPUT(fragOutput, o);
+				UNITY_INITIALIZE_OUTPUT(fragOutput, o);
 			UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i)
 			fixed4 orig_color = GET_TEX_COLOR(GETUV);
 			clip(orig_color.a - Epsilon);
@@ -70,12 +70,7 @@ Shader "Bigi/LogoPlane" {
 
 			BIGI_GETLIGHT_NOAO(lighting);
 			fixed4 normalColor;
-			#ifdef UNITY_PASS_FORWARDBASE
 			normalColor = orig_color * lighting;
-			#else
-			normalColor.rgb = lighting.rgb;
-			normalColor.a = orig_color.a * lighting.a;
-			#endif
 
 			GET_SOUND_COLOR(sound);
 
@@ -114,6 +109,13 @@ Shader "Bigi/LogoPlane" {
 		}
 
 		Pass {
+			Tags {
+				"RenderType" = "Transparent"
+				"Queue" = "Transparent-1"
+				"IgnoreProjector" = "True"
+				"LightMode" = "ForwardBase"
+				"VRCFallback"="Hidden"
+			}
 			Name "TransparentForwardBaseBack"
 			Cull Front
 			ZWrite Off
@@ -130,7 +132,10 @@ Shader "Bigi/LogoPlane" {
 		Pass {
 			Name "TransparentForwardAddBack"
 			Tags {
-				"RenderType" = "Transparent" "Queue" = "Transparent" "IgnoreProjector" = "True" "LightMode" = "ForwardAdd"
+				"RenderType" = "Transparent"
+				"Queue" = "Transparent-1"
+				"IgnoreProjector" = "True"
+				"LightMode" = "ForwardAdd"
 			}
 			Cull Front
 			ZWrite Off
@@ -146,6 +151,13 @@ Shader "Bigi/LogoPlane" {
 
 		Pass {
 			Name "TransparentForwardBaseFront"
+			Tags {
+				"RenderType" = "Transparent"
+				"Queue" = "Transparent"
+				"IgnoreProjector" = "True"
+				"LightMode" = "ForwardBase"
+				"VRCFallback"="Hidden"
+			}
 			Cull Back
 			ZWrite Off
 			ZTest LEqual
@@ -162,7 +174,10 @@ Shader "Bigi/LogoPlane" {
 		Pass {
 			Name "TransparentForwardAddFront"
 			Tags {
-				"RenderType" = "Transparent" "Queue" = "Transparent" "IgnoreProjector" = "True" "LightMode" = "ForwardAdd"
+				"RenderType" = "Transparent"
+				"Queue" = "Transparent"
+				"IgnoreProjector" = "True"
+				"LightMode" = "ForwardAdd"
 			}
 			Cull Back
 			ZWrite Off
