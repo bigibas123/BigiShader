@@ -63,6 +63,13 @@
 		
 		Pass
 		{
+			Stencil
+            {
+                Ref 148
+                Comp Always
+                Pass Replace
+                Fail Keep
+            }
 			ColorMask 0
 			Cull Off
 			ZWrite On
@@ -81,6 +88,13 @@
 		}
 
 		Pass {
+			Stencil
+            {
+                Ref 148
+                Comp Always
+                Pass Replace
+                Fail Keep
+            }
 			ZWrite Off
 			ZTest LEqual
 			Blend SrcAlpha OneMinusSrcAlpha
