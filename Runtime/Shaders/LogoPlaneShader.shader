@@ -4,6 +4,7 @@ Shader "Bigi/LogoPlane" {
 		_OtherTextureId ("CellNumber", Int) = 0
 		_AL_General_Intensity("Audiolink Intensity",Range(0.0,1.0)) = 0.0
 		_MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.01
+		[Toggle(ALPHA_MUL)] _Alpha_Multiply("Multiply alpha with itself", Float) = 1
 	}
 	SubShader {
 		Blend SrcAlpha OneMinusSrcAlpha
@@ -68,7 +69,9 @@ Shader "Bigi/LogoPlane" {
 			UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i)
 			fixed4 orig_color = GET_TEX_COLOR(GETUV);
 			clip(orig_color.a - Epsilon);
+			#ifdef ALPHA_MUL
 			orig_color.a *= orig_color.a;
+			#endif
 
 
 			BIGI_GETLIGHT_NOAO(lighting);
@@ -126,7 +129,7 @@ Shader "Bigi/LogoPlane" {
 			Blend SrcAlpha OneMinusSrcAlpha
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
-
+			#pragma shader_feature_local_fragment _ ALPHA_MUL
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
 			ENDCG
@@ -146,6 +149,7 @@ Shader "Bigi/LogoPlane" {
 			Blend One One
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
+			#pragma shader_feature_local_fragment _ ALPHA_MUL
 
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
@@ -167,6 +171,7 @@ Shader "Bigi/LogoPlane" {
 			Blend SrcAlpha OneMinusSrcAlpha
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
+			#pragma shader_feature_local_fragment _ ALPHA_MUL
 
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
@@ -188,6 +193,7 @@ Shader "Bigi/LogoPlane" {
 			Blend One One
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
+			#pragma shader_feature_local_fragment _ ALPHA_MUL
 
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
