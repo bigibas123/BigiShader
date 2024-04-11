@@ -48,19 +48,19 @@ namespace b_sound
 											RGBToHSV(color3.rgb * color3.a).z, RGBToHSV(color4.rgb * color4.a).z);
 
 				float4 finalColor;
-				/*if (intensities.w > Epsilon)
+				if (intensities.w > (Epsilon * 3.0))
 				{
 					finalColor = color4;
 				}
-				else if (intensities.z > Epsilon)
+				else if (intensities.z > (Epsilon * 3.0))
 				{
 					finalColor = color3;
 				}
-				else*/ if (intensities.y > Epsilon)
+				else if (intensities.y > (Epsilon * 3.0))
 				{
 					finalColor = color2;
 				}
-				else if (intensities.x > Epsilon)
+				else if (intensities.x > (Epsilon * 3.0))
 				{
 					finalColor = color1;
 				}
@@ -100,19 +100,19 @@ namespace b_sound
 		// totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 2.0) % 1) * AUDIOLINK_WIDTH, 1)).r;
 		// totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 4.0) % 1) * AUDIOLINK_WIDTH, 2)).r;
 		// totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 8.0) % 1) * AUDIOLINK_WIDTH, 3)).r;
-		
+
 		return totalValue;
 	}
 
 	float GetAutoCorrelator(float x)
 	{
-		return AudioLinkLerp( ALPASS_AUTOCORRELATOR + float2( x * AUDIOLINK_WIDTH, 0 ) ).r;
+		return AudioLinkLerp(ALPASS_AUTOCORRELATOR + float2(x * AUDIOLINK_WIDTH, 0)).r;
 	}
 
 	float GetWaves(in float distance)
 	{
 		distance = distance % 1.0;
-		return (GetAudioLink(distance) * 2.5) + Epsilon;//+ (GetAutoCorrelator(distance * 10.0) * 2.5) + 1.0;
+		return (GetAudioLink(distance) * 2.5) + Epsilon; //+ (GetAutoCorrelator(distance * 10.0) * 2.5) + 1.0;
 	}
 }
 #endif
