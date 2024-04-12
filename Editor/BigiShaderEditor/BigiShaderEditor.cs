@@ -13,6 +13,7 @@ namespace cc.dingemans.bigibas123.bigishader
 		private static readonly int MainTextureID = Shader.PropertyToID("_MainTex");
 		private static readonly int MainTextureArrayID = Shader.PropertyToID("_MainTexArray");
 		private static readonly int TextureArrayEnabledID = Shader.PropertyToID("_MultiTexture");
+		private static readonly int LtcgiEnabledID = Shader.PropertyToID("_EnableLTCGI");
 
 		public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
 		{
@@ -52,6 +53,18 @@ namespace cc.dingemans.bigibas123.bigishader
 						m.DisableKeyword("DO_ALPHA_PLS");
 					}
 				}
+
+				var ltcgiKw = m.shader.keywordSpace.FindKeyword("LTCGI_ENABLED");
+				
+#if LTCGI_INCLUDED
+				m.SetKeyword(ltcgiKw, true);
+				m.EnableKeyword(ltcgiKw);
+				m.SetFloat(LtcgiEnabledID,1);
+#else
+				m.SetKeyword(ltcgiKw, false);
+				m.DisableKeyword(ltcgiKw);
+				m.SetFloat(LTCGI_EnabledID,0);
+#endif
 			}
 
 			EditorGUI.EndChangeCheck();

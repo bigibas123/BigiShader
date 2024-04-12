@@ -6,9 +6,17 @@
 #include <UnityPBSLighting.cginc>
 #include <AutoLight.cginc>
 
+#include "BigiShaderStructs.cginc"
+
+
 #ifdef UNITY_PASS_FORWARDBASE
 #include "./External/VRSL/VRSLGI-ParameterSettings.cginc"
 #endif
+
+#ifdef LTCGI_ENABLED
+#include "./External/LTCGI/LTCGI-Functions.cginc"
+#endif
+
 
 #ifndef Epsilon
 #define Epsilon UNITY_HALF_MIN
@@ -20,15 +28,7 @@ namespace b_light
 	// ReSharper disable once CppInconsistentNaming
 	#define doStep(val) smoothstep(lightThreshold, lightSmoothness+lightThreshold, val)
 
-	struct world_info
-	{
-		float3 worldLightDir;
-		float4 worldLightColor;
-		float3 viewDir;
-		float3 worldPos;
-	};
-
-	world_info setup_world(in float3 worldPos, in fixed attenuation)
+	world_info setup_world(in float3 worldPos, in fixed attenuation, in float3 normal, in float2 shadowmapUV)
 	{
 		world_info wi;
 
@@ -41,16 +41,19 @@ namespace b_light
 		wi.worldLightColor = _LightColor0.rgba * attenuation;
 		wi.viewDir = normalize(_WorldSpaceCameraPos - worldPos);
 		wi.worldPos = worldPos;
+
+		wi.normal = normal;
+		wi.shadowmapUv = shadowmapUV;
 		return wi;
 	}
 
 
-	UnityLight CreateLight(const in world_info wi, const in float3 normal)
+	UnityLight CreateLight(const in world_info wi)
 	{
 		UnityLight light;
 		light.color = wi.worldLightColor;
 		light.dir = wi.worldLightDir;
-		light.ndotl = DotClamped(normal, wi.worldLightDir);
+		light.ndotl = DotClamped(wi.normal, wi.worldLightDir);
 		return light;
 	}
 
@@ -71,17 +74,15 @@ namespace b_light
 		return direction;
 	}
 
-	UnityIndirect CreateIndirectLight(in world_info wi, in float3 vertexLightColor, in float3 normal,
+	UnityIndirect CreateIndirectLight(UnityIndirect indirectLight, in world_info wi, in float3 vertexLightColor,
 									const in half minAmbient, in half smoothness)
 	{
-		UnityIndirect indirectLight;
-		indirectLight.diffuse = vertexLightColor;
-		indirectLight.specular = 0;
+		indirectLight.diffuse += vertexLightColor;
 
 		#if defined(FORWARD_BASE_PASS)
-		indirectLight.diffuse += max(0, ShadeSH9(float4(normal, 1)));
+		indirectLight.diffuse += max(0, ShadeSH9(float4(wi.normal, 1)));
 
-		float3 reflectionDir = reflect(-wi.viewDir, normal);
+		float3 reflectionDir = reflect(-wi.viewDir, wi.normal);
 		Unity_GlossyEnvironmentData envData;
 		envData.roughness = 1 - smoothness;
 		envData.reflUVW = BoxProjection(
@@ -105,13 +106,13 @@ namespace b_light
 				UNITY_PASS_TEXCUBE_SAMPLER(unity_SpecCube1, unity_SpecCube0),
 				unity_SpecCube0_HDR, envData
 			);
-			indirectLight.specular = lerp(probe1, probe0, interpolator);
+			indirectLight.specular += lerp(probe1, probe0, interpolator);
 		}
 		else {
-			indirectLight.specular = probe0;
+			indirectLight.specular += probe0;
 		}
 		#else
-		indirectLight.specular = probe0;
+		indirectLight.specular += probe0;
 		#endif
 		#endif
 		//indirectLight.diffuse = max(indirectLight.diffuse, minAmbient);
@@ -128,25 +129,34 @@ namespace b_light
 		specularTint *= specularity;
 
 		normal = normalize(normal);
-		const world_info wi = setup_world(worldPos, attenuation);
+		const world_info wi = setup_world(worldPos, attenuation, normal, shadowmapUV);
 
 		float oneMinusReflectivity;
 		albedo = EnergyConservationBetweenDiffuseAndSpecular(
 			albedo, specularTint, oneMinusReflectivity
 		);
-
+		UnityIndirect indirectStart;
+		indirectStart.diffuse = 0;
+		indirectStart.specular = 0;
+		#ifdef LTCGI_ENABLED
+		UnityIndirect ltcgi = getLTCGI(wi,smoothness);
+		indirectStart.diffuse += (ltcgi.diffuse * _LTCGIStrength);
+		indirectStart.specular += (ltcgi.specular * _LTCGIStrength);
+		#endif
 		float4 unity_pbs_output = UNITY_BRDF_PBS(
 			albedo, specularTint,
 			oneMinusReflectivity, smoothness,
-			normal, wi.viewDir,
-			CreateLight(wi, normal), CreateIndirectLight(wi, vertexLightColor, normal, minAmbient, smoothness)
+			wi.normal, wi.viewDir,
+			CreateLight(wi),
+			CreateIndirectLight(indirectStart, wi, vertexLightColor, minAmbient, smoothness)
 		);
 		float4 output = unity_pbs_output;
 		#ifdef UNITY_PASS_FORWARDBASE
 		b_vrslgi::setParams();
-		output += float4(VRSLGI(wi.worldPos, normal, smoothness, wi.viewDir, albedo,
-								float2(oneMinusReflectivity, smoothness), shadowmapUV, ambientOcclusion), 1.0);
+		output += float4(VRSLGI(wi.worldPos, wi.normal, smoothness, wi.viewDir, albedo,
+								float2(oneMinusReflectivity, smoothness), wi.shadowmapUv, ambientOcclusion), 1.0);
 		#endif
+
 		//output = max(minAmbient,output);
 		return saturate(output);
 	}

@@ -13,7 +13,9 @@ Shader "Bigi/AudioLink_frag" {
 		_LightSmoothness ("Shadow smoothness",Range(0.0,1.0)) = 1.0
 		_LightThreshold ("Shadow Start point", Range(0.0,1.0)) = 0.0
 		_MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.005
-		_VRSLGIStrength ("VRSL-GI Strength", Range(0.0,1.0)) = 0.5
+		_VRSLGIStrength ("VRSL-GI Strength", Range(0.0,1.0)) = 0.25
+		[Toggle(LTCGI_ENABLED)] _EnableLTCGI ("Enable LTCGI", Range(0.0,1.0)) = 0.0
+		_LTCGIStrength ("LTCGI Strenght", Range(0.0,2.0)) = 1.0
 		
 		[Header(MapEffects)]
 		_OcclusionStrength("Occlusion Strength", Range(0, 1.0)) = 1.0

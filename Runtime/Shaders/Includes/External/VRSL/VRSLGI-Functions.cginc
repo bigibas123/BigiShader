@@ -11,7 +11,7 @@ uniform float4  _VRSL_LightTexture_TexelSize;
 SamplerState    VRSL_BilinearClampSampler, VRSLGI_PointClampSampler;
 int     _Udon_VRSL_GI_LightCount;
 
-float _LTCGIStrength;
+//float _LTCGIStrength;
 float _AreaLitStrength;
 float _AreaLitRoughnessMult;
 Texture2D _AreaLitOcclusion;
