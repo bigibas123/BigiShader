@@ -50,11 +50,16 @@
 			{
 				v2f o;
 
-				float4 cameraPos = float4(UnityObjectToViewPos(float3(0.0, 0.0, 0.0)).xyz, 1.0);
+				// billboard mesh towards camera
+				float3 vpos = mul((float3x3)unity_ObjectToWorld, v.pos.xyz);
+				float4 worldCoord = float4(unity_ObjectToWorld._m03, unity_ObjectToWorld._m13, unity_ObjectToWorld._m23, 1);
+				float4 viewPos = mul(UNITY_MATRIX_V, worldCoord) + float4(vpos, 0);
+				float4 outPos = mul(UNITY_MATRIX_P, viewPos);
 
-				float4 viewDirection = float4(v.pos.x, v.pos.y, 0.0, 0.0);
+				o.pos = outPos;
 
-				o.pos = UnityViewToClipPos(cameraPos + viewDirection);
+				UNITY_TRANSFER_FOG(o,o.vertex);
+
 				o.uv = DO_TRANSFORM(v.uv);
 
 				return o;

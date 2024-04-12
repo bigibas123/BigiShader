@@ -16,7 +16,7 @@ uniform float _AL_Theme_Weight;
 
 uniform uint _DMX_Group;
 
-uniform half _AL_TC_BassReactive;
+uniform float _AL_TC_BassReactive;
 
 //Both
 uniform float _OutlineWidth;
@@ -30,7 +30,7 @@ uniform float _UsesAlpha;
 #ifndef BIGI_UNIFORMS_LIGHTING
 #define BIGI_UNIFORMS_LIGHTING
 //Other
-uniform half _EmissionStrength;
+uniform float _EmissionStrength;
 uniform float _MinAmbient;
 uniform float _Transmissivity;
 uniform float _Reflectivity;

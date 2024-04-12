@@ -5,11 +5,12 @@ Shader "Bigi/LogoPlane" {
 		_AL_General_Intensity("Audiolink Intensity",Range(0.0,1.0)) = 0.0
 		_MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.01
 		[Toggle(ALPHA_MUL)] _Alpha_Multiply("Multiply alpha with itself", Float) = 1
+		[Toggle(LTCGI_ENABLED)] _EnableLTCGI ("Enable LTCGI", Range(0.0,1.0)) = 0.0
 	}
 	SubShader {
 		Blend SrcAlpha OneMinusSrcAlpha
 		Tags {
-			"RenderType" = "Transparent" "Queue" = "Transparent" "IgnoreProjector" = "True" "LightMode" = "ForwardBase" "VRCFallback"="Hidden"
+			"RenderType" = "Transparent" "Queue" = "Transparent" "IgnoreProjector" = "True" "LightMode" = "ForwardBase" "VRCFallback"="Hidden" "LTCGI"="ALWAYS"
 		}
 
 		CGINCLUDE
@@ -50,6 +51,11 @@ Shader "Bigi/LogoPlane" {
 			_Transmissivity = 0.2;
 			_AL_Theme_Weight = _AL_General_Intensity;
 			_AL_TC_BassReactive = 1.0;
+			_MinAmbient = 0.2;
+			_UsesNormalMap = 0.0;
+			_UsesAlpha = 0.0;
+			_OcclusionStrength = 0.0;
+			_LTCGIStrength = 1.0;
 			#ifdef UNITY_PASS_FORWARDBASE
 			_VRSLGIStrength = 0.25;
 			#endif
@@ -121,6 +127,7 @@ Shader "Bigi/LogoPlane" {
 				"IgnoreProjector" = "True"
 				"LightMode" = "ForwardBase"
 				"VRCFallback"="Hidden"
+				"LTCGI"="ALWAYS"
 			}
 			Name "TransparentForwardBaseBack"
 			Cull Front
@@ -164,6 +171,7 @@ Shader "Bigi/LogoPlane" {
 				"IgnoreProjector" = "True"
 				"LightMode" = "ForwardBase"
 				"VRCFallback"="Hidden"
+				"LTCGI"="ALWAYS"
 			}
 			Cull Back
 			ZWrite Off
