@@ -3,7 +3,7 @@ Shader "Bigi/LogoPlane" {
 		_MainTexArray ("Texture", 2DArray) = "black" {}
 		_OtherTextureId ("CellNumber", Int) = 0
 		_AL_General_Intensity("Audiolink Intensity",Range(0.0,1.0)) = 0.0
-		_MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.01
+		_MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.2
 		[Toggle(ALPHA_MUL)] _Alpha_Multiply("Multiply alpha with itself", Float) = 1
 		[Toggle(LTCGI_ENABLED)] _EnableLTCGI ("Enable LTCGI", Range(0.0,1.0)) = 0.0
 	}
@@ -51,7 +51,6 @@ Shader "Bigi/LogoPlane" {
 			_Transmissivity = 0.2;
 			_AL_Theme_Weight = _AL_General_Intensity;
 			_AL_TC_BassReactive = 1.0;
-			_MinAmbient = 0.2;
 			_UsesNormalMap = 0.0;
 			_UsesAlpha = 0.0;
 			_OcclusionStrength = 0.0;
