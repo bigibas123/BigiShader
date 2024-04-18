@@ -28,7 +28,7 @@ namespace b_light
 	// ReSharper disable once CppInconsistentNaming
 	#define doStep(val) smoothstep(lightThreshold, lightSmoothness+lightThreshold, val)
 
-	world_info setup_world(in float3 worldPos, in fixed attenuation, in float3 normal, in float2 shadowmapUV)
+	world_info setup_world(in float3 worldPos, in fixed attenuation, in float3 normal, in float4 shadowmapUV)
 	{
 		world_info wi;
 
@@ -43,7 +43,7 @@ namespace b_light
 		wi.worldPos = worldPos;
 
 		wi.normal = normal;
-		wi.shadowmapUv = shadowmapUV;
+		wi.shadowmapUvs = shadowmapUV;
 		return wi;
 	}
 
@@ -115,13 +115,12 @@ namespace b_light
 		indirectLight.specular += probe0;
 		#endif
 		#endif
-		//indirectLight.diffuse = max(indirectLight.diffuse, minAmbient);
 		return indirectLight;
 	}
 
 	float4 _get_lighting(in float3 normal, in float3 worldPos, in float3 vertexLightColor, in half attenuation,
 						in half minAmbient, in half smoothness, in half specularity, in fixed ambientOcclusion,
-						float2 shadowmapUV)
+						float4 shadowmapUV)
 	{
 		float3 albedo = float4(1.0, 1.0, 1.0, 1.0);
 		float3 specularTint = float3(1.0, 1.0, 1.0);
@@ -139,9 +138,7 @@ namespace b_light
 		indirectStart.diffuse = 0;
 		indirectStart.specular = 0;
 		#ifdef LTCGI_ENABLED
-		UnityIndirect ltcgi = getLTCGI(wi,smoothness);
-		indirectStart.diffuse += (ltcgi.diffuse * _LTCGIStrength);
-		indirectStart.specular += (ltcgi.specular * _LTCGIStrength);
+		get_LTCGI(wi, indirectStart, smoothness);
 		#endif
 		float4 unity_pbs_output = UNITY_BRDF_PBS(
 			albedo, specularTint,
@@ -154,7 +151,7 @@ namespace b_light
 		#ifdef UNITY_PASS_FORWARDBASE
 		b_vrslgi::setParams();
 		output += float4(VRSLGI(wi.worldPos, wi.normal, smoothness, wi.viewDir, albedo,
-								float2(oneMinusReflectivity, smoothness), wi.shadowmapUv, ambientOcclusion), 1.0);
+								float2(oneMinusReflectivity, smoothness), wi.shadowmapUvs.xy, ambientOcclusion), 1.0);
 		#endif
 
 		//output = max(minAmbient,output);
@@ -162,7 +159,7 @@ namespace b_light
 	}
 
 	float4 get_lighting(in float3 normal, in float3 worldPos, in float3 vertexLightColor, in fixed4 ambientOcclusion,
-						in half occlusionStrength, in half attenuation, in float2 shadowMapUv,
+						in half occlusionStrength, in half attenuation, in float4 shadowMapUv,
 						in half minAmbient, in half transmissivity, in half lightSmoothness, in half lightThreshold,
 						in half smoothness, in half specularity)
 	{

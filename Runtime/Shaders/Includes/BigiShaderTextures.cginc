@@ -30,6 +30,15 @@
 
 #endif
 
+#ifndef PROTV_TEXTURES_INCLUDED
+#define PROTV_TEXTURES_INCLUDED
+//ProTV Textures
+UNITY_DECLARE_TEX2D(_Udon_VideoTex);
+float4 _Udon_VideoTex_TexelSize;
+float4 _Udon_VideoTex_ST;
+#endif
+
+
 #ifndef OTHER_BIGI_TEXTURES
 #define OTHER_BIGI_TEXTURES
 

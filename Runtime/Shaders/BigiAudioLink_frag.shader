@@ -109,6 +109,7 @@ Shader "Bigi/AudioLink_frag" {
 				"RenderType" = "Transparent"
 				"Queue" = "Transparent"
 				"LightMode" = "ForwardBase"
+				"LTCGI"="ALWAYS"
 			}
 			Cull Off
 			ZWrite Off
@@ -179,6 +180,7 @@ Shader "Bigi/AudioLink_frag" {
 			Name "ForwardAdd"
 			Tags {
 				"LightMode" = "ForwardAdd"
+				"LTCGI"="ALWAYS"
 			}
 			Cull Off
 			ZWrite Off
@@ -319,6 +321,7 @@ Shader "Bigi/AudioLink_frag" {
 			Name "ShadowPass"
 			Tags {
 				"LightMode"="ShadowCaster"
+				"LTCGI"="ALWAYS"
 			}
 			Cull Off
 			ZWrite On

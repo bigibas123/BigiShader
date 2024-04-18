@@ -96,6 +96,7 @@ v2f bigi_toon_vert(appdata v)
 		o.tangent.xyz = UnityObjectToWorldDir(v.tangent);
 		o.tangent.w = v.tangent.w;
 	}
+	o.uv.zw = v.uv0.zw;
 	const float tangentSign = v.tangent.w * unity_WorldTransformParams.w;
 	o.bitangent = cross(o.normal, o.tangent) * tangentSign;
 
@@ -114,23 +115,10 @@ v2f bigi_toon_vert(appdata v)
 
 	o.worldPos = mul(unity_ObjectToWorld, o.localPos);
 	
-	#if defined(LIGHTMAP_ON)
-	o.lightmapUV.xy = v.uv1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
-	#else
-	o.lightmapUV.xy = 0.0;
-	#endif
-	#ifdef DYNAMICLIGHTMAP_ON
-	o.lightmapUV.zw = v.uv2.xy * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
-	#else
-	o.lightmapUV.zw = 0.0;
-	#endif
-
-	#ifdef VERTEXLIGHT_ON
+	o.lightmapUV.xy = v.uv1.xy;// * unity_LightmapST.xy + unity_LightmapST.zw;
+	o.lightmapUV.zw = v.uv2.xy;// * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
     BIGI_GETLIGHT_VERTEX(vlight);
     o.vertexLighting = vlight;
-	#else
-	o.vertexLighting = 0;
-	#endif
 	
 	return o;
 }

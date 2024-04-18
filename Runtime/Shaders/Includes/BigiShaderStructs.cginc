@@ -11,7 +11,7 @@ namespace b_light
 		float3 worldPos;
 
 		float3 normal;
-		float2 shadowmapUv;
+		float4 shadowmapUvs;
 	};
 }
 

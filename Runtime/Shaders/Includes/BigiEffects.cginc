@@ -79,8 +79,19 @@ namespace b_effects
 		#ifdef OTHER_BIGI_TEXTURES
 		//Screenspace images
 		{
-			const half2 screen_texture_pos = TRANSFORM_TEX((staticTexturePos.xy / staticTexturePos.w), _Spacey);
-			doMixProperly(mix,UNITY_SAMPLE_TEX2D(_Spacey, screen_texture_pos), mask.g, 1.0);
+			//ProTV Check
+			if (_Udon_VideoTex_TexelSize.z <= 16)
+			{
+				// no video texture
+				const half2 screen_texture_pos = TRANSFORM_TEX((staticTexturePos.xy / staticTexturePos.w), _Spacey);
+				doMixProperly(mix,UNITY_SAMPLE_TEX2D(_Spacey, screen_texture_pos), mask.g, 1.0);
+			}
+			else
+			{
+				const half2 tv_texture_pos = TRANSFORM_TEX((staticTexturePos.xy/staticTexturePos.w), _Udon_VideoTex);
+				float4 protv_color = UNITY_SAMPLE_TEX2D(_Udon_VideoTex, tv_texture_pos);
+				doMixProperly(mix, protv_color, mask.g, 1.0);
+			}
 		}
 		#endif
 
