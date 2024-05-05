@@ -5,7 +5,6 @@
 #define BIGI_DMXAL_INCLUDES
 #include <UnityCG.cginc>
 #include <Packages/com.llealloo.audiolink/Runtime/Shaders/AudioLink.cginc>
-#include "./BigiVRSL.cginc"
 #include "./ColorUtil.cginc"
 #endif
 

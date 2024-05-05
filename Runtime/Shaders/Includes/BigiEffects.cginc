@@ -84,14 +84,16 @@ namespace b_effects
 			{
 				// no video texture
 				const half2 screen_texture_pos = TRANSFORM_TEX((staticTexturePos.xy / staticTexturePos.w), _Spacey);
-				doMixProperly(mix,UNITY_SAMPLE_TEX2D(_Spacey, screen_texture_pos), mask.g, 1.0);
+				float4 spaceyColor= UNITY_SAMPLE_TEX2D(_Spacey, screen_texture_pos);
+				doMixProperly(mix, spaceyColor.rgb, mask.g * spaceyColor.a, 1.0);
 			}
 			else
 			{
 				
 				//const half2 tv_texture_pos = TRANSFORM_TEX((staticTexturePos.xy/staticTexturePos.w), _Udon_VideoTex);
 				const half2 tv_texture_pos = TRANSFORM_TEX(uv, _Udon_VideoTex);
-				doMixProperly(mix, UNITY_SAMPLE_TEX2D(_Udon_VideoTex, tv_texture_pos), mask.g, 1.0);
+				float4 protvColor = UNITY_SAMPLE_TEX2D(_Udon_VideoTex, tv_texture_pos);
+				doMixProperly(mix, protvColor.rgb, mask.g * protvColor.a, 1.0);
 			}
 		}
 		#endif
