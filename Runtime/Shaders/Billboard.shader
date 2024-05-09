@@ -67,6 +67,11 @@
 		ENDCG
 
 		Pass {
+			Name "Depth pass"
+			Tags
+			{
+				"Queue" = "Geometry"
+			}
 			Stencil {
 				Ref 148
 				Comp Always
@@ -91,6 +96,7 @@
 		}
 
 		Pass {
+			Name "Forward Base Main"
 			Stencil {
 				Ref 148
 				Comp Always
