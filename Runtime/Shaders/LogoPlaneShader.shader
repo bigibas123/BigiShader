@@ -1,7 +1,7 @@
 Shader "Bigi/LogoPlane" {
 	Properties {
 		_MainTexArray ("Texture", 2DArray) = "black" {}
-		_OtherTextureId ("CellNumber", Int) = 0
+		_Logo_FlipBookID ("CellNumber", Int) = 0
 		_AL_General_Intensity("Audiolink Intensity",Range(0.0,1.0)) = 0.0
 		_MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.2
 		[Toggle(ALPHA_MUL)] _Alpha_Multiply("Multiply alpha with itself", Float) = 1
@@ -22,9 +22,8 @@ Shader "Bigi/LogoPlane" {
 		#include <UnityCG.cginc>
 		uniform float _AL_General_Intensity;
 
-		uniform int _OtherTextureId;
-		#define OTHER_TEXTURE_ID_REF _OtherTextureId
-		#define BIGI_OTHER_TEXTURE_ID_DEFINED
+		uniform int _Logo_FlipBookID;
+		#define OTHER_TEXTURE_ID_REF _Logo_FlipBookID
 		#define OTHER_BIGI_TEXTURES
 
 		#include "./Includes/BigiShaderParams.cginc"

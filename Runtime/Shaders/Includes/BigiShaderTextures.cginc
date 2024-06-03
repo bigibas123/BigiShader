@@ -16,8 +16,7 @@
 #else
     UNITY_DECLARE_TEX2DARRAY(_MainTexArray);
     float4 _MainTexArray_ST;
-    #ifndef BIGI_OTHER_TEXTURE_ID_DEFINED
-    #define BIGI_OTHER_TEXTURE_ID_DEFINED
+    #ifndef OTHER_TEXTURE_ID_REF
     uniform int _OtherTextureId;
     #define OTHER_TEXTURE_ID_REF _OtherTextureId
     #endif
