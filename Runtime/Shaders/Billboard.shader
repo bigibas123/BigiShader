@@ -2,6 +2,7 @@
 	Properties {
 		_MainTexArray ("Other textures", 2DArray) = "" {}
 		_TextureId ("Other texture Id", Int) = 0
+		[Toggle(ALPHA_MUL)] _Alpha_Multiply("Multiply alpha with itself", Float) = 1
 	}
 
 	SubShader {
@@ -108,13 +109,16 @@
 			ZTest LEqual
 			Blend SrcAlpha OneMinusSrcAlpha
 			CGPROGRAM
+			#pragma shader_feature_local_fragment _ ALPHA_MUL
 			#pragma vertex vert
 			#pragma fragment frag
 
 			fixed4 frag(v2f i) : SV_Target
 			{
 				half4 orig_color = GET_TEX_COLOR(i.uv);
+				#ifdef ALPHA_MUL
 				orig_color.a *= orig_color.a;
+				#endif
 				clip(orig_color.a - Epsilon);
 				b_sound::ALSettings set;
 				set.AL_Theme_Weight = 1.0;
