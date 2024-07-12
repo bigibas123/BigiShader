@@ -41,19 +41,25 @@ namespace cc.dingemans.bigibas123.bigishader
 				{
 					bool usingArray = m.HasProperty(TextureArrayEnabledID) && m.GetFloat(TextureArrayEnabledID) > 0.1;
 					var t = m.GetTexture(usingArray ? MainTextureArrayID : MainTextureID);
-					var usingAlpha = t is null || GraphicsFormatUtility.HasAlphaChannel(t.graphicsFormat);
-					if (usingAlpha)
+					if (t is not null)
 					{
-						m.SetFloat(AlphaEnabledID, 1);
-						m.EnableKeyword("DO_ALPHA_PLS");
-					}
-					else
-					{
-						m.SetFloat(AlphaEnabledID, 0);
-						m.DisableKeyword("DO_ALPHA_PLS");
+						var usingAlpha = GraphicsFormatUtility.HasAlphaChannel(t.graphicsFormat);
+						var alphaKw = m.shader.keywordSpace.FindKeyword("DO_ALPHA_PLS");
+						if (usingAlpha)
+						{
+							m.SetFloat(AlphaEnabledID, 1);
+							m.EnableKeyword(alphaKw);
+							m.SetShaderPassEnabled("TransparentForwardBase",true);
+						}
+						else
+						{
+							m.SetFloat(AlphaEnabledID, 0);
+							m.DisableKeyword(alphaKw);
+							m.SetShaderPassEnabled("TransparentForwardBase",false);
+						}
 					}
 				}
-
+				
 				var ltcgiKw = m.shader.keywordSpace.FindKeyword("LTCGI_ENABLED");
 				
 #if LTCGI_INCLUDED
