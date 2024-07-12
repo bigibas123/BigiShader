@@ -72,6 +72,7 @@ Shader "Bigi/AudioLink_frag" {
 
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
 
+			#include "./Includes/ColorUtil.cginc"
 			#include "./Includes/ToonVert.cginc"
 			#include "./Includes/LightUtilsDefines.cginc"
 			#include "./Includes/NormalUtils.cginc"
@@ -81,10 +82,12 @@ Shader "Bigi/AudioLink_frag" {
 			fragOutput frag(v2f i)
 			{
 				const fixed4 orig_color = GET_TEX_COLOR(GETUV);
+				#ifdef DO_ALPHA_PLS
 				if (_UsesAlpha)
 				{
-					clip(orig_color.a - (1.0 - Epsilon));
+					if(IsPartiallyTransparent(orig_color)){ discard; }
 				}
+				#endif
 				fragOutput o;
 				UNITY_SETUP_INSTANCE_ID(i);
 				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
@@ -113,7 +116,7 @@ Shader "Bigi/AudioLink_frag" {
 			}
 			Cull Off
 			ZWrite Off
-			ZTest LEqual
+			ZTest Less
 			Blend SrcAlpha OneMinusSrcAlpha
 			Stencil {
 				Ref 180 //148 + 32 // 1011 0100 // VRSLGI + Own stencil bit
@@ -127,6 +130,7 @@ Shader "Bigi/AudioLink_frag" {
 			#pragma multi_compile_fwdbasealpha
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
 
+			#include "./Includes/ColorUtil.cginc"
 			#include "./Includes/ToonVert.cginc"
 			#include "./Includes/LightUtilsDefines.cginc"
 			#include "./Includes/NormalUtils.cginc"
@@ -134,10 +138,12 @@ Shader "Bigi/AudioLink_frag" {
 
 			v2f vert(appdata v)
 			{
+				#ifdef DO_ALPHA_PLS
 				if (_UsesAlpha)
 				{
 					return bigi_toon_vert(v);
 				}
+				#endif
 				v2f o;
 				UNITY_INITIALIZE_OUTPUT(v2f, o);
 				return o;
@@ -147,15 +153,19 @@ Shader "Bigi/AudioLink_frag" {
 			{
 				if (_UsesAlpha)
 				{
-					const fixed4 orig_color = GET_TEX_COLOR(GETUV);
-					clip((orig_color.a - (1.0 - Epsilon)) * -1.0);
 					fragOutput o;
 					UNITY_SETUP_INSTANCE_ID(i);
 					UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
+					const fixed4 orig_color = GET_TEX_COLOR(GETUV);
+					if (!IsPartiallyTransparent(orig_color))
+					{
+						discard;
+					}
+
 					if (_UsesNormalMap)
 					{
 						i.normal = b_normalutils::recalculate_normals(i.normal, GET_NORMAL(GETUV), i.tangent,
-																	i.bitangent);
+																i.bitangent);
 					}
 
 					BIGI_GETLIGHT_DEFAULT(lighting);
@@ -169,7 +179,8 @@ Shader "Bigi/AudioLink_frag" {
 				{
 					discard;
 					fragOutput o;
-					UNITY_INITIALIZE_OUTPUT(fragOutput, o);
+						UNITY_INITIALIZE_OUTPUT(fragOutput, o);
+					o.color.rgba = 0.0;
 					return o;
 				}
 			}
@@ -271,13 +282,11 @@ Shader "Bigi/AudioLink_frag" {
 			v2f vert(appdata v)
 			{
 				v2f o;
-					UNITY_SETUP_INSTANCE_ID(v);
-					UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-					UNITY_TRANSFER_INSTANCE_ID(v, o);
+				UNITY_SETUP_INSTANCE_ID(v);
+				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				if (AudioLinkIsAvailable())
 				{
-					
-
 					GET_SOUND_COLOR(scol);
 					o.soundColor = scol;
 
@@ -286,10 +295,11 @@ Shader "Bigi/AudioLink_frag" {
 
 					o.pos = UnityObjectToClipPos(v.vertex + offset);
 					o.pos = lerp(0.0, o.pos, smoothstep(0.0,Epsilon, _OutlineWidth));
-				}else
+				}
+				else
 				{
-					o.pos = float4(0,0,0,0);
-					o.soundColor = half4(0,0,0,0);
+					o.pos = float4(0, 0, 0, 0);
+					o.soundColor = half4(0, 0, 0, 0);
 				}
 
 				return o;
@@ -306,10 +316,11 @@ Shader "Bigi/AudioLink_frag" {
 					clip(i.soundColor.a - Epsilon);
 					o.color = half4(i.soundColor.rgb * i.soundColor.a, smoothstep(0.0, 0.05, i.soundColor.a));
 					clip(o.color.a - Epsilon);
-				}else
+				}
+				else
 				{
 					discard;
-					o.color = fixed4(0,0,0,0);
+					o.color = fixed4(0, 0, 0, 0);
 				}
 				return o;
 			}
