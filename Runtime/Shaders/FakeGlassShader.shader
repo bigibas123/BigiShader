@@ -30,11 +30,16 @@ Shader "Bigi/FakeGlass"
             {
                 float4 grabPos : TEXCOORD0;
                 float4 pos : SV_POSITION;
+                UNITY_VERTEX_OUTPUT_STEREO
             };
 
             v2f vert(appdata_base v)
             {
                 v2f o;
+
+            	UNITY_SETUP_INSTANCE_ID(v);
+            	UNITY_INITIALIZE_OUTPUT(v2f, o);
+            	UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
                 // use UnityObjectToClipPos from UnityCG.cginc to calculate 
                 // the clip-space of the vertex
                 o.pos = UnityObjectToClipPos(v.vertex);
