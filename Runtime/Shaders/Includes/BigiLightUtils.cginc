@@ -159,18 +159,16 @@ namespace b_light
 	float4 get_lighting(in float3 normal, in float3 worldPos, in float3 vertexLightColor, in fixed ambientOcclusion,
 						in half occlusionStrength, in half attenuation, in float4 shadowMapUv,
 						in half minAmbient, in half transmissivity, in half lightSmoothness, in half lightThreshold,
-						in half smoothness, in half specularity)
+						in half4 specSmooth)
 	{
 		const half scaledAO = lerp(1, ambientOcclusion, occlusionStrength);
 		attenuation = attenuation * scaledAO;
 
-		half4 specularTint = half4(specularity, specularity, specularity, smoothness);
-
-		float4 total = _get_lighting(normal, worldPos, vertexLightColor, attenuation, minAmbient, specularTint,
+		float4 total = _get_lighting(normal, worldPos, vertexLightColor, attenuation, minAmbient, specSmooth,
 									scaledAO, shadowMapUv);
 		if (transmissivity > Epsilon)
 		{
-			total += _get_lighting(normal * -1.0, worldPos, vertexLightColor, attenuation, 0, specularTint,
+			total += _get_lighting(normal * -1.0, worldPos, vertexLightColor, attenuation, 0, specSmooth,
 									scaledAO, shadowMapUv) *
 				transmissivity;
 		}

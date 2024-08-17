@@ -24,8 +24,7 @@
     _Transmissivity,\
     _LightSmoothness,\
     _LightThreshold,\
-    _Smoothness,\
-    _SpecularIntensity\
+    half4(_Smoothness, _Smoothness, _Smoothness, _SpecularIntensity)\
     )
 
 #define BIGI_GETLIGHT_NOAO(outName) UNITY_LIGHT_ATTENUATION(shadowAtt, i, i.worldPos.xyz);\
@@ -41,8 +40,7 @@
     _Transmissivity,\
     _LightSmoothness,\
     _LightThreshold,\
-    _Smoothness,\
-    _SpecularIntensity\
+    half4(_Smoothness, _Smoothness, _Smoothness, _SpecularIntensity)\
     )
 
 
