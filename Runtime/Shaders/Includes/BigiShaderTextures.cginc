@@ -11,6 +11,8 @@
     #define GET_AO(uv) UNITY_SAMPLE_TEX2D_SAMPLER(_OcclusionMap, _MainTex, uv).g
     #define GET_NORMAL(uv) UNITY_SAMPLE_TEX2D_SAMPLER(_BumpMap, _MainTex, uv)
 
+    #define GET_SPEC_SMOOTH(uv) half4(_Smoothness, _Smoothness, _Smoothness, _SpecularIntensity)
+
     #define DO_TRANSFORM(tc) TRANSFORM_TEX(tc, _MainTex)
 
 #else
@@ -24,6 +26,8 @@
     #define GET_MASK_COLOR(uv) UNITY_SAMPLE_TEX2D_SAMPLER(_Mask, _MainTexArray, uv)
     #define GET_AO(uv) UNITY_SAMPLE_TEX2D_SAMPLER(_OcclusionMap, _MainTexArray, uv).g
     #define GET_NORMAL(uv) UNITY_SAMPLE_TEX2D_SAMPLER(_BumpMap, _MainTexArray, uv)
+
+    #define GET_SPEC_SMOOTH(uv) half4(_Smoothness, _Smoothness, _Smoothness, _SpecularIntensity)
 
     #define DO_TRANSFORM(tc) TRANSFORM_TEX(tc, _MainTexArray)
 
