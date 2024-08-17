@@ -2,38 +2,60 @@ Shader "Bigi/AudioLink_frag" {
 	Properties {
 		[MainTexture] _MainTex ("Texture", 2D) = "black" {}
 		[Toggle(DO_ALPHA_PLS)] _UsesAlpha("Is transparent", Float) = 1
-		_Spacey ("Spacey Texture", 2D) = "black" {}
-		_EmissionStrength ("Emission strength", Range(0.0,2.0)) = 1.0
-		[NoScaleOffset] _Mask ("Mask", 2D) = "black" {}
-		[NoScaleOffset] _OcclusionMap ("Ambient occlusion map", 2D) = "white" {}
+		
+		[Header(Normal mapping)]
+		[Space]
 		[Toggle(NORMAL_MAPPING)] _UsesNormalMap("Enable normal map", Float) = 1
 		[NoScaleOffset] _BumpMap("Normal Map", 2D) = "bump" {}
+		
+		[Header(Specular and Smooth)]
+		[Space]
+		[Toggle(SPECSMOOTH_MAP_ENABLED)] _EnableSpecularSmooth ("Enable Specular & Smoothness map", Range(0.0,1.0)) = 0.0
+		[NoScaleOffset] _SpecSmoothMap ("Specular (rgb) and Smoothness (a) map", 2D) = "black" {}
+		_SpecularIntensity ("Specular intensity multiplier", Range(0.0,1.0)) = 0.000
+		_Smoothness ("Smoothness multiplier", Range(0.0,1.0)) = 0.000
+		
+		[Header(Extra textures)]
+		[Space]
+		_Spacey ("Spacey Texture", 2D) = "black" {}
+		[Space]
+		[NoScaleOffset] _Mask ("Mask", 2D) = "black" {}
+		_EmissionStrength ("Emission strength", Range(0.0,2.0)) = 1.0
 
+		[Space]
 		[Header(Lighting)]
+		[Space]
 		_LightSmoothness ("Shadow smoothness",Range(0.0,1.0)) = 1.0
 		_LightThreshold ("Shadow Start point", Range(0.0,1.0)) = 0.0
+		[Space]
 		_MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.005
+		_Transmissivity ("Transmission of light through the material", Range(0.0,1.0)) = 0.000
+		
+		[Header(3rdParty lighting)]
+		[Space]
 		_VRSLGIStrength ("VRSL-GI Strength", Range(0.0,1.0)) = 0.25
 		[Toggle(LTCGI_ENABLED)] _EnableLTCGI ("Enable LTCGI", Range(0.0,1.0)) = 0.0
 		_LTCGIStrength ("LTCGI Strenght", Range(0.0,2.0)) = 1.0
 		
-		[Header(MapEffects)]
+		[Header(Ambient Occlusion)]
+		[Space]
+		[NoScaleOffset] _OcclusionMap ("Ambient occlusion map", 2D) = "white" {}
 		_OcclusionStrength("Occlusion Strength", Range(0, 1.0)) = 1.0
-		_Transmissivity ("Transmission of light through the material", Range(0.0,1.0)) = 0.000
-		_Smoothness ("Smoothness", Range(0.0,1.0)) = 0.000
-		_SpecularIntensity ("Specular intensity", Range(0.0,1.0)) = 0.000
 
 		[Header(Audiolink world theme colors)]
+		[Space]
 		_AL_Theme_Weight("Weight", Range(0.0, 1.0)) = 1.0
 		_AL_TC_BassReactive("Bassreactivity", Range(0.0,1.0)) = 0.75
 
 		[Header(Effects)]
+		[Space]
 		_MonoChrome("MonoChrome", Range(0.0,1.0)) = 0.0
 		_Voronoi("Voronoi", Range(0.0,1.0)) = 0.0
 		_OutlineWidth ("Outline Width", Range(0.0,1.0)) = 0.0
 		_Rounding ("Rounding Factor", Range(0.0,0.05)) = 0.0
 
 		[Header(Multi Texture)]
+		[Space]
 		[Toggle(MULTI_TEXTURE)] _MultiTexture("Use multi texture", Float) = 0
 		_MainTexArray ("Other textures", 2DArray) = "" {}
 		_OtherTextureId ("Other texture Id", Int) = 0

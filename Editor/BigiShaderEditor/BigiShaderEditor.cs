@@ -15,6 +15,9 @@ namespace cc.dingemans.bigibas123.bigishader
 		private static readonly int TextureArrayEnabledID = Shader.PropertyToID("_MultiTexture");
 		private static readonly int LtcgiEnabledID = Shader.PropertyToID("_EnableLTCGI");
 
+		public static readonly int SpecSmoothMapID = Shader.PropertyToID("_SpecSmoothMap");
+		private static readonly int SpecSmoothMapEnabledID = Shader.PropertyToID("_EnableSpecularSmooth");
+
 		public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
 		{
 			// Custom code that controls the appearance of the Inspector goes here
@@ -49,28 +52,47 @@ namespace cc.dingemans.bigibas123.bigishader
 						{
 							m.SetFloat(AlphaEnabledID, 1);
 							m.EnableKeyword(alphaKw);
-							m.SetShaderPassEnabled("TransparentForwardBase",true);
+							m.SetShaderPassEnabled("TransparentForwardBase", true);
 						}
 						else
 						{
 							m.SetFloat(AlphaEnabledID, 0);
 							m.DisableKeyword(alphaKw);
-							m.SetShaderPassEnabled("TransparentForwardBase",false);
+							m.SetShaderPassEnabled("TransparentForwardBase", false);
 						}
 					}
 				}
-				
-				var ltcgiKw = m.shader.keywordSpace.FindKeyword("LTCGI_ENABLED");
-				
+
+				if (m.HasProperty(LtcgiEnabledID))
+				{
+					var ltcgiKw = m.shader.keywordSpace.FindKeyword("LTCGI_ENABLED");
+
 #if LTCGI_INCLUDED
-				m.SetKeyword(ltcgiKw, true);
-				m.EnableKeyword(ltcgiKw);
-				m.SetFloat(LtcgiEnabledID,1);
+					m.SetKeyword(ltcgiKw, true);
+					m.EnableKeyword(ltcgiKw);
+					m.SetFloat(LtcgiEnabledID, 1);
 #else
-				m.SetKeyword(ltcgiKw, false);
-				m.DisableKeyword(ltcgiKw);
-				m.SetFloat(LTCGI_EnabledID,0);
+					m.SetKeyword(ltcgiKw, false);
+					m.DisableKeyword(ltcgiKw);
+					m.SetFloat(LTCGI_EnabledID, 0);
 #endif
+				}
+
+				if (m.HasProperty(SpecSmoothMapID) && m.HasProperty(SpecSmoothMapEnabledID))
+				{
+					bool hasSpecMap = (m.GetTexture(SpecSmoothMapID) is not null);
+					m.SetFloat(SpecSmoothMapEnabledID, hasSpecMap ? 1 : 0);
+					if (hasSpecMap)
+					{
+						m.SetFloat(SpecSmoothMapEnabledID, 1);
+						m.EnableKeyword("SPECSMOOTH_MAP_ENABLED");
+					}
+					else
+					{
+						m.SetFloat(SpecSmoothMapEnabledID, 0);
+						m.DisableKeyword("SPECSMOOTH_MAP_ENABLED");
+					}
+				}
 			}
 
 			EditorGUI.EndChangeCheck();
