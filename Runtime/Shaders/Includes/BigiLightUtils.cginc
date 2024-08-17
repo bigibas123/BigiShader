@@ -158,18 +158,19 @@ namespace b_light
 		return saturate(output);
 	}
 
-	float4 get_lighting(in float3 normal, in float3 worldPos, in float3 vertexLightColor, in fixed4 ambientOcclusion,
+	float4 get_lighting(in float3 normal, in float3 worldPos, in float3 vertexLightColor, in fixed ambientOcclusion,
 						in half occlusionStrength, in half attenuation, in float4 shadowMapUv,
 						in half minAmbient, in half transmissivity, in half lightSmoothness, in half lightThreshold,
 						in half smoothness, in half specularity)
 	{
-		attenuation = attenuation * lerp(1, ambientOcclusion.g, occlusionStrength);
+		const half scaledAO = lerp(1, ambientOcclusion, occlusionStrength);
+		attenuation = attenuation * scaledAO;
 		float4 total = _get_lighting(normal, worldPos, vertexLightColor, attenuation, minAmbient, smoothness,
-									specularity, ambientOcclusion.r, shadowMapUv);
+									specularity, scaledAO, shadowMapUv);
 		if (transmissivity > Epsilon)
 		{
 			total += _get_lighting(normal * -1.0, worldPos, vertexLightColor, attenuation, 0, smoothness, specularity,
-									ambientOcclusion.r, shadowMapUv) *
+									scaledAO, shadowMapUv) *
 				transmissivity;
 		}
 
