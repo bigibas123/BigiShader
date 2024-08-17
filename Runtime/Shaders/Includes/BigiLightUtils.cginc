@@ -119,39 +119,37 @@ namespace b_light
 	}
 
 	float4 _get_lighting(in float3 normal, in float3 worldPos, in float3 vertexLightColor, in half attenuation,
-						in half minAmbient, in half smoothness, in half specularity, in fixed ambientOcclusion,
+						in half minAmbient, in half4 specularTint, in fixed ambientOcclusion,
 						float4 shadowmapUV)
 	{
 		float3 albedo = float4(1.0, 1.0, 1.0, 1.0);
-		float3 specularTint = float3(1.0, 1.0, 1.0);
 		albedo *= 1.0;
-		specularTint *= specularity;
 
 		normal = normalize(normal);
 		const world_info wi = setup_world(worldPos, attenuation, normal, shadowmapUV);
 
 		float oneMinusReflectivity;
 		albedo = EnergyConservationBetweenDiffuseAndSpecular(
-			albedo, specularTint, oneMinusReflectivity
+			albedo, specularTint.rgb, oneMinusReflectivity
 		);
 		UnityIndirect indirectStart;
 		indirectStart.diffuse = 0;
 		indirectStart.specular = 0;
 		#ifdef LTCGI_ENABLED
-		get_LTCGI(wi, indirectStart, smoothness);
+		get_LTCGI(wi, indirectStart, specularTint.a);
 		#endif
 		float4 unity_pbs_output = UNITY_BRDF_PBS(
-			albedo, specularTint,
-			oneMinusReflectivity, smoothness,
+			albedo, specularTint.rgb,
+			oneMinusReflectivity, specularTint.a,
 			wi.normal, wi.viewDir,
 			CreateLight(wi),
-			CreateIndirectLight(indirectStart, wi, vertexLightColor, minAmbient, smoothness)
+			CreateIndirectLight(indirectStart, wi, vertexLightColor, minAmbient, specularTint.a)
 		);
 		float4 output = unity_pbs_output;
 		#ifdef UNITY_PASS_FORWARDBASE
 		b_vrslgi::setParams();
-		output += float4(VRSLGI(wi.worldPos, wi.normal, smoothness, wi.viewDir, albedo,
-								float2(oneMinusReflectivity, smoothness), wi.shadowmapUvs.xy, ambientOcclusion), 1.0);
+		output += float4(VRSLGI(wi.worldPos, wi.normal, specularTint.a, wi.viewDir, albedo,
+								float2(oneMinusReflectivity, specularTint.a), wi.shadowmapUvs.xy, ambientOcclusion), 1.0);
 		#endif
 
 		//output = max(minAmbient,output);
@@ -165,11 +163,14 @@ namespace b_light
 	{
 		const half scaledAO = lerp(1, ambientOcclusion, occlusionStrength);
 		attenuation = attenuation * scaledAO;
-		float4 total = _get_lighting(normal, worldPos, vertexLightColor, attenuation, minAmbient, smoothness,
-									specularity, scaledAO, shadowMapUv);
+
+		half4 specularTint = half4(specularity, specularity, specularity, smoothness);
+
+		float4 total = _get_lighting(normal, worldPos, vertexLightColor, attenuation, minAmbient, specularTint,
+									scaledAO, shadowMapUv);
 		if (transmissivity > Epsilon)
 		{
-			total += _get_lighting(normal * -1.0, worldPos, vertexLightColor, attenuation, 0, smoothness, specularity,
+			total += _get_lighting(normal * -1.0, worldPos, vertexLightColor, attenuation, 0, specularTint,
 									scaledAO, shadowMapUv) *
 				transmissivity;
 		}
