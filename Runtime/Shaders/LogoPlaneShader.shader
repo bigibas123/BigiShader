@@ -31,43 +31,19 @@ Shader "Bigi/LogoPlane" {
 		#include "./Includes/ToonVert.cginc"
 		#include "./Includes/LightUtilsDefines.cginc"
 		#include "./Includes/SoundUtilsDefines.cginc"
+		#include "./Includes/BigiLightingParamWriter.cginc"
 
-
-		void setVars()
-		{
-			_LightSmoothness = 1.0;
-			_LightThreshold = 0.0;
-			_Smoothness = 0.0;
-			_SpecularIntensity = 0.0;
-			_Rounding = 0.0;
-			_MonoChrome = 0.0;
-			_Voronoi = 0.0;
-			_OutlineWidth = 0.0;
-			_EmissionStrength = 1.0;
-			_Reflectivity = 0.0;
-			_DMX_Weight = 0.0;
-			_DMX_Group = 0.0;
-			_Transmissivity = 0.2;
-			_AL_Theme_Weight = _AL_General_Intensity;
-			_AL_TC_BassReactive = 1.0;
-			_UsesNormalMap = 0.0;
-			_UsesAlpha = 0.0;
-			_OcclusionStrength = 0.0;
-			_LTCGIStrength = 1.0;
-			#ifdef UNITY_PASS_FORWARDBASE
-			_VRSLGIStrength = 0.25;
-			#endif
-		}
 
 		v2f vert(appdata v)
 		{
-			setVars();
+			b_light::setVars();
 			return bigi_toon_vert(v);
 		}
 
 		fragOutput frag(v2f i)
 		{
-			setVars();
+			b_light::setVars();
+			_AL_Theme_Weight = _AL_General_Intensity;
 			fragOutput o;
 				UNITY_INITIALIZE_OUTPUT(fragOutput, o);
 			UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i)
@@ -78,7 +54,7 @@ Shader "Bigi/LogoPlane" {
 			#endif
 
 
-			BIGI_GETLIGHT_NOAO(lighting);
+			BIGI_GETLIGHT_DEFAULT(lighting);
 			fixed4 normalColor;
 			normalColor = orig_color * lighting;
 

@@ -15,8 +15,11 @@ namespace cc.dingemans.bigibas123.bigishader
 		private static readonly int TextureArrayEnabledID = Shader.PropertyToID("_MultiTexture");
 		private static readonly int LtcgiEnabledID = Shader.PropertyToID("_EnableLTCGI");
 
-		public static readonly int SpecSmoothMapID = Shader.PropertyToID("_SpecSmoothMap");
+		private static readonly int SpecSmoothMapID = Shader.PropertyToID("_SpecSmoothMap");
 		private static readonly int SpecSmoothMapEnabledID = Shader.PropertyToID("_EnableSpecularSmooth");
+
+		private static readonly int AOMapID = Shader.PropertyToID("_OcclusionMap");
+		private static readonly int AOMapEnabledID = Shader.PropertyToID("_AOEnabled");
 
 		public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
 		{
@@ -93,6 +96,23 @@ namespace cc.dingemans.bigibas123.bigishader
 						m.DisableKeyword("SPECSMOOTH_MAP_ENABLED");
 					}
 				}
+
+				if (m.HasProperty(AOMapID) && m.HasProperty(AOMapEnabledID))
+				{
+					bool hasAOMap = (m.GetTexture(AOMapID) is not null);
+					m.SetFloat(AOMapEnabledID, hasAOMap ? 1 : 0);
+					if (hasAOMap)
+					{
+						m.SetFloat(AOMapEnabledID, 1);
+						m.EnableKeyword("AMBIENT_OCCLUSION_ENABLED");
+					}
+					else
+					{
+						m.SetFloat(AOMapEnabledID, 0);
+						m.DisableKeyword("AMBIENT_OCCLUSION_ENABLED");
+					}
+				}
+				
 			}
 
 			EditorGUI.EndChangeCheck();

@@ -34,10 +34,12 @@ Shader "Bigi/ALTest" {
 			#include "./Includes/BigiShaderParams.cginc"
 			#include "./Includes/ToonVert.cginc"
 			#include "./Includes/BigiSoundUtils.cginc"
+			#include "./Includes/BigiLightingParamWriter.cginc"
 			#include "Packages/com.llealloo.audiolink/Runtime/Shaders/SmoothPixelFont.cginc"
 
 			fragOutput frag(v2f i)
 			{
+				b_light::setVars();
 				fragOutput o;
 				UNITY_SETUP_INSTANCE_ID(i);
 				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
@@ -115,6 +117,8 @@ Shader "Bigi/ALTest" {
 						1.0
 					);
 				}
+				BIGI_GETLIGHT_DEFAULT(lighting);
+				o.color = o.color * lighting;
 				UNITY_APPLY_FOG(i.fogCoord, o.color);
 				return o;
 			}

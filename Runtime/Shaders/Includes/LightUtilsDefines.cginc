@@ -27,39 +27,6 @@
     GET_SPEC_SMOOTH(GETUV)\
     )
 
-#define BIGI_GETLIGHT_NOAO(outName) UNITY_LIGHT_ATTENUATION(shadowAtt, i, i.worldPos.xyz);\
-    const fixed4 outName = b_light::get_lighting(\
-    i.normal,\
-    i.worldPos,\
-    i.vertexLighting,\
-    fixed4(1.0,1.0,1.0,1.0),\
-    0.0,\
-    shadowAtt,\
-    i.lightmapUV,\
-    _MinAmbient,\
-    _Transmissivity,\
-    _LightSmoothness,\
-    _LightThreshold,\
-    GET_SPEC_SMOOTH(GETUV)\
-    )
-
-#define BIGI_GETLIGHT_NOAO_NOSPEC(outName) UNITY_LIGHT_ATTENUATION(shadowAtt, i, i.worldPos.xyz);\
-const fixed4 outName = b_light::get_lighting(\
-i.normal,\
-i.worldPos,\
-i.vertexLighting,\
-fixed4(1.0,1.0,1.0,1.0),\
-0.0,\
-shadowAtt,\
-i.lightmapUV,\
-_MinAmbient,\
-_Transmissivity,\
-_LightSmoothness,\
-_LightThreshold,\
-half4(1.0,1.0,1.0,0.0)\
-)
-
-
 #ifdef VERTEXLIGHT_ON
 
 #define BIGI_GETLIGHT_VERTEX(outName) \

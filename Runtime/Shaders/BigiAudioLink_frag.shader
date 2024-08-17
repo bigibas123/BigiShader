@@ -12,8 +12,8 @@ Shader "Bigi/AudioLink_frag" {
 		[Space]
 		[Toggle(SPECSMOOTH_MAP_ENABLED)] _EnableSpecularSmooth ("Enable Specular & Smoothness map", Range(0.0,1.0)) = 0.0
 		[NoScaleOffset] _SpecSmoothMap ("Specular (rgb) and Smoothness (a) map", 2D) = "black" {}
-		_SpecularIntensity ("Specular intensity multiplier", Range(0.0,1.0)) = 0.000
-		_Smoothness ("Smoothness multiplier", Range(0.0,1.0)) = 0.000
+		_SpecularIntensity ("Specular intensity multiplier", Range(0.0,1.0)) = 0.0
+		_Smoothness ("Smoothness multiplier", Range(0.0,1.0)) = 1.0
 		
 		[Header(Extra textures)]
 		[Space]
@@ -29,7 +29,7 @@ Shader "Bigi/AudioLink_frag" {
 		_LightThreshold ("Shadow Start point", Range(0.0,1.0)) = 0.0
 		[Space]
 		_MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.005
-		_Transmissivity ("Transmission of light through the material", Range(0.0,1.0)) = 0.000
+		_Transmissivity ("Transmission of light through the material", Range(0.0,1.0)) = 0.2
 		
 		[Header(3rdParty lighting)]
 		[Space]
@@ -39,6 +39,7 @@ Shader "Bigi/AudioLink_frag" {
 		
 		[Header(Ambient Occlusion)]
 		[Space]
+		[Toggle(AMBIENT_OCCLUSION_ENABLED)] _AOEnabled ("Enabled Ambient Occlusion",Range(0.0,1.0)) = 0.0
 		[NoScaleOffset] _OcclusionMap ("Ambient occlusion map", 2D) = "white" {}
 		_OcclusionStrength("Occlusion Strength", Range(0, 1.0)) = 1.0
 

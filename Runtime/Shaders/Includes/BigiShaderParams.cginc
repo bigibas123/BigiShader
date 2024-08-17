@@ -33,7 +33,6 @@ uniform float _UsesAlpha;
 uniform float _EmissionStrength;
 uniform float _MinAmbient;
 uniform float _Transmissivity;
-uniform float _Reflectivity;
 uniform float _OcclusionStrength;
 uniform float _Smoothness;
 uniform float _SpecularIntensity;
