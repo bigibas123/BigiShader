@@ -42,9 +42,19 @@
 #ifndef PROTV_TEXTURES_INCLUDED
 #define PROTV_TEXTURES_INCLUDED
 //ProTV Textures
-UNITY_DECLARE_TEX2D(_Udon_VideoTex);
+#if !defined(SHADER_API_D3D11)
+uniform sampler2D _Udon_VideoTex;
 float4 _Udon_VideoTex_TexelSize;
 float4 _Udon_VideoTex_ST;
+#define PROTV_PRESENT(outVar) bool outVar = (_Udon_VideoTex_TexelSize.z > 16)
+#define GET_PROTV() tex2D(_Udon_VideoTex, TRANSFORM_TEX(uv, _Udon_VideoTex))
+
+#else
+UNITY_DECLARE_TEX2D(_Udon_VideoTex);
+float4 _Udon_VideoTex_ST;
+#define PROTV_PRESENT(outVar) int videoWidth; int videoHeight; _Udon_VideoTex.GetDimensions(videoWidth, videoHeight); bool outVar = (videoWidth > 16)
+#define GET_PROTV() _Udon_VideoTex.Sample(sampler_Udon_VideoTex, TRANSFORM_TEX(uv, _Udon_VideoTex))
+#endif
 #endif
 
 
