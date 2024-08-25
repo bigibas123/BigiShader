@@ -2,34 +2,39 @@
 #define BIGI_LIGHTING_PARAM_WRITER
 #include "./BigiShaderParams.cginc"
 
+#ifndef Epsilon
+#include <UnityCG.cginc>
+#define Epsilon UNITY_HALF_MIN
+#endif
+
+#define IFZEROAPPLY(varname, val) if (varname < Epsilon && varname > -Epsilon){ varname = val;}
 namespace b_light
 {
 	void setVars()
 	{
-		_DMX_Weight = 0.0;
-		_AL_Theme_Weight = 0.0;
-		_DMX_Group = 0.0;
-		_AL_TC_BassReactive = 1.0;
-		_OutlineWidth = 0.0;
-		_UsesNormalMap = 0.0;
-		_UsesAlpha = 0.0;
-		_EmissionStrength = 0.5;
-		_MinAmbient = 0.0;
-		_Transmissivity = 0.2;
-		_OcclusionStrength = 0.0;
-		_Smoothness = 0.0;
-		_SpecularIntensity = 0.0;
-		_MonoChrome = 0.0;
-		_Voronoi = 0.0;
-		_LightSmoothness = 1.0;
-		_LightThreshold = 0.0;
-		_LTCGIStrength = 1.0;
-		_Rounding = 0.0;
+		IFZEROAPPLY(_DMX_Weight, 0.0);
+		IFZEROAPPLY(_AL_Theme_Weight, 0.0);
+		IFZEROAPPLY(_DMX_Group, 0.0);
+		IFZEROAPPLY(_AL_TC_BassReactive, 1.0);
+		IFZEROAPPLY(_OutlineWidth, 0.0);
+		IFZEROAPPLY(_UsesNormalMap, 0.0);
+		IFZEROAPPLY(_UsesAlpha, 0.0);
+		IFZEROAPPLY(_EmissionStrength, 0.5);
+		IFZEROAPPLY(_MinAmbient, 0.20);
+		IFZEROAPPLY(_Transmissivity, 0.2);
+		IFZEROAPPLY(_OcclusionStrength, 0.0);
+		IFZEROAPPLY(_Smoothness, 0.2);
+		IFZEROAPPLY(_SpecularIntensity, 0.2);
+		IFZEROAPPLY(_MonoChrome, 0.0);
+		IFZEROAPPLY(_Voronoi, 0.0);
+		IFZEROAPPLY(_LightSmoothness, 1.0);
+		IFZEROAPPLY(_LightThreshold, 0.0);
+		IFZEROAPPLY(_LTCGIStrength, 1.0);
+		IFZEROAPPLY(_Rounding, 0.0);
 
 		#ifdef UNITY_PASS_FORWARDBASE
-		_VRSLGIStrength = 0.25;
+		IFZEROAPPLY(_VRSLGIStrength, 0.25);
 		#endif
-
 	}
 }
 
