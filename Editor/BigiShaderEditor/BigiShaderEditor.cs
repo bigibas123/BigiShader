@@ -21,6 +21,8 @@ namespace cc.dingemans.bigibas123.bigishader
 		private static readonly int AOMapID = Shader.PropertyToID("_OcclusionMap");
 		private static readonly int AOMapEnabledID = Shader.PropertyToID("_AOEnabled");
 
+		private static readonly int ProTVSquareEnabled = Shader.PropertyToID("_EnableProTVSquare");
+
 		public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
 		{
 			// Custom code that controls the appearance of the Inspector goes here
@@ -110,6 +112,21 @@ namespace cc.dingemans.bigibas123.bigishader
 					{
 						m.SetFloat(AOMapEnabledID, 0);
 						m.DisableKeyword("AMBIENT_OCCLUSION_ENABLED");
+					}
+				}
+
+				if (m.HasProperty(ProTVSquareEnabled))
+				{
+					bool protvSquare = m.GetFloat(ProTVSquareEnabled) > 0.1;
+					if (protvSquare)
+					{
+						m.SetFloat(ProTVSquareEnabled, 1.0f);
+						m.EnableKeyword("PROTV_SQUARE_ENABLED");
+					}
+					else
+					{
+						m.SetFloat(ProTVSquareEnabled, 0.0f);
+						m.DisableKeyword("PROTV_SQUARE_ENABLED");
 					}
 				}
 				

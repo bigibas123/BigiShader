@@ -3,6 +3,7 @@
 #include <HLSLSupport.cginc>
 #include "./ColorUtil.cginc"
 #include "./SoundUtilsDefines.cginc"
+#include "./BigiProTVDefines.cginc"
 
 #ifndef BIGI_LYGIA_PATCHES
 #ifndef RANDOM_SCALE_4
@@ -60,8 +61,8 @@ namespace b_effects
 		return mix.totalColor;
 	}
 
-	fixed4 apply_effects(in half2 uv, in fixed4 mask, in fixed4 orig_color, fixed4 lighting,
-						in float4 staticTexturePos)
+	fixed4 apply_effects(const in half2 uv, const in fixed4 mask, const in fixed4 orig_color, const in fixed4 lighting,
+						const in float4 staticTexturePos)
 	{
 		BEffectsTracker mix;
 		mix.totalWeight = 1.0;
@@ -90,7 +91,7 @@ namespace b_effects
 			}
 			else
 			{
-				float4 protvColor = GET_PROTV();
+				float4 protvColor = GET_PROTV(uv);
 				doMixProperly(mix, protvColor.rgb, mask.g * protvColor.a, 1.0);
 			}
 		}

@@ -24,6 +24,11 @@ uniform float _OutlineWidth;
 uniform float _UsesNormalMap;
 uniform float _UsesAlpha;
 
+//TV
+uniform float _SquareTVTest;
+uniform float _TV_Square_Opacity;
+uniform float4 _TV_Square_Position;
+
 #endif
 
 

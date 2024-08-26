@@ -31,6 +31,8 @@ namespace b_light
 		IFZEROAPPLY(_LightThreshold, 0.0);
 		IFZEROAPPLY(_LTCGIStrength, 1.0);
 		IFZEROAPPLY(_Rounding, 0.0);
+		IFZEROAPPLY(_SquareTVTest, 0.0);
+		IFZEROAPPLY(_TV_Square_Opacity, 0.0);
 
 		#ifdef UNITY_PASS_FORWARDBASE
 		IFZEROAPPLY(_VRSLGIStrength, 0.25);

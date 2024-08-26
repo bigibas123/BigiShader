@@ -55,6 +55,14 @@ Shader "Bigi/AudioLink_frag" {
 		_OutlineWidth ("Outline Width", Range(0.0,1.0)) = 0.0
 		_Rounding ("Rounding Factor", Range(0.0,0.05)) = 0.0
 
+		
+		[Header(TV Square)]
+		[Space]
+		[Toggle(PROTV_SQUARE_ENABLED)] _EnableProTVSquare ("Enable ProTV texture render", Range(0.0,1.0)) = 0.0
+		[Toggle(TV_SQUARE_TEST)] _SquareTVTest ("Enable temporarily to display tv location", Range(0.0,1.0)) = 0.0
+		_TV_Square_Opacity ("TV opacity", Range(0.0,1.0)) = 1.0
+		_TV_Square_Position ("TV Position & Size", Vector) = (0.0,0.0,1.0,1.0)
+		
 		[Header(Multi Texture)]
 		[Space]
 		[Toggle(MULTI_TEXTURE)] _MultiTexture("Use multi texture", Float) = 0
@@ -94,7 +102,7 @@ Shader "Bigi/AudioLink_frag" {
 			#pragma fragment frag
 
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
-
+			#include "./Includes/BigiProTVDefines.cginc"
 			#include "./Includes/ColorUtil.cginc"
 			#include "./Includes/ToonVert.cginc"
 			#include "./Includes/LightUtilsDefines.cginc"
@@ -158,6 +166,7 @@ Shader "Bigi/AudioLink_frag" {
 			#include "./Includes/LightUtilsDefines.cginc"
 			#include "./Includes/NormalUtils.cginc"
 			#include "./Includes/BigiEffects.cginc"
+			#include "./Includes/BigiProTVDefines.cginc"
 
 			v2f vert(appdata v)
 			{
@@ -237,6 +246,7 @@ Shader "Bigi/AudioLink_frag" {
 			#include "./Includes/BigiEffects.cginc"
 			#include "./Includes/BigiShaderParams.cginc"
 			#include "./Includes/NormalUtils.cginc"
+			#include "./Includes/BigiProTVDefines.cginc"
 
 			fragOutput frag(v2f i)
 			{
@@ -367,6 +377,7 @@ Shader "Bigi/AudioLink_frag" {
 			#include_with_pragmas "./Includes/Pragmas/ShadowCaster.cginc"
 
 			#include "./Includes/BigiShaderParams.cginc"
+			#include "./Includes/BigiProTVDefines.cginc"
 			#include <UnityCG.cginc>
 
 			struct appdata
