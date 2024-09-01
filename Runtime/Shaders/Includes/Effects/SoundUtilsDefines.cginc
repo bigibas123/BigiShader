@@ -1,10 +1,8 @@
 ﻿#ifndef BIGI_SOUND_UTILS_DEFINES
 #define BIGI_SOUND_UTILS_DEFINES
 
+#include "../Core/BigiShaderParams.cginc"
 #include "./BigiSoundUtils.cginc"
-#include "./BigiShaderParams.cginc"
-
-
 
 #define GET_SOUND_SETTINGS(set) b_sound::ALSettings set; \
 set.AL_Theme_Weight = _AL_Theme_Weight; \

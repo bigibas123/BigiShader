@@ -6,20 +6,15 @@
 #include <UnityPBSLighting.cginc>
 #include <AutoLight.cginc>
 
-#include "BigiShaderStructs.cginc"
+#include "../Core/BigiShaderStructs.cginc"
 
 
 #ifdef UNITY_PASS_FORWARDBASE
-#include "./External/VRSL/VRSLGI-ParameterSettings.cginc"
+#include "../External/VRSL/VRSLGI-ParameterSettings.cginc"
 #endif
 
 #ifdef LTCGI_ENABLED
-#include "./External/LTCGI/LTCGI-Functions.cginc"
-#endif
-
-
-#ifndef Epsilon
-#define Epsilon UNITY_HALF_MIN
+#include "../External/LTCGI/LTCGI-Functions.cginc"
 #endif
 
 namespace b_light
@@ -230,14 +225,10 @@ namespace b_light
 	)
 	{
 		float3 ret = 0;
-
-		//#ifdef VERTEXLIGHT_ON
 		ret += bigi_Shade4PointLights(
 			lightPosX, lightPosY, lightPosZ,
 			lightColor0, lightColor1, lightColor2, lightColor3,
 			lightAttenSq, pos, normal);
-		//#endif
-
 		return ret;
 	}
 }

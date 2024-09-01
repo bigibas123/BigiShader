@@ -4,7 +4,7 @@
 #include_with_pragmas "./Global.cginc"
 
 #pragma multi_compile_fwdbase
-#pragma multi_compile _ VERTEXLIGHT_ON
+#pragma multi_compile_vertex _ VERTEXLIGHT_ON
 #define FORWARD_BASE_PASS
 
 

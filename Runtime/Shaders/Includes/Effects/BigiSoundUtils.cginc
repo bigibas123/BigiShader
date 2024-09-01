@@ -3,9 +3,8 @@
 
 #ifndef BIGI_DMXAL_INCLUDES
 #define BIGI_DMXAL_INCLUDES
-#include <UnityCG.cginc>
 #include <Packages/com.llealloo.audiolink/Runtime/Shaders/AudioLink.cginc>
-#include "./ColorUtil.cginc"
+#include "../ColorUtil.cginc"
 #endif
 
 namespace b_sound

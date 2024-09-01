@@ -23,15 +23,13 @@ Shader "Bigi/LogoPlane" {
 		uniform float _AL_General_Intensity;
 
 		uniform int _Logo_FlipBookID;
+		#define MULTI_TEXTURE
 		#define OTHER_TEXTURE_ID_REF _Logo_FlipBookID
 		#define OTHER_BIGI_TEXTURES
-
-		#include "./Includes/BigiShaderParams.cginc"
-		#include "./Includes/BigiShaderTextures.cginc"
+		
 		#include "./Includes/ToonVert.cginc"
-		#include "./Includes/LightUtilsDefines.cginc"
-		#include "./Includes/SoundUtilsDefines.cginc"
-		#include "./Includes/BigiLightingParamWriter.cginc"
+		#include "./Includes/Lighting/BigiLightingParamWriter.cginc"
+		#include "./Includes/Effects/SoundUtilsDefines.cginc"
 
 
 		v2f vert(appdata v)
@@ -130,7 +128,6 @@ Shader "Bigi/LogoPlane" {
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
 			#pragma shader_feature_local_fragment _ ALPHA_MUL
-
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
 			ENDCG

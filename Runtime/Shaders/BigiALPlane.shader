@@ -31,11 +31,10 @@ Shader "Bigi/ALTest" {
 			#pragma multi_compile_fog
 			#pragma target 3.0
 			#define EXTERNAL_AUDIOLINK_ON
-			#include "./Includes/BigiShaderParams.cginc"
 			#include "./Includes/ToonVert.cginc"
-			#include "./Includes/BigiSoundUtils.cginc"
-			#include "./Includes/BigiLightingParamWriter.cginc"
-			#include "Packages/com.llealloo.audiolink/Runtime/Shaders/SmoothPixelFont.cginc"
+			#include "./Includes/Lighting/BigiLightingParamWriter.cginc"
+			#include <Packages/com.llealloo.audiolink/Runtime/Shaders/AudioLink.cginc>
+			#include <Packages/com.llealloo.audiolink/Runtime/Shaders/SmoothPixelFont.cginc>
 
 			fragOutput frag(v2f i)
 			{
@@ -152,7 +151,7 @@ Shader "Bigi/ALTest" {
 			#pragma multi_compile_instancing
 
 			#include "./Includes/ToonVert.cginc"
-			#include "./Includes/LightUtilsDefines.cginc"
+			#include "./Includes/Lighting/LightUtilsDefines.cginc"
 
 			fragOutput frag(v2f i)
 			{

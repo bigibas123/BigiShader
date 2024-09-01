@@ -1,64 +1,19 @@
 #ifndef BIGI_TOONVERT_INCL
 #define BIGI_TOONVERT_INCL
-
-
 #include <UnityCG.cginc>
 #include <AutoLight.cginc>
-#include "./LightUtilsDefines.cginc"
 
-#ifndef BIGI_DEFAULT_FRAGOUT
-#define BIGI_DEFAULT_FRAGOUT
-struct fragOutput {
-    fixed4 color : SV_Target;
-};
-#endif
-#ifndef BIGI_DEFAULT_APPDATA
-#define BIGI_DEFAULT_APPDATA
-
-struct appdata
-{
-	float4 vertex : POSITION;
-	float3 normal : NORMAL;
-	float4 tangent : TANGENT;
-	float4 uv0 : TEXCOORD0;
-	float4 color : COLOR;
-	float2 uv1 : TEXCOORD1; //Lightmap Uvs
-	float2 uv2 : TEXCOORD2; //Realtime lightmap Uvs
-	float2 uv3 : TEXCOORD3;
-	uint vertexId : SV_VertexID;
-	UNITY_VERTEX_INPUT_INSTANCE_ID
-};
-#endif
-
-//intermediate
-struct v2f
-{
-	UNITY_POSITION(pos); //float4 pos : SV_POSITION;
-
-	float4 uv : TEXCOORD0;
-	float4 uv1 : TEXCOORD1;
-	float3 normal : TEXCOORD2;
-	float4 tangent : TEXCOORD3;
-	float4 worldPos : TEXCOORD4;
-	float4 localPos : TEXCOORD5;
-	float4 lightmapUV : TEXCOORD6;
-	UNITY_FOG_COORDS(7)
-	UNITY_LIGHTING_COORDS(9,8)
-	float3 bitangent : TEXCOORD10;
-	float4 staticTexturePos : TEXCOORD11;
-	float3 vertexLighting : TEXCOORD12;
-	
-
-	UNITY_VERTEX_INPUT_INSTANCE_ID
-	UNITY_VERTEX_OUTPUT_STEREO
-};
+#include "./Core/BigiShaderStructs.cginc"
+#include "./Core/BigiShaderParams.cginc"
+#include "./Core/BigiMainTex.cginc"
+#include "./Lighting/LightUtilsDefines.cginc"
 
 #ifndef BIGI_V1_TOONVERTSHADER
 #define BIGI_V1_TOONVERTSHADER
 
-float4 round_val(float4 snapToPixel)
+float4 round_val(const in float4 snapToPixel, const uniform in float rounding)
 {
-	float gridSize = 1.0 / (_Rounding + Epsilon);
+	float gridSize = 1.0 / (rounding + Epsilon);
 	float4 vt = snapToPixel;
 	vt.xyz = snapToPixel.xyz / snapToPixel.w;
 	vt.xy = floor(gridSize * vt.xy) / gridSize;
@@ -66,23 +21,17 @@ float4 round_val(float4 snapToPixel)
 	return vt;
 }
 
-
-v2f bigi_toon_vert(appdata v)
+v2f do_v2fCalc(in v2f o, const in appdata v)
 {
-	v2f o;
-	UNITY_SETUP_INSTANCE_ID(v);
-	UNITY_TRANSFER_INSTANCE_ID(v, o);
-	UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-
-
-	if (_Rounding > Epsilon)
+	#ifndef ROUNDING_DISABLED
+	if (ROUNDING_VAR_NAME > Epsilon)
 	{
-		o.localPos = round_val(v.vertex);
+		o.localPos = round_val(v.vertex, ROUNDING_VAR_NAME);
 		o.pos = UnityObjectToClipPos(o.localPos);
 		o.uv.xy = (DO_TRANSFORM(v.uv0)) * o.pos.w;
-		o.uv1 = float4(v.uv1,v.uv2);
-		o.normal = UnityObjectToWorldNormal(round_val(float4(v.normal, 1.0)).xyz);
-		float4 rounded_tangent = round_val(v.tangent);
+		o.uv1 = float4(v.uv1, v.uv2);
+		o.normal = UnityObjectToWorldNormal(round_val(float4(v.normal, 1.0), ROUNDING_VAR_NAME).xyz);
+		float4 rounded_tangent = round_val(v.tangent, ROUNDING_VAR_NAME);
 		o.tangent.xyz = UnityObjectToWorldDir(rounded_tangent).xyz;
 		o.tangent.w = rounded_tangent.w;
 	}
@@ -91,11 +40,33 @@ v2f bigi_toon_vert(appdata v)
 		o.localPos = v.vertex;
 		o.pos = UnityObjectToClipPos(o.localPos);
 		o.uv.xy = DO_TRANSFORM(v.uv0);
-		o.uv1 = float4(v.uv1,v.uv2);
+		o.uv1 = float4(v.uv1, v.uv2);
 		o.normal = UnityObjectToWorldNormal(v.normal);
 		o.tangent.xyz = UnityObjectToWorldDir(v.tangent);
 		o.tangent.w = v.tangent.w;
 	}
+	#else
+	o.localPos = v.vertex;
+	o.pos = UnityObjectToClipPos(o.localPos);
+	o.uv.xy = DO_TRANSFORM(v.uv0);
+	o.uv1 = float4(v.uv1, v.uv2);
+	o.normal = UnityObjectToWorldNormal(v.normal);
+	o.tangent.xyz = UnityObjectToWorldDir(v.tangent);
+	o.tangent.w = v.tangent.w;
+	#endif
+	return o;
+}
+
+v2f bigi_toon_vert(appdata v)
+{
+	v2f o;
+	UNITY_INITIALIZE_OUTPUT(v2f, o);
+	UNITY_SETUP_INSTANCE_ID(v);
+	UNITY_TRANSFER_INSTANCE_ID(v, o);
+	UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+
+	o = do_v2fCalc(o, v);
+
 	o.uv.zw = v.uv0.zw;
 	const float tangentSign = v.tangent.w * unity_WorldTransformParams.w;
 	o.bitangent = cross(o.normal, o.tangent) * tangentSign;
@@ -114,12 +85,12 @@ v2f bigi_toon_vert(appdata v)
 	// Update: Orels has a shader that I can checkout: https://shaders.orels.sh/docs/ui/layered-parallax
 
 	o.worldPos = mul(unity_ObjectToWorld, o.localPos);
-	
-	o.lightmapUV.xy = v.uv1.xy;// * unity_LightmapST.xy + unity_LightmapST.zw;
-	o.lightmapUV.zw = v.uv2.xy;// * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
-    BIGI_GETLIGHT_VERTEX(vlight);
-    o.vertexLighting = vlight;
-	
+
+	o.lightmapUV.xy = v.uv1.xy; // * unity_LightmapST.xy + unity_LightmapST.zw;
+	o.lightmapUV.zw = v.uv2.xy; // * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
+	BIGI_GETLIGHT_VERTEX(vlight);
+	o.vertexLighting = vlight;
+
 	return o;
 }
 #endif

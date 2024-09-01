@@ -33,7 +33,7 @@
 
 
 		#define BIGI_SHADER_PARAMS
-		#include "./Includes/SoundUtilsDefines.cginc"
+		#include "./Includes/Effects/SoundUtilsDefines.cginc"
 
 		struct appdata
 		{

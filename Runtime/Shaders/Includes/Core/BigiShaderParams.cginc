@@ -1,12 +1,10 @@
 #ifndef BIGI_SHADER_PARAMS
 #define BIGI_SHADER_PARAMS
 
-//#include "./BigiShaderTextures.cginc"
-
-//#include <UnityShaderVariables.cginc>
-
 #ifndef BIGI_UNIFORMS
 #define BIGI_UNIFORMS
+
+uniform float _Alpha_Threshold;
 
 #ifndef BIGI_UNIFORMS_DMXAL
 #define BIGI_UNIFORMS_DMXAL
@@ -20,9 +18,6 @@ uniform float _AL_TC_BassReactive;
 
 //Both
 uniform float _OutlineWidth;
-
-uniform float _UsesNormalMap;
-uniform float _UsesAlpha;
 
 //TV
 uniform float _SquareTVTest;
@@ -50,27 +45,22 @@ uniform float _LightThreshold;
 
 uniform float _LTCGIStrength;
 
-uniform float _Rounding;
-#define GET_UV(origuv,iposw) _Rounding > Epsilon ? origuv/iposw : origuv
+#ifndef ROUNDING_VAR_NAME
+	#ifndef ROUNDING_DISABLED
+		uniform float _Rounding;
+		#define ROUNDING_VAR_NAME _Rounding
+	#endif
+#endif
+
+#if defined(ROUNDING_VAR_NAME) && defined(ROUNDING_DISABLED)
+#define GET_UV(origuv,iposw) (ROUNDING_VAR_NAME > Epsilon ? origuv/iposw : origuv)
 #define GETUV GET_UV(i.uv.xy,i.pos.w)
-
+#else
+#define GET_UV(origuv) origuv
+#define GETUV GET_UV(i.uv.xy)
 #endif
 
 
-#ifndef BIGI_DEFAULT_FRAGOUT
-#define BIGI_DEFAULT_FRAGOUT
-
-#include <HLSLSupport.cginc>
-
-struct fragOutput
-{
-	fixed4 color : SV_Target;
-};
-#endif
-
-#ifndef Epsilon
-#include <UnityCG.cginc>
-#define Epsilon UNITY_HALF_MIN
 #endif
 
 #endif

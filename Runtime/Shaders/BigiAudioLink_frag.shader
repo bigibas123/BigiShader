@@ -2,19 +2,33 @@ Shader "Bigi/AudioLink_frag" {
 	Properties {
 		[MainTexture] _MainTex ("Texture", 2D) = "black" {}
 		[Toggle(DO_ALPHA_PLS)] _UsesAlpha("Is transparent", Float) = 1
-		
+		[Enum(UnityEngine.Rendering.CullMode)] _Cull ("Culling", Float) = 2
+		_Alpha_Threshold ("Alpha threshold",Range(0.0,1.0)) = 1.0
+
+		[Header(ZWriteZTest Settings)]
+		[Header(Opaque Forward Base)]
+		[Enum(Off, 0, On, 1)] _ZWriteOFWB ("ZWrite Opaque ForwardBase", Int) = 1
+		[Enum(UnityEngine.Rendering.CompareFunction)] _ZTestOFWB ("Ztest Opaque ForwardBase", Int) = 4
+		[Header(Transparent ForwardBase)]
+		[Enum(Off, 0, On, 1)] _ZWriteTFWB ("ZWrite Transparent ForwardBase", Int) = 1
+		[Enum(UnityEngine.Rendering.CompareFunction)] _ZTestTFWB ("Ztest Transparent ForwardBase", Int) = 2
+		[Header(Other Passes)]
+		[Enum(UnityEngine.Rendering.CompareFunction)] _ZTestFWA ("Ztest ForwardAdd", Int) = 4
+		[Enum(UnityEngine.Rendering.CompareFunction)] _ZTestOL ("Ztest Outline", Int) = 4
+		[Enum(UnityEngine.Rendering.CompareFunction)] _ZTestSP ("Ztest Shadow Pass", Int) = 4
+
 		[Header(Normal mapping)]
 		[Space]
 		[Toggle(NORMAL_MAPPING)] _UsesNormalMap("Enable normal map", Float) = 1
-		[NoScaleOffset] _BumpMap("Normal Map", 2D) = "bump" {}
-		
+		[NoScaleOffset] [Normal] _BumpMap("Normal Map", 2D) = "bump" {}
+
 		[Header(Specular and Smooth)]
 		[Space]
 		[Toggle(SPECSMOOTH_MAP_ENABLED)] _EnableSpecularSmooth ("Enable Specular & Smoothness map", Range(0.0,1.0)) = 0.0
 		[NoScaleOffset] _SpecSmoothMap ("Specular (rgb) and Smoothness (a) map", 2D) = "black" {}
 		_SpecularIntensity ("Specular intensity multiplier", Range(0.0,1.0)) = 0.0
 		_Smoothness ("Smoothness multiplier", Range(0.0,1.0)) = 1.0
-		
+
 		[Header(Extra textures)]
 		[Space]
 		_Spacey ("Spacey Texture", 2D) = "black" {}
@@ -30,13 +44,13 @@ Shader "Bigi/AudioLink_frag" {
 		[Space]
 		_MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.005
 		_Transmissivity ("Transmission of light through the material", Range(0.0,1.0)) = 0.2
-		
+
 		[Header(3rdParty lighting)]
 		[Space]
 		_VRSLGIStrength ("VRSL-GI Strength", Range(0.0,1.0)) = 0.25
 		[Toggle(LTCGI_ENABLED)] _EnableLTCGI ("Enable LTCGI", Range(0.0,1.0)) = 0.0
 		_LTCGIStrength ("LTCGI Strenght", Range(0.0,2.0)) = 1.0
-		
+
 		[Header(Ambient Occlusion)]
 		[Space]
 		[Toggle(AMBIENT_OCCLUSION_ENABLED)] _AOEnabled ("Enabled Ambient Occlusion",Range(0.0,1.0)) = 0.0
@@ -55,14 +69,14 @@ Shader "Bigi/AudioLink_frag" {
 		_OutlineWidth ("Outline Width", Range(0.0,1.0)) = 0.0
 		_Rounding ("Rounding Factor", Range(0.0,0.05)) = 0.0
 
-		
+
 		[Header(TV Square)]
 		[Space]
 		[Toggle(PROTV_SQUARE_ENABLED)] _EnableProTVSquare ("Enable ProTV texture render", Range(0.0,1.0)) = 0.0
 		[Toggle(TV_SQUARE_TEST)] _SquareTVTest ("Enable temporarily to display tv location", Range(0.0,1.0)) = 0.0
 		_TV_Square_Opacity ("TV opacity", Range(0.0,1.0)) = 1.0
 		_TV_Square_Position ("TV Position & Size", Vector) = (0.0,0.0,1.0,1.0)
-		
+
 		[Header(Multi Texture)]
 		[Space]
 		[Toggle(MULTI_TEXTURE)] _MultiTexture("Use multi texture", Float) = 0
@@ -87,9 +101,9 @@ Shader "Bigi/AudioLink_frag" {
 				"LightMode" = "ForwardBase"
 				"LTCGI"="ALWAYS"
 			}
-			Cull Off
-			ZWrite On
-			ZTest Less
+			Cull [_Cull]
+			ZWrite [_ZWriteOFWB]
+			ZTest [_ZTestOFWB]
 			Blend One OneMinusSrcAlpha
 			Stencil {
 				Ref 180 //148 + 32 // 1011 0100 // VRSLGI + Own stencil bit
@@ -102,37 +116,20 @@ Shader "Bigi/AudioLink_frag" {
 			#pragma fragment frag
 
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
-			#include "./Includes/BigiProTVDefines.cginc"
-			#include "./Includes/ColorUtil.cginc"
+			#include "./Includes/Core/BigiMainTex.cginc"
 			#include "./Includes/ToonVert.cginc"
-			#include "./Includes/LightUtilsDefines.cginc"
-			#include "./Includes/NormalUtils.cginc"
-
-			#include "./Includes/BigiEffects.cginc"
+			#include "./Includes/BigiAudioLink_frag_default.cginc"
 
 			fragOutput frag(v2f i)
 			{
 				const fixed4 orig_color = GET_TEX_COLOR(GETUV);
 				#ifdef DO_ALPHA_PLS
-				if (_UsesAlpha)
+				if (orig_color.a < _Alpha_Threshold)
 				{
-					if(IsPartiallyTransparent(orig_color)){ discard; }
+					discard;
 				}
 				#endif
-				fragOutput o;
-				UNITY_SETUP_INSTANCE_ID(i);
-				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-				if (_UsesNormalMap)
-				{
-					i.normal = b_normalutils::recalculate_normals(i.normal, GET_NORMAL(GETUV), i.tangent, i.bitangent);
-				}
-
-				BIGI_GETLIGHT_DEFAULT(lighting);
-
-				const fixed4 mask = GET_MASK_COLOR(GETUV);
-				o.color = b_effects::apply_effects(GETUV, mask, orig_color, lighting, i.staticTexturePos);
-				UNITY_APPLY_FOG(i.fogCoord, o.color);
-				return o;
+				return b_frag::bigi_frag_fwdbase(i, orig_color);
 			}
 			ENDCG
 		}
@@ -145,9 +142,9 @@ Shader "Bigi/AudioLink_frag" {
 				"LightMode" = "ForwardBase"
 				"LTCGI"="ALWAYS"
 			}
-			Cull Off
-			ZWrite Off
-			ZTest Less
+			Cull [_Cull]
+			ZWrite [_ZWriteTFWB]
+			ZTest [_ZTestTFWB]
 			Blend SrcAlpha OneMinusSrcAlpha
 			Stencil {
 				Ref 180 //148 + 32 // 1011 0100 // VRSLGI + Own stencil bit
@@ -156,65 +153,35 @@ Shader "Bigi/AudioLink_frag" {
 				Pass Replace
 			}
 			CGPROGRAM
-			#pragma vertex vert
-			#pragma fragment frag
+			#pragma vertex vert alpha
+			#pragma fragment frag alpha
 			#pragma multi_compile_fwdbasealpha
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
-
-			#include "./Includes/ColorUtil.cginc"
+			#include "./Includes/Core/BigiMainTex.cginc"
 			#include "./Includes/ToonVert.cginc"
-			#include "./Includes/LightUtilsDefines.cginc"
-			#include "./Includes/NormalUtils.cginc"
-			#include "./Includes/BigiEffects.cginc"
-			#include "./Includes/BigiProTVDefines.cginc"
+			#include "./Includes/BigiAudioLink_frag_default.cginc"
 
 			v2f vert(appdata v)
 			{
 				#ifdef DO_ALPHA_PLS
-				if (_UsesAlpha)
-				{
-					return bigi_toon_vert(v);
-				}
-				#endif
+				return bigi_toon_vert(v);
+				#else
 				v2f o;
 				UNITY_INITIALIZE_OUTPUT(v2f, o);
 				return o;
+				#endif
 			}
 
 			fragOutput frag(v2f i)
 			{
-				if (_UsesAlpha)
-				{
-					fragOutput o;
-					UNITY_SETUP_INSTANCE_ID(i);
-					UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-					const fixed4 orig_color = GET_TEX_COLOR(GETUV);
-					if (!IsPartiallyTransparent(orig_color))
-					{
-						discard;
-					}
-
-					if (_UsesNormalMap)
-					{
-						i.normal = b_normalutils::recalculate_normals(i.normal, GET_NORMAL(GETUV), i.tangent,
-																i.bitangent);
-					}
-
-					BIGI_GETLIGHT_DEFAULT(lighting);
-
-					const fixed4 mask = GET_MASK_COLOR(GETUV);
-					o.color = b_effects::apply_effects(GETUV, mask, orig_color, lighting, i.staticTexturePos);
-					UNITY_APPLY_FOG(i.fogCoord, o.color);
-					return o;
-				}
-				else
+				const fixed4 orig_color = GET_TEX_COLOR(GETUV);
+				#ifdef DO_ALPHA_PLS
+				if(orig_color.a > _Alpha_Threshold)
 				{
 					discard;
-					fragOutput o;
-						UNITY_INITIALIZE_OUTPUT(fragOutput, o);
-					o.color.rgba = 0.0;
-					return o;
 				}
+				#endif
+				return b_frag::bigi_frag_fwdbase(i, orig_color);
 			}
 			ENDCG
 		}
@@ -225,9 +192,9 @@ Shader "Bigi/AudioLink_frag" {
 				"LightMode" = "ForwardAdd"
 				"LTCGI"="ALWAYS"
 			}
-			Cull Off
+			Cull [_Cull]
 			ZWrite Off
-			ZTest LEqual
+			ZTest [_ZTestFWA]
 			Blend SrcAlpha One
 			Stencil {
 				Ref 180 //148 + 32 // 1011 0100 // VRSLGI + Own stencil bit
@@ -240,13 +207,10 @@ Shader "Bigi/AudioLink_frag" {
 			#pragma fragment frag
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
 
-
 			#include "./Includes/ToonVert.cginc"
-			#include "./Includes/LightUtilsDefines.cginc"
-			#include "./Includes/BigiEffects.cginc"
-			#include "./Includes/BigiShaderParams.cginc"
-			#include "./Includes/NormalUtils.cginc"
-			#include "./Includes/BigiProTVDefines.cginc"
+			#include "./Includes/Lighting/NormalDefines.cginc"
+			#include "./Includes/Lighting/LightUtilsDefines.cginc"
+			#include "./Includes/Effects/BigiEffects.cginc"
 
 			fragOutput frag(v2f i)
 			{
@@ -254,10 +218,7 @@ Shader "Bigi/AudioLink_frag" {
 				fragOutput o;
 				UNITY_SETUP_INSTANCE_ID(i);
 				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-				if (_UsesNormalMap)
-				{
-					i.normal = b_normalutils::recalculate_normals(i.normal, GET_NORMAL(GETUV), i.tangent, i.bitangent);
-				}
+				RECALC_NORMALS();
 
 				BIGI_GETLIGHT_DEFAULT(lighting);
 
@@ -276,9 +237,9 @@ Shader "Bigi/AudioLink_frag" {
 				"RenderType" = "TransparentCutout"
 				"Lightmode" = "Always"
 			}
-			Cull Off
+			Cull [_Cull]
 			ZWrite Off
-			ZTest LEqual
+			ZTest [_ZTestOL]
 			AlphaToMask On
 			Stencil {
 				Ref 0
@@ -292,9 +253,12 @@ Shader "Bigi/AudioLink_frag" {
 
 			#include_with_pragmas "./Includes/Pragmas/Global.cginc"
 
+			#define BIGI_DEFAULT_APPDATA_DEFINED
+			#define BIGI_DEFAULT_V2F_DEFINED
 
-			#include "./Includes/BigiShaderParams.cginc"
-			#include "./Includes/SoundUtilsDefines.cginc"
+			#include "./Includes/Core/BigiShaderStructs.cginc"
+			#include "./Includes/Core/BigiShaderParams.cginc"
+			#include "./Includes/Effects/SoundUtilsDefines.cginc"
 
 
 			struct appdata
@@ -302,7 +266,8 @@ Shader "Bigi/AudioLink_frag" {
 				float4 vertex : POSITION;
 				float3 normal : NORMAL;
 				float4 texcoord : TEXCOORD0;
-				UNITY_VERTEX_INPUT_INSTANCE_ID };
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+			};
 
 			//intermediate
 			struct v2f
@@ -327,7 +292,7 @@ Shader "Bigi/AudioLink_frag" {
 					float3 offset = v.normal.xyz * (_OutlineWidth * 0.01) * b_sound::GetWaves(length(heightPos));
 
 					o.pos = UnityObjectToClipPos(v.vertex + offset);
-					o.pos = lerp(0.0, o.pos, smoothstep(0.0,Epsilon, _OutlineWidth));
+					o.pos = lerp(0.0, o.pos, smoothstep(0.0, Epsilon, _OutlineWidth));
 				}
 				else
 				{
@@ -369,15 +334,17 @@ Shader "Bigi/AudioLink_frag" {
 			}
 			Cull Off
 			ZWrite On
-			ZTest LEqual
+			ZTest [_ZTestSP]
 			CGPROGRAM
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
-
 			#include_with_pragmas "./Includes/Pragmas/ShadowCaster.cginc"
 
-			#include "./Includes/BigiShaderParams.cginc"
-			#include "./Includes/BigiProTVDefines.cginc"
+			#define BIGI_DEFAULT_APPDATA_DEFINED
+			#define BIGI_DEFAULT_V2F_DEFINED
+
+			#include "./Includes/Core/BigiShaderStructs.cginc"
+			#include "./Includes/Core/BigiShaderParams.cginc"
 			#include <UnityCG.cginc>
 
 			struct appdata

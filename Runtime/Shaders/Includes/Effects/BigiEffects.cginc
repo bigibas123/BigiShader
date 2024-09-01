@@ -1,9 +1,10 @@
 ﻿#ifndef BIGI_EFFECTS_INCLUDE
 #define BIGI_EFFECTS_INCLUDE
 #include <HLSLSupport.cginc>
-#include "./ColorUtil.cginc"
+#include "../Core/BigiProTV.cginc"
+#include "../Core/BigiGetColor.cginc"
+#include "../ColorUtil.cginc"
 #include "./SoundUtilsDefines.cginc"
-#include "./BigiProTVDefines.cginc"
 
 #ifndef BIGI_LYGIA_PATCHES
 #ifndef RANDOM_SCALE_4
@@ -77,16 +78,14 @@ namespace b_effects
 			doMixProperly(mix, orig_color.rgb * (max(1.0, _EmissionStrength) * max(1.0, _EmissionStrength)),
 						mask.r * _EmissionStrength, 1.0);
 		}
-		#ifdef OTHER_BIGI_TEXTURES
-		//Screenspace images
+		//Screenspace images or uv-based ProTV
 		{
 			PROTV_PRESENT(tvPresent);
 			//ProTV Check
 			if (!tvPresent)
 			{
 				// no video texture
-				const half2 screen_texture_pos = TRANSFORM_TEX((staticTexturePos.xy / staticTexturePos.w), _Spacey);
-				float4 spaceyColor= UNITY_SAMPLE_TEX2D(_Spacey, screen_texture_pos);
+				float4 spaceyColor= GET_SPACEY(staticTexturePos);
 				doMixProperly(mix, spaceyColor.rgb, mask.g * spaceyColor.a, 1.0);
 			}
 			else
@@ -95,7 +94,6 @@ namespace b_effects
 				doMixProperly(mix, protvColor.rgb, mask.g * protvColor.a, 1.0);
 			}
 		}
-		#endif
 
 		//Voronoi
 		{

@@ -24,7 +24,7 @@
 
 				#include <UnityCG.cginc>
 				#include "./Includes/ColorUtil.cginc"
-				#include "./Includes/BigiSoundUtils.cginc"
+				#include "./Includes/Effects/BigiSoundUtils.cginc"
 				uniform float _Brightness;
 				uniform float _Hue;
 

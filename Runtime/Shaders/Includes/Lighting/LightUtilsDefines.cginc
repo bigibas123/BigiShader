@@ -5,9 +5,9 @@
 #include <UnityPBSLighting.cginc>
 #include <AutoLight.cginc>
 #include <UnityLightingCommon.cginc>
-#include "./BigiShaderParams.cginc"
 #include "./BigiLightUtils.cginc"
-#include "./BigiShaderTextures.cginc"
+#include "../Core/BigiGetColor.cginc"
+#include "../Core/BigiShaderParams.cginc"
 
 
 
