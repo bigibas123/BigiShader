@@ -1,7 +1,7 @@
 Shader "Bigi/AudioLink_frag" {
 	Properties {
 		[MainTexture] _MainTex ("Texture", 2D) = "black" {}
-		[Toggle(DO_ALPHA_PLS)] _UsesAlpha("Is transparent", Float) = 1
+		[HideInInspector] [Toggle(DO_ALPHA_PLS)] _UsesAlpha("Is transparent", Float) = 1
 		[Enum(UnityEngine.Rendering.CullMode)] _Cull ("Culling", Float) = 2
 		_Alpha_Threshold ("Alpha threshold",Range(0.0,1.0)) = 1.0
 
@@ -19,13 +19,14 @@ Shader "Bigi/AudioLink_frag" {
 
 		[Header(Normal mapping)]
 		[Space]
-		[Toggle(NORMAL_MAPPING)] _UsesNormalMap("Enable normal map", Float) = 1
 		[NoScaleOffset] [Normal] _BumpMap("Normal Map", 2D) = "bump" {}
+		[HideInInspector] [Toggle(NORMAL_MAPPING)] _UsesNormalMap("Enable normal map", Float) = 1
+		
 
 		[Header(Specular and Smooth)]
 		[Space]
-		[Toggle(SPECSMOOTH_MAP_ENABLED)] _EnableSpecularSmooth ("Enable Specular & Smoothness map", Range(0.0,1.0)) = 0.0
 		[NoScaleOffset] _SpecSmoothMap ("Specular (rgb) and Smoothness (a) map", 2D) = "black" {}
+		[HideInInspector] [Toggle(SPECSMOOTH_MAP_ENABLED)] _EnableSpecularSmooth ("Enable Specular & Smoothness map", Range(0.0,1.0)) = 0.0
 		_SpecularIntensity ("Specular intensity multiplier", Range(0.0,1.0)) = 0.0
 		_Smoothness ("Smoothness multiplier", Range(0.0,1.0)) = 1.0
 
@@ -79,8 +80,8 @@ Shader "Bigi/AudioLink_frag" {
 
 		[Header(Multi Texture)]
 		[Space]
-		[Toggle(MULTI_TEXTURE)] _MultiTexture("Use multi texture", Float) = 0
 		_MainTexArray ("Other textures", 2DArray) = "" {}
+		[HideInInspector] [Toggle(MULTI_TEXTURE)] _MultiTexture("Use multi texture", Float) = 0
 		_OtherTextureId ("Other texture Id", Int) = 0
 
 

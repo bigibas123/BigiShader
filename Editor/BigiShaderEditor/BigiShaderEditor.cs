@@ -58,14 +58,17 @@ namespace cc.dingemans.bigibas123.bigishader
 						else
 						{
 							m.SetShaderPassEnabled("TransparentForwardBase", false);
-							ZWriteTFWB.Set(m, false);
-							ZTestTFWB.Set(m, (int)CompareFunction.Never);
-							if (ZTestTFWB.FloatPresent(m))
+							if (ZWriteTFWB.GetBool(m))
 							{
-								ZTestTFWB.Set(m, (float)CompareFunction.Never);
+								ZWriteTFWB.Set(m, false);
 							}
 
-							if (ZTestTFWB.IntPresent(m) || ZTestTFWB.FloatPresent(m))
+							if (ZTestTFWB.GetInt(m) != (int)CompareFunction.Never)
+							{
+								ZTestTFWB.Set(m, (int)CompareFunction.Never);
+							}
+
+							if (ZTestTFWB.IntPresent(m))
 							{
 								materialProperties.RemoveAll(p => p.displayName.Contains("Transparent ForwardBase"));
 							}
@@ -147,22 +150,29 @@ namespace cc.dingemans.bigibas123.bigishader
 		{
 			try
 			{
-				switch ((CompareFunction)property.GetInt(material))
+				if (property.IntPresent(material))
 				{
-					case CompareFunction.Always:
-					case CompareFunction.Disabled:
-					case CompareFunction.Greater:
-					case CompareFunction.GreaterEqual:
-					case CompareFunction.NotEqual:
-						property.Set(material, (int)CompareFunction.LessEqual);
-						break;
-					case CompareFunction.Less:
-					case CompareFunction.LessEqual:
-					case CompareFunction.Never:
-					case CompareFunction.Equal:
-						break;
-					default:
-						throw new ArgumentOutOfRangeException();
+					switch ((CompareFunction)property.GetInt(material))
+					{
+						case CompareFunction.Always:
+						case CompareFunction.Disabled:
+						case CompareFunction.Greater:
+						case CompareFunction.GreaterEqual:
+						case CompareFunction.NotEqual:
+							property.Set(material, (int)CompareFunction.LessEqual);
+							break;
+						case CompareFunction.Less:
+						case CompareFunction.LessEqual:
+						case CompareFunction.Never:
+						case CompareFunction.Equal:
+							break;
+						default:
+							throw new ArgumentOutOfRangeException();
+					}
+				}
+				else
+				{
+					property.Set(material, (int)CompareFunction.LessEqual);
 				}
 			}
 			catch (Exception e)
