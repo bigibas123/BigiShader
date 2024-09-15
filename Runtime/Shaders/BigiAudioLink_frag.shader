@@ -21,7 +21,6 @@ Shader "Bigi/AudioLink_frag" {
 		[Space]
 		[NoScaleOffset] [Normal] _BumpMap("Normal Map", 2D) = "bump" {}
 		[HideInInspector] [Toggle(NORMAL_MAPPING)] _UsesNormalMap("Enable normal map", Float) = 1
-		
 
 		[Header(Specular and Smooth)]
 		[Space]
@@ -254,53 +253,27 @@ Shader "Bigi/AudioLink_frag" {
 
 			#include_with_pragmas "./Includes/Pragmas/Global.cginc"
 
-			#define BIGI_DEFAULT_APPDATA_DEFINED
-			#define BIGI_DEFAULT_V2F_DEFINED
-
 			#include "./Includes/Core/BigiShaderStructs.cginc"
 			#include "./Includes/Core/BigiShaderParams.cginc"
 			#include "./Includes/Effects/SoundUtilsDefines.cginc"
+			#include "./Includes/ToonVert.cginc"
 
-
-			struct appdata
-			{
-				float4 vertex : POSITION;
-				float3 normal : NORMAL;
-				float4 texcoord : TEXCOORD0;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
-			//intermediate
-			struct v2f
-			{
-				UNITY_POSITION(pos); //float4 pos : SV_POSITION;
-				half4 soundColor: COLOR0;
-				UNITY_VERTEX_INPUT_INSTANCE_ID UNITY_VERTEX_OUTPUT_STEREO
-			};
 
 			v2f vert(appdata v)
 			{
 				v2f o;
-				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-				UNITY_TRANSFER_INSTANCE_ID(v, o);
+				UNITY_INITIALIZE_OUTPUT(v2f, o);
 				if (AudioLinkIsAvailable())
 				{
-					GET_SOUND_COLOR(scol);
-					o.soundColor = scol;
-
 					float4 heightPos = v.vertex * 10.0 + float4(0.0, 7.0, 0.0, 0.0);
 					float3 offset = v.normal.xyz * (_OutlineWidth * 0.01) * b_sound::GetWaves(length(heightPos));
 
-					o.pos = UnityObjectToClipPos(v.vertex + offset);
-					o.pos = lerp(0.0, o.pos, smoothstep(0.0, Epsilon, _OutlineWidth));
+					offset = lerp(0.0, offset, smoothstep(0.0, Epsilon, _OutlineWidth));
+					v.vertex = v.vertex + float4(offset,0.0);
+					o = bigi_toon_vert(v);
+					GET_SOUND_COLOR(scol);
+					o.staticTexturePos = scol;
 				}
-				else
-				{
-					o.pos = float4(0, 0, 0, 0);
-					o.soundColor = half4(0, 0, 0, 0);
-				}
-
 				return o;
 			}
 
@@ -312,8 +285,9 @@ Shader "Bigi/AudioLink_frag" {
 				if (AudioLinkIsAvailable())
 				{
 					clip(_OutlineWidth - Epsilon);
-					clip(i.soundColor.a - Epsilon);
-					o.color = half4(i.soundColor.rgb * i.soundColor.a, smoothstep(0.0, 0.05, i.soundColor.a));
+					clip(i.staticTexturePos.a - Epsilon);
+					o.color = half4(i.staticTexturePos.rgb * i.staticTexturePos.a,
+							smoothstep(0.0, 0.05, i.staticTexturePos.a));
 					clip(o.color.a - Epsilon);
 				}
 				else
@@ -340,22 +314,13 @@ Shader "Bigi/AudioLink_frag" {
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
 			#include_with_pragmas "./Includes/Pragmas/ShadowCaster.cginc"
-
-			#define BIGI_DEFAULT_APPDATA_DEFINED
+			
 			#define BIGI_DEFAULT_V2F_DEFINED
 
 			#include "./Includes/Core/BigiShaderStructs.cginc"
 			#include "./Includes/Core/BigiShaderParams.cginc"
 			#include <UnityCG.cginc>
-
-			struct appdata
-			{
-				float4 vertex : POSITION;
-				float3 normal : NORMAL;
-				float4 texcoord : TEXCOORD0;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
-
+			
 			struct v2f
 			{
 				V2F_SHADOW_CASTER;
@@ -373,6 +338,7 @@ Shader "Bigi/AudioLink_frag" {
 			v2f vert(appdata v)
 			{
 				v2f o;
+				UNITY_INITIALIZE_OUTPUT(v2f, o);
 				UNITY_SETUP_INSTANCE_ID(v);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
