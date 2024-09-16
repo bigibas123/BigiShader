@@ -239,7 +239,19 @@ namespace cc.dingemans.bigibas123.bigishader
 
 		public static void Set(this BigiProperty prop, Material material, int value)
 		{
-			material.SetInteger(prop.GetPropertyId(), value);
+			var id = prop.GetPropertyId();
+			if (material.HasInt(id))
+			{
+				material.SetInteger(id, value);
+			}
+			else if (material.HasFloat(id))
+			{
+				material.SetFloat(id, value);
+			}
+			else
+			{
+				throw new InvalidCastException($"Can't set property {prop} to {value} because it is neither a float nor an int");
+			}
 		}
 
 		public static int GetInt(this BigiProperty prop, Material material)
