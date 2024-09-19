@@ -52,7 +52,7 @@ uniform float _LTCGIStrength;
 	#endif
 #endif
 
-#if defined(ROUNDING_VAR_NAME) && defined(ROUNDING_DISABLED)
+#if defined(ROUNDING_VAR_NAME) && !defined(ROUNDING_DISABLED)
 #define GET_UV(origuv,iposw) (ROUNDING_VAR_NAME > Epsilon ? origuv/iposw : origuv)
 #define GETUV GET_UV(i.uv.xy,i.pos.w)
 #else
