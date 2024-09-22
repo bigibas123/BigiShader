@@ -23,7 +23,7 @@
     _MinAmbient,\
     _Transmissivity,\
     _LightSmoothness,\
-    _LightThreshold,\
+    _LightSteps,\
     GET_SPEC_SMOOTH(GETUV)\
     )
 

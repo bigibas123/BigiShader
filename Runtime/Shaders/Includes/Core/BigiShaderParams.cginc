@@ -41,7 +41,7 @@ uniform float _SpecularIntensity;
 uniform float _MonoChrome;
 uniform float _Voronoi;
 uniform float _LightSmoothness;
-uniform float _LightThreshold;
+uniform uint _LightSteps;
 
 uniform float _LTCGIStrength;
 

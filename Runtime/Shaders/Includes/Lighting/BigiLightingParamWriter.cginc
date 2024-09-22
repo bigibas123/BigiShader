@@ -33,7 +33,7 @@ namespace b_light
 		IFZEROAPPLY(_MonoChrome, 0.0);
 		IFZEROAPPLY(_Voronoi, 0.0);
 		IFZEROAPPLY(_LightSmoothness, 1.0);
-		IFZEROAPPLY(_LightThreshold, 0.0);
+		IFZEROAPPLY(_LightSteps, 128);
 		IFZEROAPPLY(_LTCGIStrength, 1.0);
 		IFZEROAPPLY(_Rounding, 0.0);
 

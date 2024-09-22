@@ -19,10 +19,6 @@
 
 namespace b_light
 {
-	// A macro instead of a function because this works on more types without having to overload it a bunch of times
-	// ReSharper disable once CppInconsistentNaming
-	#define doStep(val) smoothstep(lightThreshold, lightSmoothness+lightThreshold, val)
-
 	world_info setup_world(in float3 worldPos, in fixed attenuation, in float3 normal, in float4 shadowmapUV)
 	{
 		world_info wi;
@@ -151,10 +147,18 @@ namespace b_light
 		return saturate(output);
 	}
 
+	float4 doStep(in const float4 inLight, in const half smoothness, in const uint steps)
+	{
+		const float4 offsetLight = ((inLight * steps) + (smoothness / 2.0)) - 0.5;
+		const float4 smoothedPart = (float4)smoothstep(0.00, smoothness, frac(offsetLight)) / steps;
+		const float4 steppedPart = floor(offsetLight) / steps;
+		return smoothedPart + steppedPart;
+	}
+
 	float4 get_lighting(in float3 normal, in float3 worldPos, in float3 vertexLightColor, in fixed ambientOcclusion,
 						in half occlusionStrength, in half attenuation, in float4 shadowMapUv,
-						in half minAmbient, in half transmissivity, in half lightSmoothness, in half lightThreshold,
-						in half4 specSmooth)
+						in half minAmbient, in half transmissivity, in half lightSmoothness,
+						in uint lightSteps, in half4 specSmooth)
 	{
 		const half scaledAO = lerp(1, ambientOcclusion, occlusionStrength);
 		attenuation = attenuation * scaledAO;
@@ -164,11 +168,9 @@ namespace b_light
 		if (transmissivity > Epsilon)
 		{
 			total += _get_lighting(normal * -1.0, worldPos, vertexLightColor, attenuation, 0, specSmooth,
-									scaledAO, shadowMapUv) *
-				transmissivity;
+									scaledAO, shadowMapUv) * transmissivity;
 		}
-
-		total = doStep(total);
+		total = doStep(total, lightSmoothness, lightSteps);
 		total.rgba = float4(
 			clamp(total.rgb, minAmbient, 5.0),
 			clamp(total.a, 1.0, 1.0)

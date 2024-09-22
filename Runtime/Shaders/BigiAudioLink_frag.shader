@@ -40,7 +40,7 @@ Shader "Bigi/AudioLink_frag" {
 		[Header(Lighting)]
 		[Space]
 		_LightSmoothness ("Shadow smoothness",Range(0.0,1.0)) = 1.0
-		_LightThreshold ("Shadow Start point", Range(0.0,1.0)) = 0.0
+		_LightSteps ("Light steps", Integer) = 1
 		[Space]
 		_MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.005
 		_Transmissivity ("Transmission of light through the material", Range(0.0,1.0)) = 0.2
