@@ -32,12 +32,24 @@ namespace cc.dingemans.bigibas123.bigishader
 					m.shader.keywordSpace.FindKeyword("NORMAL_MAPPING").SetOn(m, hasNormalMap);
 				}
 
+				if (MultiTexture.Present(m) && MainTexArray.Present(m))
+				{
+					var usingArray = MainTexArray.GetTexture(m) is not null;
+					MultiTexture.Set(m, usingArray);
+					if (usingArray)
+					{
+						MainTex.Set(m, (Texture)null);
+					}
+
+					m.shader.keywordSpace.FindKeyword("MULTI_TEXTURE").SetOn(m, usingArray);
+				}
+
 				if (UsesAlpha.Present(m))
 				{
 					Texture t;
 					if (MultiTexture.Present(m))
 					{
-						var usingArray = MultiTexture.Present(m) && MultiTexture.GetBool(m);
+						var usingArray = MultiTexture.GetBool(m);
 						t = usingArray ? MainTexArray.GetTexture(m) : MainTex.GetTexture(m);
 					}
 					else
