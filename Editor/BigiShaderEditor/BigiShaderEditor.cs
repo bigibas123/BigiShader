@@ -65,19 +65,16 @@ namespace cc.dingemans.bigibas123.bigishader
 
 						if (usingAlpha)
 						{
-							m.SetShaderPassEnabled("TransparentForwardBase", true);
+							m.SetShaderPassEnabled("TransparentForwardBase",
+								(CompareFunction)ZTestTFWB.GetInt(m) != CompareFunction.Never);
 						}
 						else
 						{
 							m.SetShaderPassEnabled("TransparentForwardBase", false);
+							ZTestTFWB.Set(m, (int)CompareFunction.Never);
 							if (ZWriteTFWB.GetBool(m))
 							{
 								ZWriteTFWB.Set(m, false);
-							}
-
-							if (ZTestTFWB.GetInt(m) != (int)CompareFunction.Never)
-							{
-								ZTestTFWB.Set(m, (int)CompareFunction.Never);
 							}
 
 							if (ZTestTFWB.IntPresent(m))
@@ -85,13 +82,22 @@ namespace cc.dingemans.bigibas123.bigishader
 								materialProperties.RemoveAll(p => p.displayName.Contains("Transparent ForwardBase"));
 							}
 						}
-
-						MakeZTestSafe(m, ZTestOFWB);
-						MakeZTestSafe(m, ZTestTFWB);
-						MakeZTestSafe(m, ZTestFWA);
-						MakeZTestSafe(m, ZTestOL);
 					}
 				}
+
+				MakeZTestSafe(m, ZTestOFWB);
+				MakeZTestSafe(m, ZTestTFWB);
+				MakeZTestSafe(m, ZTestFWA);
+				MakeZTestSafe(m, ZTestOL);
+
+				m.SetShaderPassEnabled("OpaqueForwardBase",
+					(CompareFunction)ZTestOFWB.GetInt(m) != CompareFunction.Never);
+				m.SetShaderPassEnabled("TransparentForwardBase",
+					(CompareFunction)ZTestTFWB.GetInt(m) != CompareFunction.Never);
+				m.SetShaderPassEnabled("ForwardAdd",
+					(CompareFunction)ZTestFWA.GetInt(m) != CompareFunction.Never);
+				m.SetShaderPassEnabled("Outline",
+					(CompareFunction)ZTestOL.GetInt(m) != CompareFunction.Never);
 
 				if (ZWriteOFWB.Present(m) && ZWriteTFWB.Present(m))
 				{
@@ -162,7 +168,7 @@ namespace cc.dingemans.bigibas123.bigishader
 		{
 			try
 			{
-				if (property.IntPresent(material))
+				if (property.FloatPresent(material))
 				{
 					switch ((CompareFunction)property.GetInt(material))
 					{
@@ -171,7 +177,7 @@ namespace cc.dingemans.bigibas123.bigishader
 						case CompareFunction.Greater:
 						case CompareFunction.GreaterEqual:
 						case CompareFunction.NotEqual:
-							property.Set(material, (int)CompareFunction.LessEqual);
+							property.Set(material, (float)CompareFunction.LessEqual);
 							break;
 						case CompareFunction.Less:
 						case CompareFunction.LessEqual:
@@ -184,7 +190,7 @@ namespace cc.dingemans.bigibas123.bigishader
 				}
 				else
 				{
-					property.Set(material, (int)CompareFunction.LessEqual);
+					property.Set(material, (float)CompareFunction.LessEqual);
 				}
 			}
 			catch (Exception e)
@@ -262,7 +268,8 @@ namespace cc.dingemans.bigibas123.bigishader
 			}
 			else
 			{
-				throw new InvalidCastException($"Can't set property {prop} to {value} because it is neither a float nor an int");
+				throw new InvalidCastException(
+					$"Can't set property {prop} to {value} because it is neither a float nor an int");
 			}
 		}
 

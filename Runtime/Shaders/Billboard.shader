@@ -3,6 +3,7 @@
 		_MainTexArray ("Other textures", 2DArray) = "" {}
 		_TextureId ("Other texture Id", Int) = 0
 		[Toggle(ALPHA_MUL)] _Alpha_Multiply("Multiply alpha with itself", Float) = 1
+		[Toggle(DO_HOVER)] _Hover("Hover up and down",Float) = 1.0
 	}
 
 	SubShader {
@@ -50,12 +51,23 @@
 		v2f vert(appdata v)
 		{
 			v2f o;
+			#ifdef DO_HOVER
+			float4 _OffsetAndScale = float4(0.0, sin(_Time.y) * 0.05, 0.0, 1.0);
+			#else
+			float4 _OffsetAndScale = float4(0.0, 0.0, 0.0, 1.0);
+			#endif
 
-			// billboard mesh towards camera
-			float3 vpos = mul((float3x3)unity_ObjectToWorld, v.pos.xyz);
-			float4 worldCoord = float4(unity_ObjectToWorld._m03, unity_ObjectToWorld._m13, unity_ObjectToWorld._m23, 1);
-			float4 viewPos = mul(UNITY_MATRIX_V, worldCoord) + float4(vpos, 0);
-			float4 outPos = mul(UNITY_MATRIX_P, viewPos);
+			float3 scale = float3(
+				length(unity_ObjectToWorld._m00_m10_m20),
+				length(unity_ObjectToWorld._m01_m11_m21),
+				length(unity_ObjectToWorld._m02_m12_m22)
+			);
+
+			float4 outPos = mul(UNITY_MATRIX_P,
+								mul(UNITY_MATRIX_MV, float4(_OffsetAndScale))
+								+ float4(v.pos.x, v.pos.y, 0.0, 0.0)
+								* float4(scale.x, scale.y, 0.0, 0.0)
+			);
 
 			o.pos = outPos;
 
@@ -69,8 +81,7 @@
 
 		Pass {
 			Name "Depth pass"
-			Tags
-			{
+			Tags {
 				"Queue" = "Geometry"
 			}
 			Stencil {
@@ -84,6 +95,8 @@
 			ZWrite On
 			ZTest Less
 			CGPROGRAM
+			#pragma shader_feature_local_fragment ALPHA_MUL
+			#pragma shader_feature_local_vertex DO_HOVER
 			#pragma vertex vert
 			#pragma fragment frag
 
@@ -109,7 +122,8 @@
 			ZTest LEqual
 			Blend SrcAlpha OneMinusSrcAlpha
 			CGPROGRAM
-			#pragma shader_feature_local_fragment _ ALPHA_MUL
+			#pragma shader_feature_local_fragment ALPHA_MUL
+			#pragma shader_feature_local_vertex DO_HOVER
 			#pragma vertex vert
 			#pragma fragment frag
 
