@@ -21,7 +21,7 @@ namespace b_protv_util
 {
 	float4 getTexColor(float2 uv)
 	{
-		const float4 original_color =  GET_TEX_COLOR_ACTUAL(uv);
+		const float4 original_color = GET_TEX_COLOR_ACTUAL(uv);
 		if(_TV_Square_Opacity > Epsilon)
 		{
 			PROTV_PRESENT(tvPresent);

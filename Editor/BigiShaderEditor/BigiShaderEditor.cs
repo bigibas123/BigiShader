@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
@@ -25,121 +24,11 @@ namespace cc.dingemans.bigibas123.bigishader
 
 			foreach (var m in actualTargets)
 			{
-				if (BumpMap.Present(m) && UsesNormalMap.Present(m))
+				CheckIfMaterialPropertiesExist(m);
+				FixupMaterial(m);
+				if (!m.GetShaderPassEnabled("TransparentForwardBase"))
 				{
-					bool hasNormalMap = (BumpMap.GetTexture(m) is not null);
-					UsesNormalMap.Set(m, hasNormalMap);
-					m.shader.keywordSpace.FindKeyword("NORMAL_MAPPING").SetOn(m, hasNormalMap);
-				}
-
-				if (MultiTexture.Present(m) && MainTexArray.Present(m))
-				{
-					var usingArray = MainTexArray.GetTexture(m) is not null;
-					MultiTexture.Set(m, usingArray);
-					if (usingArray)
-					{
-						MainTex.Set(m, (Texture)null);
-					}
-
-					m.shader.keywordSpace.FindKeyword("MULTI_TEXTURE").SetOn(m, usingArray);
-				}
-
-				if (UsesAlpha.Present(m))
-				{
-					Texture t;
-					if (MultiTexture.Present(m))
-					{
-						var usingArray = MultiTexture.GetBool(m);
-						t = usingArray ? MainTexArray.GetTexture(m) : MainTex.GetTexture(m);
-					}
-					else
-					{
-						t = MainTex.GetTexture(m);
-					}
-
-					if (t is not null)
-					{
-						var usingAlpha = GraphicsFormatUtility.HasAlphaChannel(t.graphicsFormat);
-						UsesAlpha.Set(m, usingAlpha);
-						m.shader.keywordSpace.FindKeyword("DO_ALPHA_PLS").SetOn(m, usingAlpha);
-
-						if (usingAlpha)
-						{
-							m.SetShaderPassEnabled("TransparentForwardBase",
-								(CompareFunction)ZTestTFWB.GetInt(m) != CompareFunction.Never);
-						}
-						else
-						{
-							m.SetShaderPassEnabled("TransparentForwardBase", false);
-							ZTestTFWB.Set(m, (int)CompareFunction.Never);
-							if (ZWriteTFWB.GetBool(m))
-							{
-								ZWriteTFWB.Set(m, false);
-							}
-
-							if (ZTestTFWB.IntPresent(m))
-							{
-								materialProperties.RemoveAll(p => p.displayName.Contains("Transparent ForwardBase"));
-							}
-						}
-					}
-				}
-
-				MakeZTestSafe(m, ZTestOFWB);
-				MakeZTestSafe(m, ZTestTFWB);
-				MakeZTestSafe(m, ZTestFWA);
-				MakeZTestSafe(m, ZTestOL);
-
-				m.SetShaderPassEnabled("OpaqueForwardBase",
-					(CompareFunction)ZTestOFWB.GetInt(m) != CompareFunction.Never);
-				m.SetShaderPassEnabled("TransparentForwardBase",
-					(CompareFunction)ZTestTFWB.GetInt(m) != CompareFunction.Never);
-				m.SetShaderPassEnabled("ForwardAdd",
-					(CompareFunction)ZTestFWA.GetInt(m) != CompareFunction.Never);
-				m.SetShaderPassEnabled("Outline",
-					(CompareFunction)ZTestOL.GetInt(m) != CompareFunction.Never);
-
-				if (ZWriteOFWB.Present(m) && ZWriteTFWB.Present(m))
-				{
-					if (!ZWriteOFWB.GetBool(m))
-					{
-						ZWriteTFWB.Set(m, false);
-					}
-				}
-
-				if (EnableLTCGI.Present(m))
-				{
-					bool ltcgiIncluded;
-					#if LTCGI_INCLUDED
-					ltcgiIncluded = true;
-					#else
-					ltcgiIncluded = false;
-					#endif
-					// ReSharper disable ConditionIsAlwaysTrueOrFalse
-					m.shader.keywordSpace.FindKeyword("LTCGI_ENABLED").SetOn(m, ltcgiIncluded);
-					EnableLTCGI.Set(m, ltcgiIncluded);
-					// ReSharper restore ConditionIsAlwaysTrueOrFalse
-				}
-
-				if (SpecSmoothMap.Present(m) && EnableSpecularSmooth.Present(m))
-				{
-					bool hasSpecMap = (SpecSmoothMap.GetTexture(m) is not null);
-					EnableSpecularSmooth.Set(m, hasSpecMap);
-					m.shader.keywordSpace.FindKeyword("SPECSMOOTH_MAP_ENABLED").SetOn(m, hasSpecMap);
-				}
-
-				if (AOEnabled.Present(m) && OcclusionMap.Present(m))
-				{
-					bool hasAOMap = (OcclusionMap.GetTexture(m) is not null);
-					AOEnabled.Set(m, hasAOMap);
-					m.shader.keywordSpace.FindKeyword("AMBIENT_OCCLUSION_ENABLED").SetOn(m, hasAOMap);
-				}
-
-				if (EnableProTVSquare.Present(m))
-				{
-					var proTVEnabled = EnableProTVSquare.GetBool(m);
-					EnableProTVSquare.Set(m, proTVEnabled);
-					m.shader.keywordSpace.FindKeyword("PROTV_SQUARE_ENABLED").SetOn(m, proTVEnabled);
+					materialProperties.RemoveAll(p => p.displayName.Contains("Transparent ForwardBase"));
 				}
 			}
 
@@ -162,6 +51,133 @@ namespace cc.dingemans.bigibas123.bigishader
 			}
 
 			EditorGUI.indentLevel--;
+		}
+
+		private void CheckIfMaterialPropertiesExist(Material m)
+		{
+			foreach (BigiProperty prop in Enum.GetValues(typeof(BigiProperty)))
+			{
+				if (!prop.Present(m))
+				{
+					throw new PropertyMissingException(m, prop);
+				}
+			}
+
+			foreach (MaterialPropertyType propType in Enum.GetValues(typeof(MaterialPropertyType)))
+			{
+				foreach (var propName in m.GetPropertyNames(propType))
+				{
+					if (!Enum.TryParse<BigiProperty>(propName.Substring(1), out BigiProperty bigiProp))
+					{
+						throw new PropertyMissingException(propName, m);
+					}
+				}
+			}
+		}
+
+		private class PropertyMissingException : Exception
+		{
+			public PropertyMissingException(Material material, BigiProperty prop) : base(
+				$"Property {prop.ToString()} missing on Material {material.name}.")
+			{
+			}
+
+			public PropertyMissingException(string propName, Material material) : base(
+				$"Editor hasn't implemented support for {propName} from Material {material.name}.")
+			{
+			}
+		}
+
+		private static void FixupMaterial(Material m)
+		{
+			bool hasNormalMap = (BumpMap.GetTexture(m) is not null);
+			UsesNormalMap.Set(m, hasNormalMap);
+			m.shader.keywordSpace.FindKeyword("NORMAL_MAPPING").SetOn(m, hasNormalMap);
+
+			var usingArray = MainTexArray.GetTexture(m) is not null;
+			MultiTexture.Set(m, usingArray);
+			if (usingArray)
+			{
+				MainTex.Set(m, (Texture)null);
+			}
+
+			m.shader.keywordSpace.FindKeyword("MULTI_TEXTURE").SetOn(m, usingArray);
+
+			var t = usingArray ? MainTexArray.GetTexture(m) : MainTex.GetTexture(m);
+
+			if (t is not null)
+			{
+				var usingAlpha = GraphicsFormatUtility.HasAlphaChannel(t.graphicsFormat);
+				UsesAlpha.Set(m, usingAlpha);
+				m.shader.keywordSpace.FindKeyword("DO_ALPHA_PLS").SetOn(m, usingAlpha);
+
+				if (usingAlpha)
+				{
+					m.SetShaderPassEnabled("TransparentForwardBase",
+						(CompareFunction)ZTestTFWB.GetInt(m) != CompareFunction.Never);
+					if (Alpha_Threshold.GetFloat(m) < 0.0f)
+					{
+						Alpha_Threshold.Set(m, 0.0f);
+					}
+				}
+				else
+				{
+					m.SetShaderPassEnabled("TransparentForwardBase", false);
+					ZTestTFWB.Set(m, (int)CompareFunction.Never);
+					ZWriteTFWB.Set(m, false);
+					Alpha_Threshold.Set(m, -0.01f);
+				}
+			}
+
+			MakeZTestSafe(m, ZTestOFWB);
+			MakeZTestSafe(m, ZTestTFWB);
+			MakeZTestSafe(m, ZTestFWA);
+			MakeZTestSafe(m, ZTestOL);
+
+			m.SetShaderPassEnabled("OpaqueForwardBase",
+				(CompareFunction)ZTestOFWB.GetInt(m) != CompareFunction.Never);
+			m.SetShaderPassEnabled("TransparentForwardBase",
+				(CompareFunction)ZTestTFWB.GetInt(m) != CompareFunction.Never);
+			m.SetShaderPassEnabled("ForwardAdd",
+				(CompareFunction)ZTestFWA.GetInt(m) != CompareFunction.Never);
+			m.SetShaderPassEnabled("Outline",
+				(CompareFunction)ZTestOL.GetInt(m) != CompareFunction.Never);
+
+			if (!ZWriteOFWB.GetBool(m))
+			{
+				ZWriteTFWB.Set(m, false);
+			}
+
+			{
+				bool ltcgiIncluded;
+				#if LTCGI_INCLUDED
+				ltcgiIncluded = true;
+				#else
+				ltcgiIncluded = false;
+				#endif
+				// ReSharper disable ConditionIsAlwaysTrueOrFalse
+				EnableLTCGI.Set(m, ltcgiIncluded);
+				m.shader.keywordSpace.FindKeyword("LTCGI_ENABLED").SetOn(m, ltcgiIncluded);
+				// ReSharper restore ConditionIsAlwaysTrueOrFalse
+			}
+
+			if (SpecSmoothMap.Present(m) && EnableSpecularSmooth.Present(m))
+			{
+				bool hasSpecMap = (SpecSmoothMap.GetTexture(m) is not null);
+				EnableSpecularSmooth.Set(m, hasSpecMap);
+				m.shader.keywordSpace.FindKeyword("SPECSMOOTH_MAP_ENABLED").SetOn(m, hasSpecMap);
+			}
+
+			if (AOEnabled.Present(m) && OcclusionMap.Present(m))
+			{
+				bool hasAOMap = (OcclusionMap.GetTexture(m) is not null);
+				AOEnabled.Set(m, hasAOMap);
+				m.shader.keywordSpace.FindKeyword("AMBIENT_OCCLUSION_ENABLED").SetOn(m, hasAOMap);
+			}
+
+			var proTVEnabled = EnableProTVSquare.GetBool(m);
+			EnableProTVSquare.Set(m, proTVEnabled);
+			m.shader.keywordSpace.FindKeyword("PROTV_SQUARE_ENABLED").SetOn(m, proTVEnabled);
 		}
 
 		private static void MakeZTestSafe(Material material, BigiProperty property)
@@ -258,13 +274,13 @@ namespace cc.dingemans.bigibas123.bigishader
 		public static void Set(this BigiProperty prop, Material material, int value)
 		{
 			var id = prop.GetPropertyId();
-			if (material.HasInt(id))
-			{
-				material.SetInteger(id, value);
-			}
-			else if (material.HasFloat(id))
+			if (material.HasFloat(id))
 			{
 				material.SetFloat(id, value);
+			}
+			else if (material.HasInt(id))
+			{
+				material.SetInteger(id, value);
 			}
 			else
 			{
@@ -328,6 +344,9 @@ namespace cc.dingemans.bigibas123.bigishader
 	{
 		//\s_([A-Za-z_]+)
 		MainTex,
+		MainTex_ST,
+		MainTex_TexelSize,
+		MainTex_HDR,
 		UsesAlpha,
 		Cull,
 		Alpha_Threshold,
@@ -338,37 +357,56 @@ namespace cc.dingemans.bigibas123.bigishader
 		ZTestFWA,
 		ZTestOL,
 		ZTestSP,
-		UsesNormalMap,
 		BumpMap,
-		EnableSpecularSmooth,
+		BumpMap_ST,
+		BumpMap_TexelSize,
+		BumpMap_HDR,
+		UsesNormalMap,
 		SpecSmoothMap,
+		SpecSmoothMap_ST,
+		SpecSmoothMap_TexelSize,
+		SpecSmoothMap_HDR,
+		EnableSpecularSmooth,
 		SpecularIntensity,
 		Smoothness,
 		Spacey,
+		Spacey_ST,
+		Spacey_TexelSize,
+		Spacey_HDR,
 		Mask,
+		Mask_ST,
+		Mask_TexelSize,
+		Mask_HDR,
 		EmissionStrength,
 		LightSmoothness,
-		LightThreshold,
+		LightSteps,
 		MinAmbient,
 		Transmissivity,
 		VRSLGIStrength,
 		EnableLTCGI,
 		LTCGIStrength,
-		AOEnabled,
 		OcclusionMap,
+		OcclusionMap_ST,
+		OcclusionMap_TexelSize,
+		OcclusionMap_HDR,
+		AOEnabled,
 		OcclusionStrength,
 		AL_Theme_Weight,
 		AL_TC_BassReactive,
 		MonoChrome,
 		Voronoi,
 		OutlineWidth,
+		RoundingDisabled,
 		Rounding,
 		EnableProTVSquare,
 		SquareTVTest,
 		TV_Square_Opacity,
 		TV_Square_Position,
-		MultiTexture,
 		MainTexArray,
+		MainTexArray_ST,
+		MainTexArray_TexelSize,
+		MainTexArray_HDR,
+		MultiTexture,
 		OtherTextureId,
 	}
 }

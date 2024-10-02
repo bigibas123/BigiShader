@@ -3,7 +3,7 @@ Shader "Bigi/AudioLink_frag" {
 		[MainTexture] _MainTex ("Texture", 2D) = "black" {}
 		[HideInInspector] [Toggle(DO_ALPHA_PLS)] _UsesAlpha("Is transparent", Float) = 1
 		[Enum(UnityEngine.Rendering.CullMode)] _Cull ("Culling", Float) = 2
-		_Alpha_Threshold ("Alpha threshold",Range(0.0,1.0)) = 0.99
+		_Alpha_Threshold ("Alpha threshold",Range(-0.01,1.0)) = 0.99
 
 		[Header(ZWriteZTest Settings)]
 		[Header(Opaque Forward Base)]
