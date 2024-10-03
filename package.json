@@ -1,16 +1,16 @@
 {
   "name": "cc.dingemans.bigibas123.bigishader",
   "displayName": "Bigibas123's shaders",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "license": "",
   "author": {
-    "name": "bigibas123"
+	"name": "bigibas123"
   },
   "unity": "2022.3",
   "description": "Collection of shaders by bigibas123",
   "vpmDependencies": {
-    "lygia": ">=1.1.7",
-    "com.llealloo.audiolink": ">=0.2.6"
+	"lygia": ">=1.1.7",
+	"com.llealloo.audiolink": ">=0.2.6"
   },
   "url": "https://github.com/bigibas123/BigiShader.git",
   "legacyFolders": {},

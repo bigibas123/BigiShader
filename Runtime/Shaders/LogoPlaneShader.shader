@@ -2,7 +2,7 @@ Shader "Bigi/LogoPlane" {
 	Properties {
 		_MainTexArray ("Texture", 2DArray) = "black" {}
 		_Logo_FlipBookID ("CellNumber", Int) = 0
-		_AL_Theme_Weight("Audiolink Intensity",Range(0.0,1.0)) = 0.0
+		_AL_Weight("Audiolink Intensity",Range(0.0,1.0)) = 0.0
 		_MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.2
 		[Toggle(ALPHA_MUL)] _Alpha_Multiply("Multiply alpha with itself", Float) = 1
 		[Toggle(LTCGI_ENABLED)] _EnableLTCGI ("Enable LTCGI", Range(0.0,1.0)) = 0.0
@@ -20,13 +20,13 @@ Shader "Bigi/LogoPlane" {
 
 
 		#include <UnityCG.cginc>
-		uniform float _AL_General_Intensity;
+		uniform float _AL_Weight;
 
 		uniform int _Logo_FlipBookID;
 		#define MULTI_TEXTURE
 		#define OTHER_TEXTURE_ID_REF _Logo_FlipBookID
 		#define OTHER_BIGI_TEXTURES
-		
+
 		#include "./Includes/ToonVert.cginc"
 		#include "./Includes/Lighting/BigiLightingParamWriter.cginc"
 		#include "./Includes/Effects/SoundUtilsDefines.cginc"
@@ -42,18 +42,20 @@ Shader "Bigi/LogoPlane" {
 		{
 			b_light::setVars();
 			fragOutput o;
-				UNITY_INITIALIZE_OUTPUT(fragOutput, o);
+			UNITY_INITIALIZE_OUTPUT(fragOutput, o);
 			UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i)
 			fixed4 orig_color = GET_TEX_COLOR(GETUV);
 			clip(orig_color.a - Epsilon);
 			#ifdef ALPHA_MUL
-			orig_color.a *= orig_color.a;
+			orig_color.a = orig_color.a * orig_color.a;
 			#endif
 
 
 			BIGI_GETLIGHT_DEFAULT(lighting);
 			fixed4 normalColor;
 			normalColor = orig_color * lighting;
+
+			_AL_Theme_Weight = _AL_Weight;
 
 			GET_SOUND_COLOR(sound);
 
