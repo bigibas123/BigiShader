@@ -20,17 +20,42 @@ namespace cc.dingemans.bigibas123.bigishader
 				.Where(m => m != null);
 
 			EditorGUI.BeginChangeCheck();
+			bool keepTransparent = false;
+			bool keepSpecSmooth = false;
 
 
 			foreach (var m in actualTargets)
 			{
 				CheckIfMaterialPropertiesExist(m);
 				FixupMaterial(m);
-				if (!m.GetShaderPassEnabled("TransparentForwardBase"))
+				if (m.GetShaderPassEnabled("TransparentForwardBase"))
 				{
-					materialProperties.RemoveAll(p => p.displayName.Contains("Transparent ForwardBase"));
+					keepTransparent = true;
+				}
+
+				if (EnableSpecularSmooth.GetBool(m))
+				{
+					keepSpecSmooth = true;
+				}
+				else
+				{
+					SpecularIntensity.Set(m, 0.2f);
+					Smoothness.Set(m, 0.3f);
 				}
 			}
+
+			if (!keepTransparent)
+			{
+				materialProperties.RemoveAll(p => p.displayName.Contains("Transparent ForwardBase"));
+			}
+
+			if (!keepSpecSmooth)
+			{
+				materialProperties.RemoveAll(p =>
+					p.displayName.Contains("Specular intensity multiplier") ||
+					p.displayName.Contains("Smoothness multiplier"));
+			}
+
 
 			EditorGUI.EndChangeCheck();
 			base.OnGUI(materialEditor, materialProperties.ToArray());
@@ -92,7 +117,7 @@ namespace cc.dingemans.bigibas123.bigishader
 		{
 			bool hasNormalMap = (BumpMap.GetTexture(m) is not null);
 			UsesNormalMap.Set(m, hasNormalMap);
-			m.shader.keywordSpace.FindKeyword("NORMAL_MAPPING").SetOn(m, hasNormalMap);
+			m.shader.keywordSpace.FindKeyword("NORMAL_MAPPING").Set(m, hasNormalMap);
 
 			var usingArray = MainTexArray.GetTexture(m) is not null;
 			MultiTexture.Set(m, usingArray);
@@ -101,7 +126,7 @@ namespace cc.dingemans.bigibas123.bigishader
 				MainTex.Set(m, (Texture)null);
 			}
 
-			m.shader.keywordSpace.FindKeyword("MULTI_TEXTURE").SetOn(m, usingArray);
+			m.shader.keywordSpace.FindKeyword("MULTI_TEXTURE").Set(m, usingArray);
 
 			var t = usingArray ? MainTexArray.GetTexture(m) : MainTex.GetTexture(m);
 
@@ -109,7 +134,7 @@ namespace cc.dingemans.bigibas123.bigishader
 			{
 				var usingAlpha = GraphicsFormatUtility.HasAlphaChannel(t.graphicsFormat);
 				UsesAlpha.Set(m, usingAlpha);
-				m.shader.keywordSpace.FindKeyword("DO_ALPHA_PLS").SetOn(m, usingAlpha);
+				m.shader.keywordSpace.FindKeyword("DO_ALPHA_PLS").Set(m, usingAlpha);
 
 				if (usingAlpha)
 				{
@@ -157,27 +182,35 @@ namespace cc.dingemans.bigibas123.bigishader
 				#endif
 				// ReSharper disable ConditionIsAlwaysTrueOrFalse
 				EnableLTCGI.Set(m, ltcgiIncluded);
-				m.shader.keywordSpace.FindKeyword("LTCGI_ENABLED").SetOn(m, ltcgiIncluded);
+				m.shader.keywordSpace.FindKeyword("LTCGI_ENABLED").Set(m, ltcgiIncluded);
 				// ReSharper restore ConditionIsAlwaysTrueOrFalse
 			}
 
-			if (SpecSmoothMap.Present(m) && EnableSpecularSmooth.Present(m))
+			if (SpecSmoothMap.TexturePresent(m) && EnableSpecularSmooth.Present(m))
 			{
 				bool hasSpecMap = (SpecSmoothMap.GetTexture(m) is not null);
-				EnableSpecularSmooth.Set(m, hasSpecMap);
-				m.shader.keywordSpace.FindKeyword("SPECSMOOTH_MAP_ENABLED").SetOn(m, hasSpecMap);
+				LocalKeyword kw = m.shader.keywordSpace.FindKeyword("SPECSMOOTH_MAP_ENABLED");
+				if (EnableSpecularSmooth.GetBool(m) != hasSpecMap)
+				{
+					EnableSpecularSmooth.Set(m, hasSpecMap);
+				}
+
+				if (kw.IsEnabled(m) != hasSpecMap)
+				{
+					kw.Set(m, hasSpecMap);
+				}
 			}
 
 			if (AOEnabled.Present(m) && OcclusionMap.Present(m))
 			{
 				bool hasAOMap = (OcclusionMap.GetTexture(m) is not null);
 				AOEnabled.Set(m, hasAOMap);
-				m.shader.keywordSpace.FindKeyword("AMBIENT_OCCLUSION_ENABLED").SetOn(m, hasAOMap);
+				m.shader.keywordSpace.FindKeyword("AMBIENT_OCCLUSION_ENABLED").Set(m, hasAOMap);
 			}
 
 			var proTVEnabled = EnableProTVSquare.GetBool(m);
 			EnableProTVSquare.Set(m, proTVEnabled);
-			m.shader.keywordSpace.FindKeyword("PROTV_SQUARE_ENABLED").SetOn(m, proTVEnabled);
+			m.shader.keywordSpace.FindKeyword("PROTV_SQUARE_ENABLED").Set(m, proTVEnabled);
 		}
 
 		private static void MakeZTestSafe(Material material, BigiProperty property)
@@ -317,7 +350,7 @@ namespace cc.dingemans.bigibas123.bigishader
 
 	public static class LocalKeyWordExtensions
 	{
-		public static void SetOn(this LocalKeyword kw, Material m, bool value)
+		public static void Set(this LocalKeyword kw, Material m, bool value)
 		{
 			if (value)
 			{
@@ -329,14 +362,19 @@ namespace cc.dingemans.bigibas123.bigishader
 			}
 		}
 
-		public static void EnableOn(this LocalKeyword kw, Material m)
+		public static void Enable(this LocalKeyword kw, Material m)
 		{
-			SetOn(kw, m, true);
+			Set(kw, m, true);
 		}
 
-		public static void DisableOn(this LocalKeyword kw, Material m)
+		public static void Disable(this LocalKeyword kw, Material m)
 		{
-			SetOn(kw, m, false);
+			Set(kw, m, false);
+		}
+
+		public static bool IsEnabled(this LocalKeyword kw, Material m)
+		{
+			return m.IsKeywordEnabled(kw);
 		}
 	}
 
