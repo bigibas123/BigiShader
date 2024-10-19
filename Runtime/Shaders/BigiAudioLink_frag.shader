@@ -16,7 +16,14 @@ Shader "Bigi/AudioLink_frag" {
 		[Enum(UnityEngine.Rendering.CompareFunction)] _ZTestFWA ("Ztest ForwardAdd", Int) = 4
 		[Enum(UnityEngine.Rendering.CompareFunction)] _ZTestOL ("Ztest Outline", Int) = 4
 		[Enum(UnityEngine.Rendering.CompareFunction)] _ZTestSP ("Ztest Shadow Pass", Int) = 4
-
+		
+		[Header(Extra textures)]
+        [Space]
+        [NoScaleOffset] _Mask ("Mask", 2D) = "black" {}
+        _EmissionStrength ("Emission strength", Range(0.0,2.0)) = 1.0
+		[Space]
+        _Spacey ("Spacey Texture", 2D) = "black" {}
+		[Space]
 		[Header(Normal mapping)]
 		[Space]
 		[NoScaleOffset] [Normal] _BumpMap("Normal Map", 2D) = "bump" {}
@@ -29,12 +36,11 @@ Shader "Bigi/AudioLink_frag" {
 		_SpecularIntensity ("Specular intensity multiplier", Range(0.0,1.0)) = 0.0
 		_Smoothness ("Smoothness multiplier", Range(0.0,1.0)) = 1.0
 
-		[Header(Extra textures)]
+		[Header(Ambient Occlusion)]
 		[Space]
-		_Spacey ("Spacey Texture", 2D) = "black" {}
-		[Space]
-		[NoScaleOffset] _Mask ("Mask", 2D) = "black" {}
-		_EmissionStrength ("Emission strength", Range(0.0,2.0)) = 1.0
+		[NoScaleOffset] _OcclusionMap ("Ambient occlusion map", 2D) = "white" {}
+		[HideInInspector] [Toggle(AMBIENT_OCCLUSION_ENABLED)] _AOEnabled ("Enabled Ambient Occlusion",Range(0.0,1.0)) = 0.0
+		_OcclusionStrength("Occlusion Strength", Range(0, 1.0)) = 1.0
 
 		[Space]
 		[Header(Lighting)]
@@ -50,12 +56,6 @@ Shader "Bigi/AudioLink_frag" {
 		_VRSLGIStrength ("VRSL-GI Strength", Range(0.0,1.0)) = 0.25
 		[Toggle(LTCGI_ENABLED)] _EnableLTCGI ("Enable LTCGI", Range(0.0,1.0)) = 0.0
 		_LTCGIStrength ("LTCGI Strenght", Range(0.0,2.0)) = 1.0
-
-		[Header(Ambient Occlusion)]
-		[Space]
-		[NoScaleOffset] _OcclusionMap ("Ambient occlusion map", 2D) = "white" {}
-		[HideInInspector] [Toggle(AMBIENT_OCCLUSION_ENABLED)] _AOEnabled ("Enabled Ambient Occlusion",Range(0.0,1.0)) = 0.0
-		_OcclusionStrength("Occlusion Strength", Range(0, 1.0)) = 1.0
 
 		[Header(Audiolink world theme colors)]
 		[Space]
