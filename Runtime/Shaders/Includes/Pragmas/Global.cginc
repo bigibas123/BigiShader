@@ -12,13 +12,14 @@
 #pragma multi_compile_fog
 
 
+#pragma shader_feature_local_fragment NORMAL_MAPPING
 #pragma shader_feature_local_fragment MULTI_TEXTURE
 #pragma shader_feature_local_fragment LTCGI_ENABLED
 #pragma shader_feature_local DO_ALPHA_PLS
 #pragma shader_feature_local_fragment SPECSMOOTH_MAP_ENABLED
 #pragma shader_feature_local_fragment AMBIENT_OCCLUSION_ENABLED
 #pragma shader_feature_local_fragment PROTV_SQUARE_ENABLED
-#pragma shader_feature_local ROUNDING_DISABLED
+#pragma shader_feature_local_vertex ROUNDING_DISABLED
 
 #pragma skip_variants LIGHTMAP_ON DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRLIGHTMAP_COMBINED _MIXED_LIGHTING_SUBTRACTIVE
 #pragma skip_variants DECALS_OFF DECALS_3RT DECALS_4RT DECAL_SURFACE_GRADIENT _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3

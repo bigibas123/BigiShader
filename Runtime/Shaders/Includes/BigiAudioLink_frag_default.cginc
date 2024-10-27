@@ -10,7 +10,7 @@
 
 namespace b_frag
 {
-	fragOutput bigi_frag_fwdbase(const in v2f i, const in float4 orig_color)
+	fragOutput bigi_frag_fwdbase(in v2f i, const in float4 orig_color)
 	{
 		fragOutput o;
 		UNITY_INITIALIZE_OUTPUT(fragOutput, o);
