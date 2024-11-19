@@ -39,8 +39,8 @@ namespace cc.dingemans.bigibas123.bigishader
 				}
 				else
 				{
-					SpecularIntensity.Set(m, 0.2f);
-					Smoothness.Set(m, 0.3f);
+					SpecularIntensity.Set(m, 0.0f);
+					Smoothness.Set(m, 0.0f);
 				}
 			}
 

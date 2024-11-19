@@ -28,8 +28,8 @@ namespace b_light
 		IFZEROAPPLY(_MinAmbient, 0.20);
 		IFZEROAPPLY(_Transmissivity, 0.2);
 		IFZEROAPPLY(_OcclusionStrength, 0.0);
-		IFZEROAPPLY(_Smoothness, 0.2);
-		IFZEROAPPLY(_SpecularIntensity, 0.2);
+		IFZEROAPPLY(_Smoothness, 0.0);
+		IFZEROAPPLY(_SpecularIntensity, 0.0);
 		IFZEROAPPLY(_MonoChrome, 0.0);
 		IFZEROAPPLY(_Voronoi, 0.0);
 		IFZEROAPPLY(_LightSmoothness, 1.0);
