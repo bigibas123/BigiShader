@@ -21,8 +21,6 @@ namespace cc.dingemans.bigibas123.bigishader
 
 			EditorGUI.BeginChangeCheck();
 			bool keepTransparent = false;
-			bool keepSpecSmooth = false;
-
 
 			foreach (var m in actualTargets)
 			{
@@ -32,28 +30,11 @@ namespace cc.dingemans.bigibas123.bigishader
 				{
 					keepTransparent = true;
 				}
-
-				if (EnableSpecularSmooth.GetBool(m))
-				{
-					keepSpecSmooth = true;
-				}
-				else
-				{
-					SpecularIntensity.Set(m, 0.0f);
-					Smoothness.Set(m, 0.0f);
-				}
 			}
 
 			if (!keepTransparent)
 			{
 				materialProperties.RemoveAll(p => p.displayName.Contains("Transparent ForwardBase"));
-			}
-
-			if (!keepSpecSmooth)
-			{
-				materialProperties.RemoveAll(p =>
-					p.displayName.Contains("Specular intensity multiplier") ||
-					p.displayName.Contains("Smoothness multiplier"));
 			}
 
 
@@ -405,8 +386,6 @@ namespace cc.dingemans.bigibas123.bigishader
 		SpecSmoothMap_TexelSize,
 		SpecSmoothMap_HDR,
 		EnableSpecularSmooth,
-		SpecularIntensity,
-		Smoothness,
 		Spacey,
 		Spacey_ST,
 		Spacey_TexelSize,

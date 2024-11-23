@@ -45,9 +45,9 @@
 		#include <HLSLSupport.cginc>
 		UNITY_DECLARE_TEX2D_NOSAMPLER(_SpecSmoothMap);
 		#include "./BigiMainTex.cginc"
-		#define GET_SPEC_SMOOTH(uv) (SAMPLE_TEX2D(_SpecSmoothMap, uv) * half4(_SpecularIntensity, _SpecularIntensity, _SpecularIntensity, _Smoothness))
+		#define GET_SPEC_SMOOTH(uv) (SAMPLE_TEX2D(_SpecSmoothMap, uv))
 	#else
-		#define GET_SPEC_SMOOTH(uv) half4(_SpecularIntensity, _SpecularIntensity, _SpecularIntensity, _Smoothness)
+		#define GET_SPEC_SMOOTH(uv) (half4(0, 0, 0, 0))
 	#endif
 #endif
 

@@ -33,8 +33,6 @@ Shader "Bigi/AudioLink_frag" {
 		[Space]
 		[NoScaleOffset] _SpecSmoothMap ("Specular (rgb) and Smoothness (a) map", 2D) = "black" {}
 		[HideInInspector] [Toggle(SPECSMOOTH_MAP_ENABLED)] _EnableSpecularSmooth ("Enable Specular & Smoothness map", Range(0.0,1.0)) = 0.0
-		_SpecularIntensity ("Specular intensity multiplier", Range(0.0,1.0)) = 0.0
-		_Smoothness ("Smoothness multiplier", Range(0.0,1.0)) = 0.0
 
 		[Header(Ambient Occlusion)]
 		[Space]
