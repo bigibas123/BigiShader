@@ -25,8 +25,10 @@ namespace b_light
 		IFZEROAPPLY(_TV_Square_Position.z, 0.0);
 		IFZEROAPPLY(_TV_Square_Position.w, 0.0);
 		IFZEROAPPLY(_EmissionStrength, 0.5);
+		#ifndef NO_RESET_MINAMBIENT
 		IFZEROAPPLY(_MinAmbient, 0.20);
-		IFZEROAPPLY(_Transmissivity, 0.2);
+		#endif
+		IFZEROAPPLY(_Transmissivity, 0.0);
 		IFZEROAPPLY(_OcclusionStrength, 0.0);
 		IFZEROAPPLY(_Smoothness, 0.0);
 		IFZEROAPPLY(_SpecularIntensity, 0.0);
@@ -35,7 +37,13 @@ namespace b_light
 		IFZEROAPPLY(_LightSmoothness, 1.0);
 		IFZEROAPPLY(_LightSteps, 128);
 		IFZEROAPPLY(_LTCGIStrength, 1.0);
+		#ifndef ROUNDING_DISABLED
+		#ifdef ROUNDING_VAR_NAME
+		IFZEROAPPLY(ROUNDING_VAR_NAME, 0.0);
+		#else
 		IFZEROAPPLY(_Rounding, 0.0);
+		#endif
+		#endif
 
 		#ifdef UNITY_PASS_FORWARDBASE
 		IFZEROAPPLY(_VRSLGIStrength, 0.25);
