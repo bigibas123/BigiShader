@@ -14,6 +14,7 @@ Shader "Bigi/HeartRate" {
 		}
 
 		CGINCLUDE
+		#pragma shader_feature_local_fragment LTCGI_ENABLED
 		#pragma shader_feature_local_vertex FLIP_XY
 		#pragma shader_feature_local_vertex INVERT_Y
 		#pragma shader_feature_local_vertex INVERT_X
@@ -90,7 +91,7 @@ Shader "Bigi/HeartRate" {
 			ZWrite On
 			ZTest Less
 			CGPROGRAM
-			#include_with_pragmas "./Includes/Pragmas/Global.cginc"
+			#include_with_pragmas "./Includes/Pragmas/VRCLighting.cginc"
 			#pragma vertex vertd alpha
 			#pragma fragment fragd alpha
 			v2f vertd(appdata v)

@@ -44,7 +44,7 @@ Shader "Bigi/AudioLink_frag" {
 		[Header(Lighting)]
 		[Space]
 		_LightSmoothness ("Shadow smoothness",Range(0.0,1.0)) = 1.0
-		_LightSteps ("Light steps", Integer) = 1
+		[IntRange] _LightSteps ("Light steps", Range(0,256)) = 1
 		[Space]
 		_MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.005
 		_Transmissivity ("Transmission of light through the material", Range(0.0,1.0)) = 0.2
@@ -115,6 +115,7 @@ Shader "Bigi/AudioLink_frag" {
 			#pragma fragment frag
 
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
+			#include_with_pragmas "./Includes/Pragmas/CustomVariants.cginc"
 			#include "./Includes/Core/BigiMainTex.cginc"
 			#include "./Includes/ToonVert.cginc"
 			#include "./Includes/BigiAudioLink_frag_default.cginc"
@@ -156,6 +157,7 @@ Shader "Bigi/AudioLink_frag" {
 			#pragma fragment frag alpha
 			#pragma multi_compile_fwdbasealpha
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
+			#include_with_pragmas "./Includes/Pragmas/CustomVariants.cginc"
 			#include "./Includes/Core/BigiMainTex.cginc"
 			#include "./Includes/ToonVert.cginc"
 			#include "./Includes/BigiAudioLink_frag_default.cginc"
@@ -205,7 +207,7 @@ Shader "Bigi/AudioLink_frag" {
 			#pragma vertex bigi_toon_vert
 			#pragma fragment frag
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
-
+			#include_with_pragmas "./Includes/Pragmas/CustomVariants.cginc"
 			#include "./Includes/ToonVert.cginc"
 			#include "./Includes/Lighting/NormalDefines.cginc"
 			#include "./Includes/Lighting/LightUtilsDefines.cginc"
@@ -250,8 +252,8 @@ Shader "Bigi/AudioLink_frag" {
 			#pragma vertex vert
 			#pragma fragment frag
 
-			#include_with_pragmas "./Includes/Pragmas/Global.cginc"
-
+			#include_with_pragmas "./Includes/Pragmas/VRCLighting.cginc"
+			#include_with_pragmas "./Includes/Pragmas/CustomVariants.cginc"
 			#include "./Includes/Core/BigiShaderStructs.cginc"
 			#include "./Includes/Core/BigiShaderParams.cginc"
 			#include "./Includes/Effects/SoundUtilsDefines.cginc"
@@ -313,6 +315,7 @@ Shader "Bigi/AudioLink_frag" {
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
 			#include_with_pragmas "./Includes/Pragmas/ShadowCaster.cginc"
+			#include_with_pragmas "./Includes/Pragmas/CustomVariants.cginc"
 			
 			#define BIGI_DEFAULT_V2F_DEFINED
 
