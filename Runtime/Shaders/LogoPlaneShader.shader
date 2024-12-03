@@ -52,14 +52,13 @@ Shader "Bigi/LogoPlane" {
 
 
 			BIGI_GETLIGHT_DEFAULT(lighting);
-			fixed4 normalColor;
-			normalColor = orig_color * lighting;
+			fixed4 normal_color = orig_color * lighting;
 
 			_AL_Theme_Weight = _AL_Weight;
 
 			GET_SOUND_COLOR(sound);
 
-			o.color = lerp(normalColor,fixed4(sound.rgb, normalColor.a), sound.a);
+			o.color = lerp(normal_color,fixed4(sound.rgb, normal_color.a), sound.a);
 			o.color.a = orig_color.a;
 			//o.color = orig_color;
 			UNITY_APPLY_FOG(i.fogCoord, o.color);
@@ -109,7 +108,8 @@ Shader "Bigi/LogoPlane" {
 			Blend SrcAlpha OneMinusSrcAlpha
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
-			#pragma shader_feature_local_fragment _ ALPHA_MUL
+			#pragma shader_feature_local_fragment LTCGI_ENABLED
+			#pragma shader_feature_local_fragment ALPHA_MUL
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
 			ENDCG
@@ -129,7 +129,8 @@ Shader "Bigi/LogoPlane" {
 			Blend One One
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
-			#pragma shader_feature_local_fragment _ ALPHA_MUL
+			#pragma shader_feature_local_fragment LTCGI_ENABLED
+			#pragma shader_feature_local_fragment ALPHA_MUL
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
 			ENDCG
@@ -151,7 +152,8 @@ Shader "Bigi/LogoPlane" {
 			Blend SrcAlpha OneMinusSrcAlpha
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
-			#pragma shader_feature_local_fragment _ ALPHA_MUL
+			#pragma shader_feature_local_fragment LTCGI_ENABLED
+			#pragma shader_feature_local_fragment ALPHA_MUL
 
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
@@ -173,7 +175,8 @@ Shader "Bigi/LogoPlane" {
 			Blend One One
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
-			#pragma shader_feature_local_fragment _ ALPHA_MUL
+			#pragma shader_feature_local_fragment LTCGI_ENABLED
+			#pragma shader_feature_local_fragment ALPHA_MUL
 
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
