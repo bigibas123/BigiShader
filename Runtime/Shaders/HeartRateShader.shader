@@ -35,6 +35,7 @@ Shader "Bigi/HeartRate" {
 		// Code taken and modified from: https://github.com/llealloo/audiolink/blob/965842714afbca8194c5a25882b8cd70a0ed434a/AudioLinkSandboxUnityProject/Assets/AudioLinkSandbox/Shaders/NewTextTest.shader#L51
 		float4 determineValue(in float2 uv)
 		{
+			uv.y = 1.0 - uv.y;
 			//
 			// Pixel location as uint (floor)
 			uint2 pixel = (uint2)uv;
@@ -45,7 +46,7 @@ Shader "Bigi/HeartRate" {
 			float2 softness_uv = uv * float2(4, 6);
 			float softness = 4. / (pow(length(float2(ddx(softness_uv.x), ddy(softness_uv.y))), 0.5)) - 1.;
 
-			float2 charUV = float2(4, 6) - glsl_mod(uv, 1.0) * float2(4.0, 6.0);
+			float2 charUV = float2(4, 6.5) - glsl_mod(uv, 1.0) * float2(4.0, 6.5);
 			float value = PrintNumberOnLine(_Heartrate, charUV, softness, pixel.x, 3, 0, false, 0);
 			return float4(value, value, value, value);
 		}
@@ -55,7 +56,7 @@ Shader "Bigi/HeartRate" {
 			b_light::setVars();
 			v2f o = bigi_toon_vert(v);
 			#ifdef FLIP_XY
-			o.uv.xy = o.uv.yx; // Flip Xy so text if flipped
+			o.uv.xy = o.uv.yx; // Flip Xy so text is flipped
 			#endif
 			#ifdef INVERT_Y
 			o.uv.y = 1.0 - o.uv.y;

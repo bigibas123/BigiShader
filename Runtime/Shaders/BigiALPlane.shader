@@ -22,13 +22,7 @@ Shader "Bigi/ALTest" {
 			CGPROGRAM
 			#pragma vertex bigi_toon_vert
 			#pragma fragment frag
-			#pragma instancing_options assumeuniformscaling
-			#pragma multi_compile_instancing
-			#pragma multi_compile_fwdbase
-			#pragma multi_compile_fwdbasealpha
-			#pragma multi_compile_lightpass
-			#pragma multi_compile_shadowcollector
-			#pragma multi_compile_fog
+			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
 			#pragma target 3.0
 			#define EXTERNAL_AUDIOLINK_ON
 			#include "./Includes/ToonVert.cginc"
@@ -143,12 +137,7 @@ Shader "Bigi/ALTest" {
 			#pragma target 3.0
 			#pragma vertex bigi_toon_vert
 			#pragma fragment frag
-			#pragma instancing_options assumeuniformscaling
-			#pragma multi_compile_fwdadd_fullshadows
-			#pragma multi_compile_lightpass
-			#pragma multi_compile_shadowcollector
-			#pragma multi_compile_fog
-			#pragma multi_compile_instancing
+			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
 
 			#include "./Includes/ToonVert.cginc"
 			#include "./Includes/Lighting/LightUtilsDefines.cginc"
@@ -188,14 +177,7 @@ Shader "Bigi/ALTest" {
 			CGPROGRAM
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
-			#pragma multi_compile_shadowcaster
-			#pragma multi_compile_instancing
-			#pragma multi_compile_lightpass
-			#pragma instancing_options assumeuniformscaling
-			#pragma multi_compile_fwdbase
-			#pragma multi_compile_fwdbasealpha
-			#pragma multi_compile_lightpass
-			#pragma multi_compile_fog
+			#include_with_pragmas "./Includes/Pragmas/ShadowCaster.cginc"
 			#pragma target 3.0
 			#include "UnityCG.cginc"
 			uniform int _Invisibility;

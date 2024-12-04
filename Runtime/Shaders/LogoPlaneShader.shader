@@ -10,7 +10,7 @@ Shader "Bigi/LogoPlane" {
 	SubShader {
 		Blend SrcAlpha OneMinusSrcAlpha
 		Tags {
-			"RenderType" = "Transparent" "Queue" = "Transparent" "IgnoreProjector" = "True" "LightMode" = "ForwardBase" "VRCFallback"="Hidden" "LTCGI"="ALWAYS"
+			"RenderType" = "Transparent" "Queue" = "Transparent" "IgnoreProjector" = "True" "LightMode" = "ForwardBase" "VRCFallback"="Hidden" "LTCGI"="ALWAYS" "PreviewType" = "Plane"
 		}
 
 		CGINCLUDE
