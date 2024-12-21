@@ -20,25 +20,19 @@ namespace cc.dingemans.bigibas123.bigishader
 				.Where(m => m != null);
 
 			EditorGUI.BeginChangeCheck();
-			bool keepTransparent = false;
-
 			foreach (var m in actualTargets)
 			{
 				CheckIfMaterialPropertiesExist(m);
 				FixupMaterial(m);
-				if (m.GetShaderPassEnabled("TransparentForwardBase"))
-				{
-					keepTransparent = true;
-				}
 			}
-
-			if (!keepTransparent)
-			{
-				materialProperties.RemoveAll(p => p.displayName.Contains("Transparent ForwardBase"));
-			}
-
 
 			EditorGUI.EndChangeCheck();
+			var mats = actualTargets.Select(t => (Material)t);
+			if (mats.All(m => !AOEnabled.GetBool(m)))
+			{
+				materialProperties.RemoveAll(p => p.name == "_" + nameof(AOEnabled));
+			}
+
 			base.OnGUI(materialEditor, materialProperties.ToArray());
 			EditorGUI.indentLevel++;
 			EditorGUI.BeginChangeCheck();
