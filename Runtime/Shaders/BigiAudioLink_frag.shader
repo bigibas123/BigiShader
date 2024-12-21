@@ -267,7 +267,7 @@ Shader "Bigi/AudioLink_frag" {
 				if (AudioLinkIsAvailable())
 				{
 					float4 heightPos = v.vertex * 10.0 + float4(0.0, 7.0, 0.0, 0.0);
-					float3 offset = v.normal.xyz * (_OutlineWidth * 0.01) * b_sound::GetWaves(length(heightPos));
+					float3 offset = (normalize(v.normal.xyz)*2.0) * (_OutlineWidth * 0.01) * b_sound::GetWaves(length(heightPos));
 
 					offset = lerp(0.0, offset, smoothstep(0.0, Epsilon, _OutlineWidth));
 					v.vertex = v.vertex + float4(offset,0.0);
