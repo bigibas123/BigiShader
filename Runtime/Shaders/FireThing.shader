@@ -40,7 +40,7 @@ Shader "Bigi/FireThing" {
 
 			struct v2g
 			{
-				float4 vertex : POSITION;
+				UNITY_POSITION(vertex);
 				float3 normal : NORMAL;
 				float distance: BLENDWEIGHT;
 				UNITY_VERTEX_OUTPUT_STEREO
@@ -49,19 +49,22 @@ Shader "Bigi/FireThing" {
 
 			struct g2f
 			{
-				float4 vertex : SV_POSITION;
+				UNITY_POSITION(vertex);
 				float distance : BLENDWEIGHT0;
 				UNITY_VERTEX_OUTPUT_STEREO
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
-			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
+			#pragma target 5.0
+			#pragma fragmentoption ARB_precision_hint_fastest
 
 			v2g vert(appdata v)
 			{
 				v2g o;
+				UNITY_INITIALIZE_OUTPUT(v2g, o);
 				UNITY_SETUP_INSTANCE_ID(v);
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
+				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 				o.vertex = v.vertex;
 				o.normal = v.normal;
 				o.distance = 1.0;
@@ -74,11 +77,12 @@ Shader "Bigi/FireThing" {
 			v2g getMiddleV2g(const in v2g a, const in v2g b)
 			{
 				v2g res;
-				UNITY_INITIALIZE_OUTPUT(v2g, res);
-				SetMiddle(vertex);
-				SetMiddle(normal);
-				UnitIfy(normal);
+					UNITY_INITIALIZE_OUTPUT(v2g, res);
+					SetMiddle(vertex);
+					SetMiddle(normal);
+					UnitIfy(normal);
 				UNITY_TRANSFER_VERTEX_OUTPUT_STEREO(a, res);
+				UNITY_TRANSFER_INSTANCE_ID(a, res);
 				return res;
 			}
 
@@ -96,6 +100,7 @@ Shader "Bigi/FireThing" {
 				res.distance = a.distance;
 				res.vertex = UnityObjectToClipPos(a.vertex);
 				UNITY_TRANSFER_VERTEX_OUTPUT_STEREO(a, res);
+				UNITY_TRANSFER_INSTANCE_ID(a, res);
 				return res;
 			}
 
