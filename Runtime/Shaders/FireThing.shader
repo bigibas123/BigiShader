@@ -22,12 +22,6 @@ Shader "Bigi/FireThing" {
 			ZWrite On
 			ZTest On
 			Blend One OneMinusSrcAlpha
-			Stencil {
-				Ref 180 //148 + 32 // 1011 0100 // VRSLGI + Own stencil bit
-				Comp Always
-				WriteMask 180
-				Pass Replace
-			}
 			CGPROGRAM
 			#pragma geometry geom
 			#pragma vertex vert
@@ -48,14 +42,17 @@ Shader "Bigi/FireThing" {
 			{
 				float4 vertex : POSITION;
 				float3 normal : NORMAL;
+				float distance: BLENDWEIGHT;
+				UNITY_VERTEX_OUTPUT_STEREO
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
 			struct g2f
 			{
 				float4 vertex : SV_POSITION;
-				float4 localPos : TEXCOORD0;
+				float distance : BLENDWEIGHT0;
 				UNITY_VERTEX_OUTPUT_STEREO
+				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
@@ -67,13 +64,14 @@ Shader "Bigi/FireThing" {
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				o.vertex = v.vertex;
 				o.normal = v.normal;
+				o.distance = 1.0;
 				return o;
 			}
 
 			#define SetMiddle(prop) res.prop = (((b.prop - a.prop) / 2.0) + a.prop)
 			#define UnitIfy(prop) res.prop = normalize(res.prop)
 
-			v2g getMiddleV2f(const in v2g a, const in v2g b)
+			v2g getMiddleV2g(const in v2g a, const in v2g b)
 			{
 				v2g res;
 				UNITY_INITIALIZE_OUTPUT(v2g, res);
@@ -95,7 +93,7 @@ Shader "Bigi/FireThing" {
 			g2f v2gToG2f(const in v2g a)
 			{
 				g2f res;
-				res.localPos = a.vertex;
+				res.distance = a.distance;
 				res.vertex = UnityObjectToClipPos(a.vertex);
 				UNITY_TRANSFER_VERTEX_OUTPUT_STEREO(a, res);
 				return res;
@@ -116,18 +114,20 @@ Shader "Bigi/FireThing" {
 				return (mul(unity_ObjectToWorld, pos).xz * 20.0) + (_Time.w / 2.0);
 			}
 
-			float getOffset(const in float4 pos)
+			float4 getOffset(const in float4 pos, const in float3 normal)
 			{
+				float result;
 				float2 coord = getPos(pos);
 				if (AudioLinkIsAvailable())
 				{
 					float dist = (coord.x * 8.0 + coord.y * 4.0) % (AUDIOLINK_WIDTH * 1.0);
-					return AudioLinkLerp(ALPASS_AUDIOLINK + float2(dist, 0)) + 0.1;
+					result = (AudioLinkLerp(ALPASS_AUDIOLINK + float2(dist, 0)) + 0.1).x;
 				}
 				else
 				{
-					return cnoise(coord) * 0.5 + 0.5;
+					result = cnoise(coord) * 0.5 + 0.5;
 				}
+				return float4(normalize(normal) * result, result);
 			}
 
 			arrayContainer split3(const in v2g input[3], const uint id)
@@ -136,9 +136,11 @@ Shader "Bigi/FireThing" {
 				v2g a = input[0];
 				v2g b = input[1];
 				v2g c = input[2];
-				v2g ab = getMiddleV2f(a, b);
-				v2g abc = getMiddleV2f(ab, c);
-				abc.vertex.z -= getOffset(abc.vertex);
+				v2g ab = getMiddleV2g(a, b);
+				v2g abc = getMiddleV2g(ab, c);
+				float4 offset = getOffset(abc.vertex, abc.normal);
+				abc.vertex.xyz += offset.xyz;
+				abc.distance = 1.0 - offset.w;
 				output[0] = a;
 				output[1] = b;
 				output[2] = abc;
@@ -153,8 +155,8 @@ Shader "Bigi/FireThing" {
 				return ret;
 			}
 
-			//[maxvertexcount(128)]
-			[maxvertexcount(3 * 3 * 3 * 3)]
+			//[maxvertexcount(3 * 3 * 3 * 3)]
+			[maxvertexcount(128)]
 			void geom(
 				triangle v2g input[3], uint pid : SV_PrimitiveID,
 				inout TriangleStream<g2f> os
@@ -163,7 +165,7 @@ Shader "Bigi/FireThing" {
 				DEFAULT_UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input[0])
 				const uint rid = pid * 10;
 				v2g splitList1[9] = split3(input, rid).output;
-				UNITY_UNROLL
+				[unroll]
 				for (int i = 0; i <= 2; ++i)
 				{
 					v2g input2[3] = {
@@ -206,19 +208,9 @@ Shader "Bigi/FireThing" {
 					float3(1.0, 0.46, 0.0),
 					float3(0.98, 0.75, 0.0),
 				};
-				const float scale = 5.0;
-				float pos = (i.localPos.z) * scale;
-
-				uint selection;
-				if (pos < 0)
-				{
-					selection = fireColorCount + (pos % fireColorCount);
-				}
-				else
-				{
-					selection = (pos % fireColorCount);
-				}
-
+				const float scale = 10.0;
+				const float pos = (i.distance + 0.2) * scale;
+				const uint selection = (pos % fireColorCount);
 				return float4(fireColors[(fireColorCount - 1) - selection], 1.0);
 			}
 			ENDCG
