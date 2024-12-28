@@ -53,17 +53,18 @@ struct v2f
 	UNITY_POSITION(pos); //float4 pos : SV_POSITION;
 
 	float4 uv : TEXCOORD0;
-	float4 uv1 : TEXCOORD1;
+	//float4 uv1 : TEXCOORD1;
 	float3 normal : TEXCOORD2;
 	float4 tangent : TEXCOORD3;
 	float4 worldPos : TEXCOORD4;
-	float4 localPos : TEXCOORD5;
-	float4 lightmapUV : TEXCOORD6;
-	UNITY_FOG_COORDS(7)
-	UNITY_LIGHTING_COORDS(9,8)
-	float3 bitangent : TEXCOORD10;
-	float4 staticTexturePos : TEXCOORD11;
-	float3 vertexLighting : TEXCOORD12;
+	float4 lightmapUV : TEXCOORD5;
+	UNITY_FOG_COORDS(6)
+	UNITY_LIGHTING_COORDS(8,7)
+	float3 bitangent : TEXCOORD9;
+	float4 staticTexturePos : TEXCOORD10;
+	#ifdef VERTEXLIGHT_ON
+	float3 vertexLighting : TEXCOORD11;
+	#endif
 	
 
 	UNITY_VERTEX_INPUT_INSTANCE_ID

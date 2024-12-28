@@ -26,10 +26,10 @@ v2f do_v2fCalc(in v2f o, const in appdata v)
 	#ifndef ROUNDING_DISABLED
 	if (ROUNDING_VAR_NAME > Epsilon)
 	{
-		o.localPos = round_val(v.vertex, ROUNDING_VAR_NAME);
-		o.pos = UnityObjectToClipPos(o.localPos);
+		//o.localPos = round_val(v.vertex, ROUNDING_VAR_NAME);
+		o.pos = UnityObjectToClipPos(round_val(v.vertex, ROUNDING_VAR_NAME));
 		o.uv.xy = (DO_TRANSFORM(v.uv0)) * o.pos.w;
-		o.uv1 = float4(v.uv1, v.uv2);
+		//o.uv1 = float4(v.uv1, v.uv2);
 		o.normal = UnityObjectToWorldNormal(round_val(float4(v.normal, 1.0), ROUNDING_VAR_NAME).xyz);
 		float4 rounded_tangent = round_val(v.tangent, ROUNDING_VAR_NAME);
 		o.tangent.xyz = UnityObjectToWorldDir(rounded_tangent).xyz;
@@ -37,19 +37,19 @@ v2f do_v2fCalc(in v2f o, const in appdata v)
 	}
 	else
 	{
-		o.localPos = v.vertex;
-		o.pos = UnityObjectToClipPos(o.localPos);
+		//o.localPos = v.vertex;
+		o.pos = UnityObjectToClipPos(v.vertex);
 		o.uv.xy = DO_TRANSFORM(v.uv0);
-		o.uv1 = float4(v.uv1, v.uv2);
+		//o.uv1 = float4(v.uv1, v.uv2);
 		o.normal = UnityObjectToWorldNormal(v.normal);
 		o.tangent.xyz = UnityObjectToWorldDir(v.tangent);
 		o.tangent.w = v.tangent.w;
 	}
 	#else
-	o.localPos = v.vertex;
-	o.pos = UnityObjectToClipPos(o.localPos);
+	//o.localPos = v.vertex;
+	o.pos = UnityObjectToClipPos(v.vertex);
 	o.uv.xy = DO_TRANSFORM(v.uv0);
-	o.uv1 = float4(v.uv1, v.uv2);
+	//o.uv1 = float4(v.uv1, v.uv2);
 	o.normal = UnityObjectToWorldNormal(v.normal);
 	o.tangent.xyz = UnityObjectToWorldDir(v.tangent);
 	o.tangent.w = v.tangent.w;
@@ -84,12 +84,11 @@ v2f bigi_toon_vert(appdata v)
 	//TODO make this object space relative or something?
 	// Update: Orels has a shader that I can checkout: https://shaders.orels.sh/docs/ui/layered-parallax
 
-	o.worldPos = mul(unity_ObjectToWorld, o.localPos);
+	o.worldPos = mul(unity_ObjectToWorld, v.vertex);
 
 	o.lightmapUV.xy = v.uv1.xy; // * unity_LightmapST.xy + unity_LightmapST.zw;
 	o.lightmapUV.zw = v.uv2.xy; // * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
-	BIGI_GETLIGHT_VERTEX(vlight);
-	o.vertexLighting = vlight;
+	BIGI_GETLIGHT_VERTEX(o);
 
 	return o;
 }
