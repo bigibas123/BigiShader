@@ -4,6 +4,7 @@
 //#pragma skip_optimizations d3d11
 //#pragma warning(disable : 3568)
 //#pragma enable_d3d11_debug_symbols
+#pragma warning (default : 3206) // implicit truncation
 #pragma fragmentoption ARB_precision_hint_fastest
 #pragma multi_compile_instancing
 #pragma multi_compile_fog

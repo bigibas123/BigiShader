@@ -23,9 +23,11 @@ Shader "Bigi/FireThing" {
 			ZTest On
 			Blend One OneMinusSrcAlpha
 			CGPROGRAM
+			#pragma target 5.0
 			#pragma geometry geom
 			#pragma vertex vert
 			#pragma fragment frag
+			#pragma multi_compile_instancing
 			#include <UnityCG.cginc>
 			#include <Packages/lygia/generative/cnoise.hlsl>
 			#include <Packages/com.llealloo.audiolink/Runtime/Shaders/AudioLink.cginc>
@@ -34,7 +36,6 @@ Shader "Bigi/FireThing" {
 			{
 				float4 vertex : POSITION;
 				float4 normal : NORMAL;
-				UNITY_VERTEX_OUTPUT_STEREO
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -42,9 +43,8 @@ Shader "Bigi/FireThing" {
 			{
 				UNITY_POSITION(vertex);
 				float3 normal : NORMAL;
-				float distance: BLENDWEIGHT;
+				float distance: BLENDWEIGHT0;
 				UNITY_VERTEX_OUTPUT_STEREO
-				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
 			struct g2f
@@ -52,7 +52,6 @@ Shader "Bigi/FireThing" {
 				UNITY_POSITION(vertex);
 				float distance : BLENDWEIGHT0;
 				UNITY_VERTEX_OUTPUT_STEREO
-				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
 			#pragma target 5.0
@@ -61,9 +60,8 @@ Shader "Bigi/FireThing" {
 			v2g vert(appdata v)
 			{
 				v2g o;
-				UNITY_INITIALIZE_OUTPUT(v2g, o);
 				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_TRANSFER_INSTANCE_ID(v, o);
+				UNITY_INITIALIZE_OUTPUT(v2g, o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 				o.vertex = v.vertex;
 				o.normal = v.normal;
@@ -77,12 +75,11 @@ Shader "Bigi/FireThing" {
 			v2g getMiddleV2g(const in v2g a, const in v2g b)
 			{
 				v2g res;
-					UNITY_INITIALIZE_OUTPUT(v2g, res);
-					SetMiddle(vertex);
-					SetMiddle(normal);
-					UnitIfy(normal);
+				UNITY_INITIALIZE_OUTPUT(v2g, res);
 				UNITY_TRANSFER_VERTEX_OUTPUT_STEREO(a, res);
-				UNITY_TRANSFER_INSTANCE_ID(a, res);
+				SetMiddle(vertex);
+				res.normal = (a.normal + b.normal) / 2.0;
+				SetMiddle(distance);
 				return res;
 			}
 
@@ -97,10 +94,10 @@ Shader "Bigi/FireThing" {
 			g2f v2gToG2f(const in v2g a)
 			{
 				g2f res;
+				UNITY_INITIALIZE_OUTPUT(g2f, res);
+				UNITY_TRANSFER_VERTEX_OUTPUT_STEREO(a, res);
 				res.distance = a.distance;
 				res.vertex = UnityObjectToClipPos(a.vertex);
-				UNITY_TRANSFER_VERTEX_OUTPUT_STEREO(a, res);
-				UNITY_TRANSFER_INSTANCE_ID(a, res);
 				return res;
 			}
 
@@ -114,28 +111,55 @@ Shader "Bigi/FireThing" {
 				v2g output[9];
 			};
 
-			float2 getPos(const in float4 pos)
+			float2 getPos(const in float4 objPos, const in float3 scale)
 			{
-				return (mul(unity_ObjectToWorld, pos).xz * 20.0) + (_Time.w / 2.0);
+				const float3 pos = objPos / scale;
+				return float2(
+					(pos.x * 2.0) + (pos.y * 4.0) + (pos.z * 8.0) + (_Time.w / 4.0),
+					(pos.z * 2.0) + (pos.y * 4.0) + (pos.x * 8.0) + (_Time.w / 4.0)
+				);
 			}
 
-			float4 getOffset(const in float4 pos, const in float3 normal)
+			float3 getWorldPos(const in float3 objPos, const in float3 scale)
+			{
+				const float4 wp = mul(unity_ObjectToWorld, objPos);
+				return wp;
+			}
+
+			float getMax(const in float4 val)
+			{
+				return max(val.x, max(val.y, max(val.z, val.w)));
+			}
+
+			float getAl(const in float2 coord)
+			{
+				float dist = abs((coord.x * 2.0 + coord.y) * 20.0) % (AUDIOLINK_WIDTH);
+				float4 audio = float4(
+					AudioLinkLerp(ALPASS_AUDIOLINK + float2(dist, 0)).r,
+					AudioLinkLerp(ALPASS_AUDIOLINK + float2(dist, 1)).r,
+					AudioLinkLerp(ALPASS_AUDIOLINK + float2(dist, 2)).r,
+					AudioLinkLerp(ALPASS_AUDIOLINK + float2(dist, 3)).r
+				);
+
+				return (getMax(audio) + 0.1).x;
+			}
+
+			float4 getOffset(const in float4 pos, const in float3 normal, const in float3 scale)
 			{
 				float result;
-				float2 coord = getPos(pos);
-				if (AudioLinkIsAvailable())
+				if (false && AudioLinkIsAvailable())
 				{
-					float dist = (coord.x * 8.0 + coord.y * 4.0) % (AUDIOLINK_WIDTH * 1.0);
-					result = (AudioLinkLerp(ALPASS_AUDIOLINK + float2(dist, 0)) + 0.1).x;
+					result = getAl(getPos(pos, scale) * 20.0);
 				}
 				else
 				{
-					result = cnoise(coord) * 0.5 + 0.5;
+					result = cnoise(getPos(pos, scale)) * 0.5 + 0.5;
 				}
-				return float4(normalize(normal) * result, result);
+				result = clamp(result, 0.0, 1.0);
+				return float4((normalize(normal.xyz) * 0.35 * 0.35 * 0.35) * result, result);
 			}
 
-			arrayContainer split3(const in v2g input[3], const uint id)
+			arrayContainer split3(const in v2g input[3], const in float3 scale)
 			{
 				v2g output[9];
 				v2g a = input[0];
@@ -143,8 +167,8 @@ Shader "Bigi/FireThing" {
 				v2g c = input[2];
 				v2g ab = getMiddleV2g(a, b);
 				v2g abc = getMiddleV2g(ab, c);
-				float4 offset = getOffset(abc.vertex, abc.normal);
-				abc.vertex.xyz += offset.xyz;
+				float4 offset = getOffset(abc.vertex, abc.normal, scale);
+				abc.vertex = abc.vertex + float4(offset.xyz * scale, 0.0);
 				abc.distance = 1.0 - offset.w;
 				output[0] = a;
 				output[1] = b;
@@ -160,43 +184,55 @@ Shader "Bigi/FireThing" {
 				return ret;
 			}
 
-			//[maxvertexcount(3 * 3 * 3 * 3)]
-			[maxvertexcount(128)]
+			[instance(3 * 3 * 3)]
+			[maxvertexcount(3 * 3 * 3)]
 			void geom(
 				triangle v2g input[3], uint pid : SV_PrimitiveID,
-				inout TriangleStream<g2f> os
+				inout TriangleStream<g2f> os,
+				uint instanceID : SV_GSInstanceID
 			)
 			{
-				DEFAULT_UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input[0])
-				const uint rid = pid * 10;
-				v2g splitList1[9] = split3(input, rid).output;
-				[unroll]
+				const float3 scale = 1.0 / float3(
+					length(unity_ObjectToWorld._m00_m10_m20),
+					length(unity_ObjectToWorld._m01_m11_m21),
+					length(unity_ObjectToWorld._m02_m12_m22)
+				);
+				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input[0])
+				v2g splitList1[9] = split3(input, scale).output;
+				v2g input2[3] = {
+					splitList1[0 + (glsl_mod(instanceID, 3) * 3)],
+					splitList1[1 + (glsl_mod(instanceID, 3) * 3)],
+					splitList1[2 + (glsl_mod(instanceID, 3) * 3)]
+				};
+				v2g splitList2[9] = split3(input2, scale).output;
+				v2g input3[3] = {
+					splitList2[0 + (glsl_mod(instanceID / 3, 3) * 3)],
+					splitList2[1 + (glsl_mod(instanceID / 3, 3) * 3)],
+					splitList2[2 + (glsl_mod(instanceID / 3, 3) * 3)]
+				};
+				v2g splitList3[9] = split3(input3, scale).output;
+				v2g input4[3] = {
+					splitList3[0 + (glsl_mod(instanceID / 3 / 3, 3) * 3)],
+					splitList3[1 + (glsl_mod(instanceID / 3 / 3, 3) * 3)],
+					splitList3[2 + (glsl_mod(instanceID / 3 / 3, 3) * 3)]
+				};
+				v2g splitList4[9] = split3(input4, scale).output;
 				for (int i = 0; i <= 2; ++i)
 				{
-					v2g input2[3] = {
-						splitList1[0 + (i * 3)],
-						splitList1[1 + (i * 3)],
-						splitList1[2 + (i * 3)]
+					v2g input5[3] = {
+						splitList4[0 + i * 3],
+						splitList4[1 + i * 3],
+						splitList4[2 + i * 3]
 					};
-					v2g splitList2[9] = split3(input2, rid + i).output;
-					UNITY_UNROLL
-					for (int j = 0; j <= 2; ++j)
+					v2g splitList5[9] = split3(input5, scale).output;
+
+					for (int k = 0; k <= 2; ++k)
 					{
-						v2g input3[3] = {
-							splitList2[0 + (j * 3)],
-							splitList2[1 + (j * 3)],
-							splitList2[2 + (j * 3)]
-						};
-						v2g splitList3[9] = split3(input3, rid + i).output;
-						UNITY_UNROLL
-						for (int k = 0; k <= 2; ++k)
-						{
-							addTriangle(
-								splitList3[0 + (k * 3)],
-								splitList3[1 + (k * 3)],
-								splitList3[2 + (k * 3)],
-								os);
-						}
+						addTriangle(
+							splitList5[0 + (k * 3)],
+							splitList5[1 + (k * 3)],
+							splitList5[2 + (k * 3)],
+							os);
 					}
 				}
 			}
@@ -213,10 +249,20 @@ Shader "Bigi/FireThing" {
 					float3(1.0, 0.46, 0.0),
 					float3(0.98, 0.75, 0.0),
 				};
-				const float scale = 10.0;
-				const float pos = (i.distance + 0.2) * scale;
-				const uint selection = (pos % fireColorCount);
-				return float4(fireColors[(fireColorCount - 1) - selection], 1.0);
+				const float scale = 7.5;
+				const float pos = (i.distance - 0.2) * scale;
+				const float selection = fireColorCount - (glsl_mod(pos, fireColorCount));
+				const uint iSelection = selection;
+				if (true)
+				{
+					const float3 sel1 = fireColors[clamp(iSelection, 0, fireColorCount - 1)];
+					const float3 sel2 = fireColors[clamp(iSelection + 1.0, 0, fireColorCount - 1)];
+					return float4(lerp(sel1, sel2, frac(selection)), 1.0);
+				}
+				else
+				{
+					return float4(fireColors[clamp(iSelection, 0, fireColorCount - 1)], 1.0);
+				}
 			}
 			ENDCG
 		}
