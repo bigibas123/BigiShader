@@ -35,6 +35,6 @@ half3 HSVToRGB(in const half3 c)
 
 half3 RGBtoHCV(in const half r, in const half g, in const half b) { return RGBtoHCV(half3(r, g, b)); }
 half3 RGBToHSV(in const half r, in const half g, in const half b) { return RGBToHSV(half3(r, g, b)); }
-half3 HSVToRGB(in const half r, in const half g, in const half b) { return HSVToRGB(half3(r, g, b)); }
+half3 HSVToRGB(in const half h, in const half s, in const half v) { return HSVToRGB(half3(h, s, v)); }
 
 #endif
