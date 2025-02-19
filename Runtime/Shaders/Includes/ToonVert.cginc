@@ -23,7 +23,7 @@ float4 round_val(const in float4 snapToPixel, const uniform in float rounding)
 
 v2f do_v2fCalc(in v2f o, const in appdata v)
 {
-	#ifndef ROUNDING_DISABLED
+	#ifdef ROUNDING_ENABLED
 	if (ROUNDING_VAR_NAME > Epsilon)
 	{
 		//o.localPos = round_val(v.vertex, ROUNDING_VAR_NAME);

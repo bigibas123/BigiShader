@@ -65,7 +65,7 @@ Shader "Bigi/AudioLink_frag" {
 		_MonoChrome("MonoChrome", Range(0.0,1.0)) = 0.0
 		_Voronoi("Voronoi", Range(0.0,1.0)) = 0.0
 		_OutlineWidth ("Outline Width", Range(0.0,1.0)) = 0.0
-		[Toggle(ROUNDING_DISABLED)] _RoundingDisabled ("Disable Rounding effect",Range(0.0,1.0)) = 1.0
+		[Toggle(ROUNDING_ENABLED)] _RoundingEnabled ("Enable Rounding effect",Range(0.0,1.0)) = 0.0
 		_Rounding ("Rounding Factor", Range(0.0,0.05)) = 0.0
 
 
@@ -354,7 +354,7 @@ Shader "Bigi/AudioLink_frag" {
                         o.viewDirForParallax = mul (rotation, ObjSpaceViewDir(v.vertex));
 				#endif
 				#endif
-				#ifndef ROUNDING_DISABLED
+				#ifdef ROUNDING_ENABLED
 				if (_Rounding > Epsilon)
 				{
 					float4 snapToPixel = o.pos;

@@ -33,6 +33,11 @@ namespace cc.dingemans.bigibas123.bigishader
 				materialProperties.RemoveAll(p => p.name == "_" + nameof(AOEnabled));
 			}
 
+			if (mats.All(m => !RoundingEnabled.GetBool(m)))
+			{
+				materialProperties.RemoveAll(p => p.name == "_" + nameof(Rounding));
+			}
+
 			base.OnGUI(materialEditor, materialProperties.ToArray());
 			EditorGUI.indentLevel++;
 			EditorGUI.BeginChangeCheck();
@@ -181,6 +186,11 @@ namespace cc.dingemans.bigibas123.bigishader
 				bool hasAOMap = (OcclusionMap.GetTexture(m) is not null);
 				AOEnabled.Set(m, hasAOMap);
 				m.shader.keywordSpace.FindKeyword("AMBIENT_OCCLUSION_ENABLED").Set(m, hasAOMap);
+			}
+
+			if (!RoundingEnabled.GetBool(m))
+			{
+				Rounding.Set(m, 0.0f);
 			}
 
 			var proTVEnabled = EnableProTVSquare.GetBool(m);
@@ -407,7 +417,7 @@ namespace cc.dingemans.bigibas123.bigishader
 		MonoChrome,
 		Voronoi,
 		OutlineWidth,
-		RoundingDisabled,
+		RoundingEnabled,
 		Rounding,
 		EnableProTVSquare,
 		SquareTVTest,

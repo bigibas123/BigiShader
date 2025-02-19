@@ -26,6 +26,7 @@ Shader "Bigi/LogoPlane" {
 		#define MULTI_TEXTURE
 		#define OTHER_TEXTURE_ID_REF _Logo_FlipBookID
 		#define OTHER_BIGI_TEXTURES
+		#define NO_RESET_MINAMBIENT
 
 		#include "./Includes/ToonVert.cginc"
 		#include "./Includes/Lighting/BigiLightingParamWriter.cginc"

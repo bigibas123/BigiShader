@@ -46,13 +46,13 @@ uniform uint _LightSteps;
 uniform float _LTCGIStrength;
 
 #ifndef ROUNDING_VAR_NAME
-	#ifndef ROUNDING_DISABLED
+	#ifdef ROUNDING_ENABLED
 		uniform float _Rounding;
 		#define ROUNDING_VAR_NAME _Rounding
 	#endif
 #endif
 
-#if defined(ROUNDING_VAR_NAME) && !defined(ROUNDING_DISABLED)
+#if defined(ROUNDING_VAR_NAME) && defined(ROUNDING_ENABLED)
 #ifndef GET_UV
 #define GET_UV(origuv,iposw) (ROUNDING_VAR_NAME > Epsilon ? origuv/iposw : origuv)
 #endif

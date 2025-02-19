@@ -8,6 +8,6 @@
 #pragma shader_feature_local_fragment SPECSMOOTH_MAP_ENABLED
 #pragma shader_feature_local_fragment AMBIENT_OCCLUSION_ENABLED
 #pragma shader_feature_local_fragment PROTV_SQUARE_ENABLED
-#pragma shader_feature_local_vertex ROUNDING_DISABLED
+#pragma shader_feature_local_vertex ROUNDING_ENABLED
 
 #endif
