@@ -42,6 +42,9 @@ uniform float _MonoChrome;
 uniform float _Voronoi;
 uniform float _LightSmoothness;
 uniform uint _LightSteps;
+#ifdef MIRROR_THING
+uniform float _DoMirrorThing;
+#endif
 
 uniform float _LTCGIStrength;
 
