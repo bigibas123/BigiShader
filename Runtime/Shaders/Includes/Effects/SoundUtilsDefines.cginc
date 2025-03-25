@@ -5,6 +5,8 @@
 #include "./BigiSoundUtils.cginc"
 
 #define GET_SOUND_SETTINGS(set) b_sound::ALSettings set; \
+set.AL_Mode = _AL_Mode; \
+set.AL_Distance = distance;\
 set.AL_Theme_Weight = _AL_Theme_Weight; \
 set.AL_TC_BassReactive = _AL_TC_BassReactive;
 

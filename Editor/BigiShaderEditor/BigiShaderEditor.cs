@@ -412,6 +412,7 @@ namespace cc.dingemans.bigibas123.bigishader
 		OcclusionMap_HDR,
 		AOEnabled,
 		OcclusionStrength,
+		AL_Mode,
 		AL_Theme_Weight,
 		AL_TC_BassReactive,
 		MonoChrome,

@@ -7,6 +7,7 @@
 #include "./Core/BigiShaderParams.cginc"
 #include "./Core/BigiMainTex.cginc"
 #include "./Lighting/LightUtilsDefines.cginc"
+#include "./Effects/LengthDefine.cginc"
 
 #ifdef MIRROR_THING
 #include "./ScruffyRufflesAndMerlinDerivatives.cginc"
@@ -61,6 +62,7 @@ v2f do_v2fCalc(in v2f o, const in appdata v)
 	o.tangent.w = v.tangent.w;
 	o.worldPos = mul(unity_ObjectToWorld, v.vertex);
 	#endif
+	o.distance = GET_DISTANCE(v.vertex);
 	return o;
 }
 

@@ -59,17 +59,30 @@ struct v2f
 	float4 worldPos : TEXCOORD4;
 	float4 lightmapUV : TEXCOORD5;
 	UNITY_FOG_COORDS(6)
-	UNITY_LIGHTING_COORDS(8,7)
+	UNITY_LIGHTING_COORDS(8, 7)
 	float3 bitangent : TEXCOORD9;
 	float4 staticTexturePos : TEXCOORD10;
 	#ifdef VERTEXLIGHT_ON
 	float3 vertexLighting : TEXCOORD11;
 	#endif
-	
+	float distance : BLENDWEIGHT0;
 
 	UNITY_VERTEX_INPUT_INSTANCE_ID
 	UNITY_VERTEX_OUTPUT_STEREO
 };
+#endif
+
+#ifndef BIGI_DEFAULT_AL_MODES_DEFINED
+#define BIGI_DEFAULT_AL_MODES_DEFINED
+#define AudioLinkMode_e uint
+namespace b_sound
+{
+	namespace AudioLinkMode
+	{
+		const static AudioLinkMode_e ALM_Flat = 0;
+		const static AudioLinkMode_e ALM_CenterOut = 1;
+	}
+}
 #endif
 
 

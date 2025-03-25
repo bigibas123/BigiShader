@@ -40,30 +40,13 @@ namespace b_effects
 		return HSVToRGB(half3((voronoiOutput.x + voronoiOutput.y) / 2.0f, 1.0, 1.0));
 	}
 
-	// float3 get_quantize()
-	// {
-	//     return float3(0,0,0);
-	// }
-
-	half3 get_meta_emissions(in const half3 orig_color,
-							in const fixed4 mask,
-							in const float emission_strength
+	fixed4 apply_effects(const in half2 uv,
+						const in fixed4 mask,
+						const in fixed4 orig_color,
+						const in fixed4 lighting,
+						const in float distance,
+						const in float4 staticTexturePos
 	)
-	{
-		BEffectsTracker mix;
-		mix.totalColor = 0.0;
-		mix.totalWeight = 0.0;
-
-		doMixProperly(mix, orig_color.rgb * emission_strength * max(1.0, emission_strength), mask.r, 1.0);
-
-		GET_SOUND_COLOR(soundC);
-		doMixProperly(mix, soundC.rgb, mask.b * RGBtoHCV(soundC).z * soundC.a, mix.totalWeight + 1.0);
-
-		return mix.totalColor;
-	}
-
-	fixed4 apply_effects(const in half2 uv, const in fixed4 mask, const in fixed4 orig_color, const in fixed4 lighting,
-						const in float4 staticTexturePos)
 	{
 		BEffectsTracker mix;
 		mix.totalWeight = 1.0;
@@ -85,7 +68,7 @@ namespace b_effects
 			if (!tvPresent)
 			{
 				// no video texture
-				float4 spaceyColor= GET_SPACEY(staticTexturePos);
+				float4 spaceyColor = GET_SPACEY(staticTexturePos);
 				doMixProperly(mix, spaceyColor.rgb, mask.g * spaceyColor.a, 1.0);
 			}
 			else

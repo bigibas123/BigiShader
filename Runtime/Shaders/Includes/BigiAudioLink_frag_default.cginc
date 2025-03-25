@@ -6,7 +6,7 @@
 #include "./Core/BigiShaderParams.cginc"
 #include "./Lighting/NormalDefines.cginc"
 #include "./Lighting/LightUtilsDefines.cginc"
-#include "./Effects/BigiEffects.cginc"
+#include "./Effects/EffectsDefines.cginc"
 
 namespace b_frag
 {
@@ -21,8 +21,7 @@ namespace b_frag
 		
 		BIGI_GETLIGHT_DEFAULT(lighting);
 
-		const fixed4 mask = GET_MASK_COLOR(GETUV);
-		o.color = b_effects::apply_effects(GETUV, mask, orig_color, lighting, i.staticTexturePos);
+		o.color = GET_EFFECTS_COLOR(i.distance,i.staticTexturePos);
 		UNITY_APPLY_FOG(i.fogCoord, o.color);
 		return o;
 	}

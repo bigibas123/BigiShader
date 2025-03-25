@@ -34,6 +34,9 @@
 
 
 		#define BIGI_SHADER_PARAMS
+		#define BIGI_DEFAULT_APPDATA_DEFINED
+		#define BIGI_DEFAULT_V2F_DEFINED
+
 		#include "./Includes/Effects/SoundUtilsDefines.cginc"
 
 		struct appdata
@@ -64,9 +67,9 @@
 			);
 
 			float4 outPos = mul(UNITY_MATRIX_P,
-								mul(UNITY_MATRIX_MV, float4(_OffsetAndScale))
-								+ float4(v.pos.x, v.pos.y, 0.0, 0.0)
-								* float4(scale.x, scale.y, 0.0, 0.0)
+							mul(UNITY_MATRIX_MV, float4(_OffsetAndScale))
+							+ float4(v.pos.x, v.pos.y, 0.0, 0.0)
+							* float4(scale.x, scale.y, 0.0, 0.0)
 			);
 
 			o.pos = outPos;
@@ -135,6 +138,8 @@
 				#endif
 				clip(orig_color.a - Epsilon);
 				b_sound::ALSettings set;
+				set.AL_Mode = b_sound::AudioLinkMode::ALM_Flat;
+				set.AL_Distance = 0.0;
 				set.AL_Theme_Weight = 1.0;
 				set.AL_TC_BassReactive = 0.9;
 				GET_SOUND_COLOR_CALL(set, soundColor);

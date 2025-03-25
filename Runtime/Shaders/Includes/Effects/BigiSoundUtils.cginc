@@ -4,6 +4,7 @@
 #ifndef BIGI_DMXAL_INCLUDES
 #define BIGI_DMXAL_INCLUDES
 #include <Packages/com.llealloo.audiolink/Runtime/Shaders/AudioLink.cginc>
+#include "../Core/BigiShaderStructs.cginc"
 #include "../ColorUtil.cginc"
 #endif
 
@@ -11,6 +12,8 @@ namespace b_sound
 {
 	struct ALSettings
 	{
+		AudioLinkMode_e AL_Mode;
+		float AL_Distance;
 		float AL_Theme_Weight;
 		half AL_TC_BassReactive; //bool for bass reactivity of the AL_Theme
 	};
@@ -20,6 +23,21 @@ namespace b_sound
 		float totalWeight;
 		half3 totalColor;
 	};
+
+	/*
+	Strange way of getting an autdiolink value, x [0,1] for how long ago y [0,3] for the band
+	*/
+	float GetAudioLink(float x)
+	{
+		float totalValue = 0;
+		totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 1.0) % 1) * AUDIOLINK_WIDTH, 0)).r;
+		// totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 2.0) % 1) * AUDIOLINK_WIDTH, 1)).r;
+		// totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 4.0) % 1) * AUDIOLINK_WIDTH, 2)).r;
+		// totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 8.0) % 1) * AUDIOLINK_WIDTH, 3)).r;
+
+		return totalValue;
+	}
+
 
 	void doMixProperly(inout MixRatio obj, in const half3 color, in const float weight)
 	{
@@ -67,7 +85,20 @@ namespace b_sound
 					finalColor = float4(0, 0, 0, 0);
 				}
 				const float soundIntensity = clamp(lerp(1.0, bassIntensity, conf.AL_TC_BassReactive), 0.0, 1.0);
-				doMixProperly(mix, finalColor.rgb, soundIntensity * conf.AL_Theme_Weight);
+				switch (conf.AL_Mode)
+				{
+				case AudioLinkMode::ALM_Flat:
+					{
+						doMixProperly(mix, finalColor.rgb, soundIntensity * conf.AL_Theme_Weight);
+						break;
+					}
+				case AudioLinkMode::ALM_CenterOut:
+					{
+						doMixProperly(mix, finalColor.rgb,
+									soundIntensity * conf.AL_Theme_Weight * GetAudioLink(conf.AL_Distance));
+						break;
+					}
+				}
 			}
 		}
 		return half4(mix.totalColor, mix.totalWeight / (conf.AL_Theme_Weight + Epsilon));
@@ -88,20 +119,6 @@ namespace b_sound
 		return AudioLinkGetChronoTime(0, 0);
 	}
 
-	/*
-	Strange way of getting an autdiolink value, x [0,1] for how long ago y [0,3] for the band
-	*/
-	float GetAudioLink(float x)
-	{
-		float totalValue = 0;
-		totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 1.0) % 1) * AUDIOLINK_WIDTH, 0)).r;
-		// totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 2.0) % 1) * AUDIOLINK_WIDTH, 1)).r;
-		// totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 4.0) % 1) * AUDIOLINK_WIDTH, 2)).r;
-		// totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 8.0) % 1) * AUDIOLINK_WIDTH, 3)).r;
-
-		return totalValue;
-	}
-
 	float GetAutoCorrelator(float x)
 	{
 		return AudioLinkLerp(ALPASS_AUTOCORRELATOR + float2(x * AUDIOLINK_WIDTH, 0)).r;
@@ -109,7 +126,6 @@ namespace b_sound
 
 	float GetWaves(in float distance)
 	{
-		distance = distance % 1.0;
 		return (GetAudioLink(distance) * 2.5) + Epsilon; //+ (GetAutoCorrelator(distance * 10.0) * 2.5) + 1.0;
 	}
 }

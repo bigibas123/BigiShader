@@ -21,19 +21,22 @@
 				#pragma target 2.0
 				#pragma multi_compile_particles
 				#pragma multi_compile_fog
-
+				#define BIGI_DEFAULT_APPDATA_DEFINED
+				#define BIGI_DEFAULT_V2F_DEFINED
 				#include <UnityCG.cginc>
 				#include "./Includes/ColorUtil.cginc"
 				#include "./Includes/Effects/BigiSoundUtils.cginc"
 				uniform float _Brightness;
 				uniform float _Hue;
 
-				struct appdata_t {
+				struct appdata_t
+				{
 					float4 vertex : POSITION;
 					fixed4 color : COLOR;
 					UNITY_VERTEX_INPUT_INSTANCE_ID };
 
-				struct v2f {
+				struct v2f
+				{
 					float4 pos : SV_POSITION;
 					float4 worldPos: TEXCOORD0;
 					fixed4 color : COLOR;
@@ -55,13 +58,15 @@
 				{
 					half4 col;
 
-					if (AudioLinkIsAvailable()) {
+					if (AudioLinkIsAvailable())
+					{
 						const float soundTime = b_sound::GetTime();
 						const half themeColorIndex = (((i.color.r + soundTime) * 3.0f) % 3.0f);
 						const half4 c1 = b_sound::GetThemeColor(themeColorIndex);
 						const half4 c2 = b_sound::GetThemeColor((themeColorIndex + 1) % 3);
 						col = lerp(c1, c2, frac(themeColorIndex));
-					} else { col = half4(HSVToRGB(half3(_Hue, 1.0, 1.0)), 1.0); }
+					}
+					else { col = half4(HSVToRGB(half3(_Hue, 1.0, 1.0)), 1.0); }
 
 					UNITY_APPLY_FOG_COLOR(i.fogCoord, col, fixed4(0,0,0,0));
 					return half4(col.rgb * _Brightness, col.a);

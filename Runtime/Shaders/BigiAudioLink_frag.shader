@@ -55,7 +55,9 @@ Shader "Bigi/AudioLink_frag" {
 		[Toggle(LTCGI_ENABLED)] _EnableLTCGI ("Enable LTCGI", Range(0.0,1.0)) = 0.0
 		_LTCGIStrength ("LTCGI Strenght", Range(0.0,2.0)) = 1.0
 
-		[Header(Audiolink world theme colors)]
+		[Header(Audiolink)]
+		[Space]
+		[Enum(Flat,0,CenterOut,1)] _AL_Mode ("Audiolink mode", Range(0,1)) = 0
 		[Space]
 		_AL_Theme_Weight("Weight", Range(0.0, 1.0)) = 1.0
 		_AL_TC_BassReactive("Bassreactivity", Range(0.0,1.0)) = 0.75
@@ -216,7 +218,7 @@ Shader "Bigi/AudioLink_frag" {
 			#include "./Includes/ToonVert.cginc"
 			#include "./Includes/Lighting/NormalDefines.cginc"
 			#include "./Includes/Lighting/LightUtilsDefines.cginc"
-			#include "./Includes/Effects/BigiEffects.cginc"
+			#include "./Includes/Effects/EffectsDefines.cginc"
 
 			fragOutput frag(v2f i)
 			{
@@ -228,7 +230,7 @@ Shader "Bigi/AudioLink_frag" {
 
 				BIGI_GETLIGHT_DEFAULT(lighting);
 
-				o.color = b_effects::apply_effects(GETUV, fixed4(0, 0, 0, 0), orig_color, lighting, i.staticTexturePos);
+				o.color = GET_EFFECTS_COLOR(i.distance, i.staticTexturePos);
 				UNITY_APPLY_FOG(i.fogCoord, o.color);
 				return o;
 			}
@@ -262,6 +264,7 @@ Shader "Bigi/AudioLink_frag" {
 			#include "./Includes/Core/BigiShaderStructs.cginc"
 			#include "./Includes/Core/BigiShaderParams.cginc"
 			#include "./Includes/Effects/SoundUtilsDefines.cginc"
+			#include "./Includes/Effects/LengthDefine.cginc"
 			#include "./Includes/ToonVert.cginc"
 
 
@@ -271,13 +274,16 @@ Shader "Bigi/AudioLink_frag" {
 				UNITY_INITIALIZE_OUTPUT(v2f, o);
 				if (AudioLinkIsAvailable())
 				{
-					float4 heightPos = v.vertex * 10.0 + float4(0.0, 7.0, 0.0, 0.0);
-					float3 offset = (normalize(v.normal.xyz)*2.0) * (_OutlineWidth * 0.01) * b_sound::GetWaves(length(heightPos));
+					float distance = GET_DISTANCE(v.vertex);
+					float3 offset = (normalize(v.normal.xyz) * 2.0) * (_OutlineWidth * 0.01) * b_sound::GetWaves(distance);
 
 					offset = lerp(0.0, offset, smoothstep(0.0, Epsilon, _OutlineWidth));
-					v.vertex = v.vertex + float4(offset,0.0);
+					v.vertex = v.vertex + float4(offset, 0.0);
 					o = bigi_toon_vert(v);
-					GET_SOUND_COLOR(scol);
+					
+					GET_SOUND_SETTINGS(bsoundSet);
+					bsoundSet.AL_Mode = b_sound::AudioLinkMode::ALM_Flat;
+					GET_SOUND_COLOR_CALL(bsoundSet,scol);
 					o.staticTexturePos = scol;
 				}
 				return o;
@@ -293,7 +299,7 @@ Shader "Bigi/AudioLink_frag" {
 					clip(_OutlineWidth - Epsilon);
 					clip(i.staticTexturePos.a - Epsilon);
 					o.color = half4(i.staticTexturePos.rgb * i.staticTexturePos.a,
-							smoothstep(0.0, 0.05, i.staticTexturePos.a));
+									smoothstep(0.0, 0.05, i.staticTexturePos.a));
 					clip(o.color.a - Epsilon);
 				}
 				else
@@ -321,13 +327,13 @@ Shader "Bigi/AudioLink_frag" {
 			#pragma fragment frag alpha
 			#include_with_pragmas "./Includes/Pragmas/ShadowCaster.cginc"
 			#include_with_pragmas "./Includes/Pragmas/CustomVariants.cginc"
-			
+
 			#define BIGI_DEFAULT_V2F_DEFINED
 
 			#include "./Includes/Core/BigiShaderStructs.cginc"
 			#include "./Includes/Core/BigiShaderParams.cginc"
 			#include <UnityCG.cginc>
-			
+
 			struct v2f
 			{
 				V2F_SHADOW_CASTER;
