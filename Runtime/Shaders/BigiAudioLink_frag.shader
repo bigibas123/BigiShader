@@ -218,7 +218,7 @@ Shader "Bigi/AudioLink_frag" {
 			#include "./Includes/ToonVert.cginc"
 			#include "./Includes/Lighting/NormalDefines.cginc"
 			#include "./Includes/Lighting/LightUtilsDefines.cginc"
-			#include "./Includes/Effects/EffectsDefines.cginc"
+			#include "./Includes/Effects/BigiEffects.cginc"
 
 			fragOutput frag(v2f i)
 			{
@@ -230,7 +230,7 @@ Shader "Bigi/AudioLink_frag" {
 
 				BIGI_GETLIGHT_DEFAULT(lighting);
 
-				o.color = GET_EFFECTS_COLOR(i.distance, i.staticTexturePos);
+				o.color = b_effects::apply_effects(GETUV,GET_MASK_COLOR(GETUV), orig_color, lighting, i.distance, i.staticTexturePos);
 				UNITY_APPLY_FOG(i.fogCoord, o.color);
 				return o;
 			}

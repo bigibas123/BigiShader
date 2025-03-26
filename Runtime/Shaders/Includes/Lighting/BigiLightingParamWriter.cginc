@@ -37,6 +37,7 @@ namespace b_light
 		IFZEROAPPLY(_LightSmoothness, 1.0);
 		IFZEROAPPLY(_LightSteps, 128);
 		IFZEROAPPLY(_LTCGIStrength, 1.0);
+		IFZEROAPPLY(_AL_Mode, 0.0)
 		#ifdef ROUNDING_ENABLED
 		#ifdef ROUNDING_VAR_NAME
 		IFZEROAPPLY(ROUNDING_VAR_NAME, 0.0);
