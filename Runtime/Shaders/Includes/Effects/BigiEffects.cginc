@@ -6,6 +6,10 @@
 #include "../ColorUtil.cginc"
 #include "./SoundUtilsDefines.cginc"
 
+#ifdef MIRROR_THING
+#include "../ScruffyRufflesAndMerlinDerivatives.cginc"
+#endif
+
 #ifndef BIGI_LYGIA_PATCHES
 #ifndef RANDOM_SCALE_4
 #define RANDOM_SCALE_4 float4(443.897, 441.423, .0973, 1.6334)
@@ -80,10 +84,11 @@ namespace b_effects
 
 		//Voronoi
 		{
-			if (_Voronoi > Epsilon)
+			if (_Voronoi > Epsilon || (_DoMirrorThing && IsInMirror()))
 			{
+				float vWeight = (_DoMirrorThing && IsInMirror()) ? 1.0 : _Voronoi;
 				//TODO move somewhere earlier so it respects lighting
-				doMixProperly(mix, get_voronoi(uv) * lighting, _Voronoi, mix.totalWeight + _Voronoi);
+				doMixProperly(mix, get_voronoi(uv) * lighting, vWeight, mix.totalWeight + vWeight);
 			}
 		}
 

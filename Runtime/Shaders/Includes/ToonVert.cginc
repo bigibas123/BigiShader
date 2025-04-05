@@ -9,10 +9,6 @@
 #include "./Lighting/LightUtilsDefines.cginc"
 #include "./Effects/LengthDefine.cginc"
 
-#ifdef MIRROR_THING
-#include "./ScruffyRufflesAndMerlinDerivatives.cginc"
-#endif
-
 #ifndef BIGI_V1_TOONVERTSHADER
 #define BIGI_V1_TOONVERTSHADER
 
@@ -97,22 +93,6 @@ v2f bigi_toon_vert(appdata v)
 	o.lightmapUV.zw = v.uv2.xy; // * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
 	BIGI_GETLIGHT_VERTEX(o);
 
-	#ifdef MIRROR_THING
-	// Neitri
-	// UNITY_BRANCH
-	// if (_DoMirrorThing && IsInMirror())
-	// {
-	// 	// https://docs.microsoft.com/en-us/windows/win32/direct3d9/viewports-and-clipping
-	// 	o.pos.z = min(o.pos.z, o.pos.w);
-	// }
-
-	// d4rkpl4y3r
-	UNITY_BRANCH
-	if(IsInMirror())
-	{
-		o.pos.z = o.pos.w / pow(1 + length(_WorldSpaceCameraPos - o.worldPos.xyz), .01);
-	}
-	#endif
 	return o;
 }
 #endif

@@ -8,6 +8,7 @@
 #endif
 
 #define IFZEROAPPLY(varName, val) if (varName < Epsilon && varName > -Epsilon){ varName = val;}
+
 namespace b_light
 {
 	void setVars()
@@ -43,6 +44,11 @@ namespace b_light
 		IFZEROAPPLY(ROUNDING_VAR_NAME, 0.0);
 		#else
 		IFZEROAPPLY(_Rounding, 0.0);
+		#endif
+		#endif
+		#ifdef MIRROR_THING
+		#ifndef NO_RESET_MIRROR_THING
+		IFZEROAPPLY(_DoMirrorThing, 0.0);
 		#endif
 		#endif
 
