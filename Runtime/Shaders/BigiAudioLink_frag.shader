@@ -28,6 +28,23 @@ Shader "Bigi/AudioLink_frag" {
 		[Space]
 		[NoScaleOffset] [Normal] _BumpMap("Normal Map", 2D) = "bump" {}
 		[HideInInspector] [Toggle(NORMAL_MAPPING)] _UsesNormalMap("Enable normal map", Float) = 1
+		[Space]
+		[Space]
+		[Header(Decals)]
+		[NoScaleOffset] _Decal1 ("Decal 1", 2D) = "black" {}
+		[Toggle(DECAL_1_ENABLED)] _Decal1Enabled ("Enable decal 1", Float) = 0
+		_Decal1_Opacity ("Decal 1 opacity", Range(0.0,1.0)) = 1.0
+		_Decal1_Position ("Decal 1 Position & Size", Vector) = (0.0,0.0,1.0,1.0)
+		[Space]
+		[NoScaleOffset] _Decal2 ("Decal 2", 2D) = "black" {}
+		[Toggle(DECAL_2_ENABLED)] _Decal2Enabled ("Enable decal 2", Float) = 0
+		_Decal2_Opacity ("Decal 2 opacity", Range(0.0,1.0)) = 1.0
+		_Decal2_Position ("Decal 2 Position & Size", Vector) = (0.0,0.0,1.0,1.0)
+		[Space]
+		[NoScaleOffset] _Decal3 ("Decal 3", 2D) = "black" {}
+		[Toggle(DECAL_3_ENABLED)] _Decal3Enabled ("Enable decal 3", Float) = 0
+		_Decal3_Opacity ("Decal 3 opacity", Range(0.0,1.0)) = 1.0
+		_Decal3_Position ("Decal 3 Position & Size", Vector) = (0.0,0.0,1.0,1.0)
 
 		[Header(Specular and Smooth)]
 		[Space]

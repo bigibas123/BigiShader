@@ -3,8 +3,8 @@
 
 #ifndef GET_TEX_COLOR
 	#ifndef PROTV_SQUARE_ENABLED
-		#include "./BigiMainTex.cginc"
-		#define GET_TEX_COLOR(uv) GET_TEX_COLOR_ACTUAL(uv)
+		#include "./BigiTextureCreation.cginc"
+		#define GET_TEX_COLOR(uv) bigi_texture::GetTexColor(uv)
 	#else
 		#include "./BigiProTV.cginc"
 		#define GET_TEX_COLOR(uv) b_protv_util::getTexColor(uv)

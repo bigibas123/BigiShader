@@ -15,13 +15,13 @@ float4 _Udon_VideoTex_ST;
 #endif
 
 #ifdef PROTV_SQUARE_ENABLED
-#include "./BigiMainTex.cginc"
+#include "./BigiTextureCreation.cginc"
 #include "./BigiShaderParams.cginc"
 namespace b_protv_util
 {
 	float4 getTexColor(float2 uv)
 	{
-		const float4 original_color = GET_TEX_COLOR_ACTUAL(uv);
+		const float4 original_color = bigi_texture::GetTexColor(uv);
 		if(_TV_Square_Opacity > Epsilon)
 		{
 			PROTV_PRESENT(tvPresent);

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
@@ -38,6 +40,32 @@ namespace cc.dingemans.bigibas123.bigishader
 				materialProperties.RemoveAll(p => p.name == "_" + nameof(Rounding));
 			}
 
+			if (mats.All(m => !Decal1Enabled.GetBool(m)))
+			{
+				materialProperties.RemoveAll(p =>
+					p.name == "_" + nameof(Decal1Enabled) || p.name.StartsWith("_" + nameof(Decal1) + "_"));
+			}
+
+			if (mats.All(m => !Decal2Enabled.GetBool(m)))
+			{
+				materialProperties.RemoveAll(p =>
+					p.name == "_" + nameof(Decal2Enabled) || p.name.StartsWith("_" + nameof(Decal2) + "_"));
+				if (mats.All(m => !Decal1Enabled.GetBool(m)))
+				{
+					materialProperties.RemoveAll(p => p.name == "_" + nameof(Decal2));
+				}
+			}
+
+			if (mats.All(m => !Decal3Enabled.GetBool(m)))
+			{
+				materialProperties.RemoveAll(p =>
+					p.name == "_" + nameof(Decal3Enabled) || p.name.StartsWith("_" + nameof(Decal3) + "_"));
+				if (mats.All(m => !Decal2Enabled.GetBool(m)))
+				{
+					materialProperties.RemoveAll(p => p.name == "_" + nameof(Decal3));
+				}
+			}
+
 			base.OnGUI(materialEditor, materialProperties.ToArray());
 			EditorGUI.indentLevel++;
 			EditorGUI.BeginChangeCheck();
@@ -60,11 +88,12 @@ namespace cc.dingemans.bigibas123.bigishader
 
 		private void CheckIfMaterialPropertiesExist(Material m)
 		{
+			LinkedList<PropertyMissingException> missingProperties = new LinkedList<PropertyMissingException>();
 			foreach (BigiProperty prop in Enum.GetValues(typeof(BigiProperty)))
 			{
 				if (!prop.Present(m))
 				{
-					throw new PropertyMissingException(m, prop);
+					missingProperties.AddLast(new PropertyMissingException(m, prop));
 				}
 			}
 
@@ -74,8 +103,17 @@ namespace cc.dingemans.bigibas123.bigishader
 				{
 					if (!Enum.TryParse<BigiProperty>(propName.Substring(1), out BigiProperty bigiProp))
 					{
-						throw new PropertyMissingException(propName, m);
+						missingProperties.AddLast(new PropertyMissingException(propName, m));
 					}
+				}
+			}
+
+			if (missingProperties.Any())
+			{
+				Debug.LogError("Not all properties implemented!");
+				foreach (PropertyMissingException exception in missingProperties)
+				{
+					Debug.LogError(exception.Message);
 				}
 			}
 		}
@@ -192,6 +230,13 @@ namespace cc.dingemans.bigibas123.bigishader
 			{
 				Rounding.Set(m, 0.0f);
 			}
+
+			Decal1Enabled.Set(m, Decal1.TexturePresent(m) && Decal1.GetTexture(m) is not null);
+			Decal2Enabled.Set(m, Decal2.TexturePresent(m) && Decal2.GetTexture(m) is not null);
+			Decal3Enabled.Set(m, Decal3.TexturePresent(m) && Decal3.GetTexture(m) is not null);
+			m.shader.keywordSpace.FindKeyword("DECAL_1_ENABLED").Set(m, Decal1Enabled.GetBool(m));
+			m.shader.keywordSpace.FindKeyword("DECAL_2_ENABLED").Set(m, Decal2Enabled.GetBool(m));
+			m.shader.keywordSpace.FindKeyword("DECAL_3_ENABLED").Set(m, Decal3Enabled.GetBool(m));
 
 			var proTVEnabled = EnableProTVSquare.GetBool(m);
 			EnableProTVSquare.Set(m, proTVEnabled);
@@ -431,5 +476,26 @@ namespace cc.dingemans.bigibas123.bigishader
 		MainTexArray_HDR,
 		MultiTexture,
 		OtherTextureId,
+		Decal1Enabled,
+		Decal1,
+		Decal1_Opacity,
+		Decal1_Position,
+		Decal1_ST,
+		Decal1_TexelSize,
+		Decal1_HDR,
+		Decal2Enabled,
+		Decal2,
+		Decal2_Opacity,
+		Decal2_Position,
+		Decal2_ST,
+		Decal2_TexelSize,
+		Decal2_HDR,
+		Decal3Enabled,
+		Decal3,
+		Decal3_Opacity,
+		Decal3_Position,
+		Decal3_ST,
+		Decal3_TexelSize,
+		Decal3_HDR,
 	}
 }
