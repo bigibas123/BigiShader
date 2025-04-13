@@ -6,7 +6,7 @@
 		#include "./BigiTextureCreation.cginc"
 		#define GET_TEX_COLOR(uv) bigi_texture::GetTexColor(uv)
 	#else
-		#include "./BigiProTV.cginc"
+		#include "../External/ProTV/BigiProTV.cginc"
 		#define GET_TEX_COLOR(uv) b_protv_util::getTexColor(uv)
 	#endif
 #endif

@@ -1,7 +1,7 @@
 ﻿#ifndef BIGI_EFFECTS_INCLUDE
 #define BIGI_EFFECTS_INCLUDE
 #include <HLSLSupport.cginc>
-#include "../Core/BigiProTV.cginc"
+#include "../External/ProTV/BigiProTV.cginc"
 #include "../Core/BigiGetColor.cginc"
 #include "../ColorUtil.cginc"
 #include "./SoundUtilsDefines.cginc"

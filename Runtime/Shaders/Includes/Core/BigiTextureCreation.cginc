@@ -21,11 +21,40 @@ namespace bigi_texture
 	}
 
 	// TODO Maybe better color mixing/layering
-	float4 DoMix(in float4 total, const in float4 input, const in float param)
+	float4 DoMix(in float4 total, const in float4 input, const in float param, const in uint mode)
 	{
-		const float decalOpacity = (input.a * param);
-		total.rgb = lerp(total.rgb, input.rgb, decalOpacity);
-		total.a = clamp(total.a + decalOpacity, 0.0, 1.0);
+		const float decalWeight = (input.a * param);
+		float3 result;
+		switch (mode)
+		{
+		case 0: // Replace
+			{
+				result = input.rgb;
+				break;
+			}
+		case 1: // Multiply
+			{
+				result = total.rgb * input.rgb;
+				break;
+			}
+		case 2: // Screen
+			{
+				result = 1.0 - ((1.0 - total.rgb) * (1.0 - input.rgb));
+				break;
+			}
+		case 3: // Add
+			{
+				result = total.rgb + input.rgb;
+				break;
+			}
+		case 4: // Subtract
+			{
+				result = total.rgb - input.rgb;
+				break;
+			}
+		}
+		total.rgb = lerp(total.rgb, result.rgb, decalWeight);
+		total.rgb = clamp(total.rgb, 0.0, 1.0);
 		return total;
 	}
 
@@ -37,21 +66,21 @@ namespace bigi_texture
 		if ((_Decal1_Opacity > Epsilon) && (IsInsidePos(_Decal1_Position,uv)))
 		{
 			const float4 decalColor = b_decal::GetTexColorDecal1(CalcDecalUv(_Decal1_Position,uv));
-			color = DoMix(color, decalColor, _Decal1_Opacity);
+			color = DoMix(color, decalColor, _Decal1_Opacity, _Decal1_BlendMode);
 		}
 		#endif
 		#ifdef DECAL_2_ENABLED
 		if ((_Decal2_Opacity > Epsilon) && (IsInsidePos(_Decal2_Position,uv)))
 		{
 			const float4 decalColor = b_decal::GetTexColorDecal2(CalcDecalUv(_Decal2_Position,uv));
-			color = DoMix(color, decalColor, _Decal2_Opacity);
+			color = DoMix(color, decalColor, _Decal2_Opacity, _Decal2_BlendMode);
 		}
 		#endif
 		#ifdef DECAL_3_ENABLED
 		if ((_Decal3_Opacity > Epsilon) && (IsInsidePos(_Decal3_Position,uv)))
 		{
 			const float4 decalColor = b_decal::GetTexColorDecal3(CalcDecalUv(_Decal3_Position,uv));
-			color = DoMix(color, decalColor, _Decal3_Opacity);
+			color = DoMix(color, decalColor, _Decal3_Opacity, _Decal3_BlendMode);
 		}
 		#endif
 		return color;

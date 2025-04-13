@@ -16,13 +16,13 @@ Shader "Bigi/AudioLink_frag" {
 		[Enum(UnityEngine.Rendering.CompareFunction)] _ZTestFWA ("Ztest ForwardAdd", Int) = 4
 		[Enum(UnityEngine.Rendering.CompareFunction)] _ZTestOL ("Ztest Outline", Int) = 4
 		[Enum(UnityEngine.Rendering.CompareFunction)] _ZTestSP ("Ztest Shadow Pass", Int) = 4
-		
+
 		[Header(Extra textures)]
-        [Space]
-        [NoScaleOffset] _Mask ("Mask", 2D) = "black" {}
-        _EmissionStrength ("Emission strength", Range(0.0,2.0)) = 1.0
 		[Space]
-        _Spacey ("Spacey Texture", 2D) = "black" {}
+		[NoScaleOffset] _Mask ("Mask", 2D) = "black" {}
+		_EmissionStrength ("Emission strength", Range(0.0,2.0)) = 1.0
+		[Space]
+		_Spacey ("Spacey Texture", 2D) = "black" {}
 		[Space]
 		[Header(Normal mapping)]
 		[Space]
@@ -32,17 +32,20 @@ Shader "Bigi/AudioLink_frag" {
 		[Space]
 		[Header(Decals)]
 		[NoScaleOffset] _Decal1 ("Decal 1", 2D) = "black" {}
-		[Toggle(DECAL_1_ENABLED)] _Decal1Enabled ("Enable decal 1", Float) = 0
+		[HideInInspector] [Toggle(DECAL_1_ENABLED)] _Decal1Enabled ("Enable decal 1", Float) = 0
+		[Enum(Replace,0,Multiply,1,Screen,2,Add,3,Subtract,4)] _Decal1_BlendMode ("Decal 1 blend mode",Range(0,4)) = 0
 		_Decal1_Opacity ("Decal 1 opacity", Range(0.0,1.0)) = 1.0
 		_Decal1_Position ("Decal 1 Position & Size", Vector) = (0.0,0.0,1.0,1.0)
 		[Space]
 		[NoScaleOffset] _Decal2 ("Decal 2", 2D) = "black" {}
-		[Toggle(DECAL_2_ENABLED)] _Decal2Enabled ("Enable decal 2", Float) = 0
+		[HideInInspector] [Toggle(DECAL_2_ENABLED)] _Decal2Enabled ("Enable decal 2", Float) = 0
+		[Enum(Replace,0,Multiply,1,Screen,2,Add,3,Subtract,4)] _Decal2_BlendMode ("Decal 2 blend mode",Range(0,4)) = 0
 		_Decal2_Opacity ("Decal 2 opacity", Range(0.0,1.0)) = 1.0
 		_Decal2_Position ("Decal 2 Position & Size", Vector) = (0.0,0.0,1.0,1.0)
 		[Space]
 		[NoScaleOffset] _Decal3 ("Decal 3", 2D) = "black" {}
-		[Toggle(DECAL_3_ENABLED)] _Decal3Enabled ("Enable decal 3", Float) = 0
+		[HideInInspector] [Toggle(DECAL_3_ENABLED)] _Decal3Enabled ("Enable decal 3", Float) = 0
+		[Enum(Replace,0,Multiply,1,Screen,2,Add,3,Subtract,4)] _Decal3_BlendMode ("Decal 3 blend mode",Range(0,4)) = 0
 		_Decal3_Opacity ("Decal 3 opacity", Range(0.0,1.0)) = 1.0
 		_Decal3_Position ("Decal 3 Position & Size", Vector) = (0.0,0.0,1.0,1.0)
 
@@ -92,7 +95,7 @@ Shader "Bigi/AudioLink_frag" {
 		[Header(TV Square)]
 		[Space]
 		[Toggle(PROTV_SQUARE_ENABLED)] _EnableProTVSquare ("Enable ProTV texture render", Range(0.0,1.0)) = 0.0
-		[Toggle(TV_SQUARE_TEST)] _SquareTVTest ("Enable temporarily to display tv location", Range(0.0,1.0)) = 0.0
+		[ToggleUI] _SquareTVTest ("Enable temporarily to display tv location", Range(0.0,1.0)) = 0.0
 		_TV_Square_Opacity ("TV opacity", Range(0.0,1.0)) = 1.0
 		_TV_Square_Position ("TV Position & Size", Vector) = (0.0,0.0,1.0,1.0)
 
@@ -111,7 +114,7 @@ Shader "Bigi/AudioLink_frag" {
 		Tags {
 			"VRCFallback" = "ToonCutout" "LTCGI"="ALWAYS"
 		}
-		
+
 		CGINCLUDE
 		#define MIRROR_THING
 		ENDCG
@@ -247,7 +250,8 @@ Shader "Bigi/AudioLink_frag" {
 
 				BIGI_GETLIGHT_DEFAULT(lighting);
 
-				o.color = b_effects::apply_effects(GETUV,GET_MASK_COLOR(GETUV), orig_color, lighting, i.distance, i.staticTexturePos);
+				o.color = b_effects::apply_effects(GETUV,GET_MASK_COLOR(GETUV), orig_color, lighting, i.distance,
+													i.staticTexturePos);
 				UNITY_APPLY_FOG(i.fogCoord, o.color);
 				return o;
 			}
@@ -292,15 +296,16 @@ Shader "Bigi/AudioLink_frag" {
 				if (AudioLinkIsAvailable())
 				{
 					float distance = GET_DISTANCE(v.vertex);
-					float3 offset = (normalize(v.normal.xyz) * 2.0) * (_OutlineWidth * 0.01) * b_sound::GetWaves(distance);
+					float3 offset = (normalize(v.normal.xyz) * 2.0) * (_OutlineWidth * 0.01) * b_sound::GetWaves(
+						distance);
 
 					offset = lerp(0.0, offset, smoothstep(0.0, Epsilon, _OutlineWidth));
 					v.vertex = v.vertex + float4(offset, 0.0);
 					o = bigi_toon_vert(v);
-					
+
 					GET_SOUND_SETTINGS(bsoundSet);
 					bsoundSet.AL_Mode = b_sound::AudioLinkMode::ALM_Flat;
-					GET_SOUND_COLOR_CALL(bsoundSet,scol);
+					GET_SOUND_COLOR_CALL(bsoundSet, scol);
 					o.staticTexturePos = scol;
 				}
 				return o;

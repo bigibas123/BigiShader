@@ -66,6 +66,12 @@ namespace cc.dingemans.bigibas123.bigishader
 				}
 			}
 
+			if (mats.All(m => !(EnableProTVSquare.GetBool(m) || m.IsKeywordEnabled("PROTV_SQUARE_ENABLED"))))
+			{
+				materialProperties.RemoveAll(p =>
+					p.name == "_" + nameof(SquareTVTest) || p.name.StartsWith("_TV_Square_"));
+			}
+
 			base.OnGUI(materialEditor, materialProperties.ToArray());
 			EditorGUI.indentLevel++;
 			EditorGUI.BeginChangeCheck();
@@ -478,6 +484,7 @@ namespace cc.dingemans.bigibas123.bigishader
 		OtherTextureId,
 		Decal1Enabled,
 		Decal1,
+		Decal1_BlendMode,
 		Decal1_Opacity,
 		Decal1_Position,
 		Decal1_ST,
@@ -485,6 +492,7 @@ namespace cc.dingemans.bigibas123.bigishader
 		Decal1_HDR,
 		Decal2Enabled,
 		Decal2,
+		Decal2_BlendMode,
 		Decal2_Opacity,
 		Decal2_Position,
 		Decal2_ST,
@@ -492,6 +500,7 @@ namespace cc.dingemans.bigibas123.bigishader
 		Decal2_HDR,
 		Decal3Enabled,
 		Decal3,
+		Decal3_BlendMode,
 		Decal3_Opacity,
 		Decal3_Position,
 		Decal3_ST,

@@ -15,8 +15,8 @@ float4 _Udon_VideoTex_ST;
 #endif
 
 #ifdef PROTV_SQUARE_ENABLED
-#include "./BigiTextureCreation.cginc"
-#include "./BigiShaderParams.cginc"
+#include "../../Core/BigiTextureCreation.cginc"
+#include "../../Core/BigiShaderParams.cginc"
 namespace b_protv_util
 {
 	float4 getTexColor(float2 uv)
@@ -25,7 +25,7 @@ namespace b_protv_util
 		if(_TV_Square_Opacity > Epsilon)
 		{
 			PROTV_PRESENT(tvPresent);
-			tvPresent = tvPresent || (_SquareTVTest > 0.1);
+			tvPresent = tvPresent || (_SquareTVTest > Epsilon);
 			if (tvPresent
 				&& (uv.x >= _TV_Square_Position.x && uv.x <= (_TV_Square_Position.x + _TV_Square_Position.z))
 				&& (uv.y >= _TV_Square_Position.y && uv.y <= (_TV_Square_Position.y + _TV_Square_Position.w))

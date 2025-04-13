@@ -58,6 +58,7 @@
 	UNITY_DECLARE_TEX2D(_Decal##num); \
 	float4 _Decal##num##_ST; \
 	namespace b_decal { float4 GetTexColorDecal##num(const in float2 uv){return UNITY_SAMPLE_TEX2D(_Decal##num,uv);} }\
+	uniform uint _Decal##num##_BlendMode;\
 	uniform float _Decal##num##_Opacity; \
 	uniform float4 _Decal##num##_Position; \
 
