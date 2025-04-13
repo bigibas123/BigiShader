@@ -27,6 +27,7 @@ namespace bigi_texture
 		float3 result;
 		switch (mode)
 		{
+		default:
 		case 0: // Replace
 			{
 				result = input.rgb;
