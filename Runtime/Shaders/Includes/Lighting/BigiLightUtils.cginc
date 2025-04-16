@@ -2,6 +2,7 @@
 #define BIGI_LIGHT_UTILS_H
 
 #include <UnityCG.cginc>
+#include <UnityStandardUtils.cginc>
 #include <UnityLightingCommon.cginc>
 #include <UnityPBSLighting.cginc>
 #include <AutoLight.cginc>
@@ -39,12 +40,12 @@ namespace b_light
 	}
 
 
-	UnityLight CreateLight(const in world_info wi)
+	UnityLight CreateLight(const in world_info wi, const in half mainStrength)
 	{
 		UnityLight light;
-		light.color = wi.worldLightColor;
+		light.color = wi.worldLightColor * mainStrength;
 		light.dir = wi.worldLightDir;
-		light.ndotl = DotClamped(wi.normal, wi.worldLightDir);
+		light.ndotl = DotClamped(wi.normal, wi.worldLightDir) * mainStrength;
 		return light;
 	}
 
@@ -66,12 +67,12 @@ namespace b_light
 	}
 
 	UnityIndirect CreateIndirectLight(UnityIndirect indirectLight, in world_info wi, in float3 vertexLightColor,
-									const in half minAmbient, in half smoothness)
+									const in half minAmbient, in half smoothness, in half vertexStrength, in half envStrength)
 	{
-		indirectLight.diffuse += vertexLightColor;
+		indirectLight.diffuse += (vertexLightColor * vertexStrength);
 
 		#if defined(FORWARD_BASE_PASS)
-		indirectLight.diffuse += max(0, ShadeSH9(float4(wi.normal, 1)));
+		indirectLight.diffuse += (max(0, ShadeSH9(float4(wi.normal, 1))) * envStrength);
 
 		float3 reflectionDir = reflect(-wi.viewDir, wi.normal);
 		Unity_GlossyEnvironmentData envData;
@@ -97,13 +98,13 @@ namespace b_light
 				UNITY_PASS_TEXCUBE_SAMPLER(unity_SpecCube1, unity_SpecCube0),
 				unity_SpecCube0_HDR, envData
 			);
-			indirectLight.specular += lerp(probe1, probe0, interpolator);
+			indirectLight.specular += (lerp(probe1, probe0, interpolator) * envStrength);
 		}
 		else {
-			indirectLight.specular += probe0;
+			indirectLight.specular += (probe0 * envStrength);
 		}
 		#else
-		indirectLight.specular += probe0;
+		indirectLight.specular += (probe0 * envStrength);
 		#endif
 		#endif
 		return indirectLight;
@@ -111,7 +112,7 @@ namespace b_light
 
 	float4 _get_lighting(in float3 normal, in float3 worldPos, in float3 vertexLightColor, in half attenuation,
 						in half minAmbient, in half4 specularTint, in fixed ambientOcclusion,
-						float4 shadowmapUV)
+						float4 shadowmapUV, in half3 vertexEnvMainStrengths)
 	{
 		float3 albedo = float4(1.0, 1.0, 1.0, 1.0);
 		albedo *= 1.0;
@@ -133,8 +134,8 @@ namespace b_light
 			albedo, specularTint.rgb,
 			oneMinusReflectivity, specularTint.a,
 			wi.normal, wi.viewDir,
-			CreateLight(wi),
-			CreateIndirectLight(indirectStart, wi, vertexLightColor, minAmbient, specularTint.a)
+			CreateLight(wi, vertexEnvMainStrengths.z),
+			CreateIndirectLight(indirectStart, wi, vertexLightColor, minAmbient, specularTint.a, vertexEnvMainStrengths.x, vertexEnvMainStrengths.y)
 		);
 		float4 output = unity_pbs_output;
 		#ifdef UNITY_PASS_FORWARDBASE
@@ -158,17 +159,17 @@ namespace b_light
 	float4 get_lighting(in float3 normal, in float3 worldPos, in float3 vertexLightColor, in fixed ambientOcclusion,
 						in half occlusionStrength, in half attenuation, in float4 shadowMapUv,
 						in half minAmbient, in half transmissivity, in half lightSmoothness,
-						in uint lightSteps, in half4 specSmooth)
+						in uint lightSteps, in half4 specSmooth, in half3 vertexEnvMainStrengths)
 	{
 		const half scaledAO = lerp(1, ambientOcclusion, occlusionStrength);
 		attenuation = attenuation * scaledAO;
 
 		float4 total = _get_lighting(normal, worldPos, vertexLightColor, attenuation, minAmbient, specSmooth,
-									scaledAO, shadowMapUv);
+									scaledAO, shadowMapUv, vertexEnvMainStrengths);
 		if (transmissivity > Epsilon)
 		{
 			total += _get_lighting(normal * -1.0, worldPos, vertexLightColor, attenuation, 0, specSmooth,
-									scaledAO, shadowMapUv) * transmissivity;
+									scaledAO, shadowMapUv, vertexEnvMainStrengths) * transmissivity;
 		}
 		total = doStep(total, lightSmoothness, lightSteps);
 		total.rgba = float4(

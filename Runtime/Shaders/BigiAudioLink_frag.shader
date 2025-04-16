@@ -69,9 +69,12 @@ Shader "Bigi/AudioLink_frag" {
 		_MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.005
 		_Transmissivity ("Transmission of light through the material", Range(0.0,1.0)) = 0.2
 
-		[Header(3rdParty lighting)]
+		[Header(Lighting System strengths)]
 		[Space]
-		_VRSLGIStrength ("VRSL-GI Strength", Range(0.0,1.0)) = 0.25
+		_LightVertexMultiplier ("Vertex Multiplier",Range(0.0,5.0)) = 1.0
+		_LightEnvironmentMultiplier ("Environment Multiplier",Range(0.0,5.0)) = 1.0
+		_LightMainMultiplier ("Main Light Multiplier",Range(0.0,5.0)) = 1.0
+		_VRSLGIStrength ("VRSL-GI Strength", Range(0.0,2.0)) = 0.25
 		[Toggle(LTCGI_ENABLED)] _EnableLTCGI ("Enable LTCGI", Range(0.0,1.0)) = 0.0
 		_LTCGIStrength ("LTCGI Strenght", Range(0.0,2.0)) = 1.0
 

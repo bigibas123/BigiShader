@@ -50,6 +50,10 @@ uniform float _DoMirrorThing;
 
 uniform float _LTCGIStrength;
 
+uniform half _LightVertexMultiplier;
+uniform half _LightEnvironmentMultiplier;
+uniform half _LightMainMultiplier;
+
 #ifndef ROUNDING_VAR_NAME
 	#ifdef ROUNDING_ENABLED
 		uniform float _Rounding;
