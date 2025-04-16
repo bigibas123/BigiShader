@@ -13,6 +13,7 @@ namespace cc.dingemans.bigibas123.bigishader
 {
 	public class BigiShaderEditor : ShaderGUI
 	{
+		private bool m_ShowHiddenProps = false;
 		public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
 		{
 			List<MaterialProperty> materialProperties = properties.ToList();
@@ -30,23 +31,43 @@ namespace cc.dingemans.bigibas123.bigishader
 
 			EditorGUI.EndChangeCheck();
 			var mats = actualTargets.Select(t => (Material)t);
-			if (mats.All(m => !AOEnabled.GetBool(m)))
+			if (!m_ShowHiddenProps)
+			{
+				materialProperties.RemoveAll(p =>
+				{
+					return p.name.Substring(1, p.name.Length - 1) switch
+					{
+						nameof(UsesAlpha)
+							or nameof(UsesNormalMap)
+							or nameof(Decal1Enabled)
+							or nameof(Decal2Enabled)
+							or nameof(Decal3Enabled)
+							or nameof(EnableSpecularSmooth)
+							or nameof(AOEnabled)
+							or nameof(MultiTexture)
+							=> true,
+						_ => false
+					};
+				});
+			}
+
+			if (mats.All(m => !AOEnabled.GetBool(m)) && !m_ShowHiddenProps)
 			{
 				materialProperties.RemoveAll(p => p.name == "_" + nameof(AOEnabled));
 			}
 
-			if (mats.All(m => !RoundingEnabled.GetBool(m)))
+			if (mats.All(m => !RoundingEnabled.GetBool(m)) && !m_ShowHiddenProps)
 			{
 				materialProperties.RemoveAll(p => p.name == "_" + nameof(Rounding));
 			}
 
-			if (mats.All(m => !Decal1Enabled.GetBool(m)))
+			if (mats.All(m => !Decal1Enabled.GetBool(m)) && !m_ShowHiddenProps)
 			{
 				materialProperties.RemoveAll(p =>
 					p.name == "_" + nameof(Decal1Enabled) || p.name.StartsWith("_" + nameof(Decal1) + "_"));
 			}
 
-			if (mats.All(m => !Decal2Enabled.GetBool(m)))
+			if (mats.All(m => !Decal2Enabled.GetBool(m)) && !m_ShowHiddenProps)
 			{
 				materialProperties.RemoveAll(p =>
 					p.name == "_" + nameof(Decal2Enabled) || p.name.StartsWith("_" + nameof(Decal2) + "_"));
@@ -56,7 +77,7 @@ namespace cc.dingemans.bigibas123.bigishader
 				}
 			}
 
-			if (mats.All(m => !Decal3Enabled.GetBool(m)))
+			if (mats.All(m => !Decal3Enabled.GetBool(m)) && !m_ShowHiddenProps)
 			{
 				materialProperties.RemoveAll(p =>
 					p.name == "_" + nameof(Decal3Enabled) || p.name.StartsWith("_" + nameof(Decal3) + "_"));
@@ -66,7 +87,8 @@ namespace cc.dingemans.bigibas123.bigishader
 				}
 			}
 
-			if (mats.All(m => !(EnableProTVSquare.GetBool(m) || m.IsKeywordEnabled("PROTV_SQUARE_ENABLED"))))
+			if (mats.All(m => !(EnableProTVSquare.GetBool(m) || m.IsKeywordEnabled("PROTV_SQUARE_ENABLED"))) &&
+			    !m_ShowHiddenProps)
 			{
 				materialProperties.RemoveAll(p =>
 					p.name == "_" + nameof(SquareTVTest) || p.name.StartsWith("_TV_Square_"));
@@ -90,7 +112,27 @@ namespace cc.dingemans.bigibas123.bigishader
 			}
 
 			EditorGUI.indentLevel--;
+			if (materialEditor.HelpBoxWithButton(m_TextContent,
+				    m_ShowHiddenProps ? m_HideButtonContent : m_ShowButtonContent))
+			{
+				m_ShowHiddenProps = !m_ShowHiddenProps;
+			}
 		}
+		public static GUIContent m_TextContent = new()
+		{
+			text = "Show/Hide hidden properties",
+		};
+
+		public static GUIContent m_ShowButtonContent = new()
+		{
+			text = "Show",
+		};
+
+		public static GUIContent m_HideButtonContent = new()
+		{
+			text = "Hide",
+		};
+
 
 		private void CheckIfMaterialPropertiesExist(Material m)
 		{
