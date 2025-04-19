@@ -20,7 +20,7 @@ void callback_specular(inout UnityIndirect acc, in ltcgi_output output);
 #include "../../Core/BigiShaderParams.cginc"
 
 // now we declare LTCGI APIv2 functions for real
-void callback_diffuse(inout UnityIndirect acc, in ltcgi_output output)
+void callback_diffuse(inout LTCGI_V2_CUSTOM_INPUT acc, in ltcgi_output output)
 {
 	// you can do whatever here! check out the ltcgi_output struct in
 	// "LTCGI_structs.cginc" to see what data you have available
@@ -30,7 +30,7 @@ void callback_diffuse(inout UnityIndirect acc, in ltcgi_output output)
 	acc.diffuse += adjusted_diffuse;
 }
 
-void callback_specular(inout UnityIndirect acc, in ltcgi_output output)
+void callback_specular(inout LTCGI_V2_CUSTOM_INPUT acc, in ltcgi_output output)
 {
 	// same here, this example one is pretty boring though.
 	// you could accumulate intensity separately for example,
@@ -41,7 +41,7 @@ void callback_specular(inout UnityIndirect acc, in ltcgi_output output)
 	acc.specular += adjusted_specular;
 }
 
-void get_LTCGI(in b_light::world_info wi, inout UnityIndirect acc, in half smoothness)
+void get_LTCGI(in b_light::world_info wi, inout LTCGI_V2_CUSTOM_INPUT acc, in half smoothness)
 {
 	LTCGI_Contribution(
 		acc, // our accumulator
