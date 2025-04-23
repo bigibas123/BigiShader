@@ -58,7 +58,7 @@ v2f do_v2fCalc(in v2f o, const in appdata v)
 	o.tangent.w = v.tangent.w;
 	o.worldPos = mul(unity_ObjectToWorld, v.vertex);
 	#endif
-	o.distance = GET_DISTANCE(v.vertex);
+	o.distance.w = GET_DISTANCE(v.vertex);
 	return o;
 }
 

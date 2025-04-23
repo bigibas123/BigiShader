@@ -65,7 +65,7 @@ struct v2f
 	#ifdef VERTEXLIGHT_ON
 	float3 vertexLighting : TEXCOORD11;
 	#endif
-	float distance : BLENDWEIGHT0;
+	float4 distance : POSITION1; // barycentric coordinates (xyz) and distance from arbitrary point (w)
 
 	UNITY_VERTEX_INPUT_INSTANCE_ID
 	UNITY_VERTEX_OUTPUT_STEREO
@@ -81,6 +81,7 @@ namespace b_sound
 	{
 		const static AudioLinkMode_e ALM_Flat = 0;
 		const static AudioLinkMode_e ALM_CenterOut = 1;
+		const static AudioLinkMode_e ALM_WireFrame = 2;
 	}
 }
 #endif

@@ -9,7 +9,7 @@ uniform float _Alpha_Threshold;
 #ifndef BIGI_UNIFORMS_DMXAL
 #define BIGI_UNIFORMS_DMXAL
 
-uniform int _AL_Mode;
+uniform uint _AL_Mode;
 
 uniform float _DMX_Weight;
 uniform float _AL_Theme_Weight;
@@ -17,6 +17,7 @@ uniform float _AL_Theme_Weight;
 uniform uint _DMX_Group;
 
 uniform float _AL_TC_BassReactive;
+uniform float _AL_WireFrameWidth;
 
 //Both
 uniform float _OutlineWidth;

@@ -511,6 +511,7 @@ namespace cc.dingemans.bigibas123.bigishader
 		AL_Mode,
 		AL_Theme_Weight,
 		AL_TC_BassReactive,
+		AL_WireFrameWidth,
 		MonoChrome,
 		Voronoi,
 		OutlineWidth,

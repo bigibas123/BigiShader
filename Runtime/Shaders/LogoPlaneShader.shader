@@ -56,7 +56,7 @@ Shader "Bigi/LogoPlane" {
 			fixed4 normal_color = orig_color * lighting;
 
 			_AL_Theme_Weight = _AL_Weight;
-			float distance = 0.0;
+			float4 distance = float4(1.0/3.0,1.0/3.0,1.0/3.0,0.0);
 			GET_SOUND_COLOR(sound);
 
 			o.color = lerp(normal_color,fixed4(sound.rgb, normal_color.a), sound.a);

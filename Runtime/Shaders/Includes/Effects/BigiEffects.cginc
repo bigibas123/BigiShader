@@ -44,11 +44,12 @@ namespace b_effects
 		return HSVToRGB(half3((voronoiOutput.x + voronoiOutput.y) / 2.0f, 1.0, 1.0));
 	}
 
-	fixed4 apply_effects(const in half2 uv,
+	fixed4 apply_effects(const in float4 pos,
+						const in half2 uv,
 						const in fixed4 mask,
 						const in fixed4 orig_color,
 						const in fixed4 lighting,
-						const in float distance,
+						const in float4 distance,
 						const in float4 staticTexturePos
 	)
 	{
@@ -58,7 +59,18 @@ namespace b_effects
 		//AudioLink
 		{
 			GET_SOUND_COLOR(soundC);
-			doMixProperly(mix, soundC.rgb, mask.b * RGBtoHCV(soundC).z * soundC.a, 2.0);
+			float maskWeight;
+			if (_AL_Mode != b_sound::AudioLinkMode::ALM_WireFrame)
+			{
+				maskWeight = mask.b;
+			}
+			else
+			{
+				maskWeight = min(distance.x, min(distance.y, distance.z)); // Get minimum distance from edge (will be 0 on edge and 1/3 in the center)
+				//maskWeight /= pos.w; // For keeping it the same width at a distance
+				maskWeight = 1.0 - step(_AL_WireFrameWidth / 9.0, maskWeight);
+			}
+			doMixProperly(mix, soundC.rgb, maskWeight * RGBtoHCV(soundC).z * soundC.a, 2.0);
 		}
 		//"Emissions"
 		{

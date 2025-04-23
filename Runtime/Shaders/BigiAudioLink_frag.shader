@@ -80,10 +80,11 @@ Shader "Bigi/AudioLink_frag" {
 
 		[Header(Audiolink)]
 		[Space]
-		[Enum(Flat,0,CenterOut,1)] _AL_Mode ("Audiolink mode", Range(0,1)) = 0
+		[Enum(Flat,0,CenterOut,1,WireFrame,2)] _AL_Mode ("Audiolink mode", Range(0,2)) = 0
 		[Space]
 		_AL_Theme_Weight("Weight", Range(0.0, 1.0)) = 1.0
 		_AL_TC_BassReactive("Bassreactivity", Range(0.0,1.0)) = 0.75
+		_AL_WireFrameWidth ("Wireframe Width", Range(0.0,1.0)) = 0.05
 
 		[Header(Effects)]
 		[Space]
@@ -143,12 +144,14 @@ Shader "Bigi/AudioLink_frag" {
 			CGPROGRAM
 			#pragma vertex bigi_toon_vert
 			#pragma fragment frag
+			#pragma geometry bigi_geom
 
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
 			#include_with_pragmas "./Includes/Pragmas/CustomVariants.cginc"
 			#include "./Includes/Core/BigiMainTex.cginc"
 			#include "./Includes/ToonVert.cginc"
 			#include "./Includes/BigiAudioLink_frag_default.cginc"
+			#include "./Includes/GeomProcessor.cginc"
 
 			fragOutput frag(v2f i)
 			{
@@ -183,14 +186,18 @@ Shader "Bigi/AudioLink_frag" {
 				Pass Replace
 			}
 			CGPROGRAM
+			#define TRANSPARENT_FORWARD_BASE
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
+			#pragma geometry geom alpha
 			#pragma multi_compile_fwdbasealpha
+			
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
 			#include_with_pragmas "./Includes/Pragmas/CustomVariants.cginc"
 			#include "./Includes/Core/BigiMainTex.cginc"
 			#include "./Includes/ToonVert.cginc"
 			#include "./Includes/BigiAudioLink_frag_default.cginc"
+			#include "./Includes/GeomProcessor.cginc"
 
 			v2f vert(appdata v)
 			{
@@ -200,6 +207,18 @@ Shader "Bigi/AudioLink_frag" {
 				v2f o;
 				UNITY_INITIALIZE_OUTPUT(v2f, o);
 				return o;
+				#endif
+			}
+			
+			[instance(1)]
+			[maxvertexcount(3)]
+			void geom(
+				triangle v2f input[3],
+				inout TriangleStream<v2f> os
+				)
+			{
+				#ifdef DO_ALPHA_PLS
+				bigi_geom(input, os);
 				#endif
 			}
 
@@ -253,7 +272,7 @@ Shader "Bigi/AudioLink_frag" {
 
 				BIGI_GETLIGHT_DEFAULT(lighting);
 
-				o.color = b_effects::apply_effects(GETUV,GET_MASK_COLOR(GETUV), orig_color, lighting, i.distance,
+				o.color = b_effects::apply_effects(i.pos, GETUV,GET_MASK_COLOR(GETUV), orig_color, lighting, i.distance,
 													i.staticTexturePos);
 				UNITY_APPLY_FOG(i.fogCoord, o.color);
 				return o;
@@ -298,9 +317,9 @@ Shader "Bigi/AudioLink_frag" {
 				UNITY_INITIALIZE_OUTPUT(v2f, o);
 				if (AudioLinkIsAvailable())
 				{
-					float distance = GET_DISTANCE(v.vertex);
+					float4 distance = float4(1.0/3.0,1.0/3.0,1.0/3.0,GET_DISTANCE(v.vertex));
 					float3 offset = (normalize(v.normal.xyz) * 2.0) * (_OutlineWidth * 0.01) * b_sound::GetWaves(
-						distance);
+						distance.w);
 
 					offset = lerp(0.0, offset, smoothstep(0.0, Epsilon, _OutlineWidth));
 					v.vertex = v.vertex + float4(offset, 0.0);

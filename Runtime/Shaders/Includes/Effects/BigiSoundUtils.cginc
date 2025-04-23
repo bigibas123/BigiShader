@@ -93,6 +93,7 @@ namespace b_sound
 						break;
 					}
 				case AudioLinkMode::ALM_CenterOut:
+				case AudioLinkMode::ALM_WireFrame:
 					{
 						doMixProperly(mix, finalColor.rgb,
 									soundIntensity * conf.AL_Theme_Weight * GetAudioLink(conf.AL_Distance));
