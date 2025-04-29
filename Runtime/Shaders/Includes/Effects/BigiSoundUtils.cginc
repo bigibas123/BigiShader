@@ -29,6 +29,7 @@ namespace b_sound
 	*/
 	float GetAudioLink(float x)
 	{
+		x = (x  % 1.0);
 		float totalValue = 0;
 		totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 1.0) % 1) * AUDIOLINK_WIDTH, 0)).r;
 		// totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 2.0) % 1) * AUDIOLINK_WIDTH, 1)).r;
