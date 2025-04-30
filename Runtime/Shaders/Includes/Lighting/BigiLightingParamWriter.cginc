@@ -44,12 +44,10 @@ namespace b_light
 		IFZEROAPPLY(_LightMainMultiplier, 1.0);
 
 		IFZEROAPPLY(_AL_Mode, 0.0)
-		#ifdef ROUNDING_ENABLED
 		#ifdef ROUNDING_VAR_NAME
 		IFZEROAPPLY(ROUNDING_VAR_NAME, 0.0);
 		#else
 		IFZEROAPPLY(_Rounding, 0.0);
-		#endif
 		#endif
 		#ifdef MIRROR_THING
 		#ifndef NO_RESET_MIRROR_THING

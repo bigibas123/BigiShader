@@ -56,11 +56,6 @@ namespace cc.dingemans.bigibas123.bigishader
 				materialProperties.RemoveAll(p => p.name == "_" + nameof(AOEnabled));
 			}
 
-			if (mats.All(m => !RoundingEnabled.GetBool(m)) && !m_ShowHiddenProps)
-			{
-				materialProperties.RemoveAll(p => p.name == "_" + nameof(Rounding));
-			}
-
 			if (mats.All(m => !Decal1Enabled.GetBool(m)) && !m_ShowHiddenProps)
 			{
 				materialProperties.RemoveAll(p =>
@@ -272,11 +267,6 @@ namespace cc.dingemans.bigibas123.bigishader
 				bool hasAOMap = (OcclusionMap.GetTexture(m) is not null);
 				AOEnabled.Set(m, hasAOMap);
 				m.shader.keywordSpace.FindKeyword("AMBIENT_OCCLUSION_ENABLED").Set(m, hasAOMap);
-			}
-
-			if (!RoundingEnabled.GetBool(m))
-			{
-				Rounding.Set(m, 0.0f);
 			}
 
 			Decal1Enabled.Set(m, Decal1.TexturePresent(m) && Decal1.GetTexture(m) is not null);
@@ -515,7 +505,6 @@ namespace cc.dingemans.bigibas123.bigishader
 		MonoChrome,
 		Voronoi,
 		OutlineWidth,
-		RoundingEnabled,
 		Rounding,
 		DoMirrorThing,
 		EnableProTVSquare,

@@ -56,28 +56,13 @@ uniform half _LightEnvironmentMultiplier;
 uniform half _LightMainMultiplier;
 
 #ifndef ROUNDING_VAR_NAME
-	#ifdef ROUNDING_ENABLED
 		uniform float _Rounding;
 		#define ROUNDING_VAR_NAME _Rounding
-	#endif
 #endif
 
-#if defined(ROUNDING_VAR_NAME) && defined(ROUNDING_ENABLED)
-#ifndef GET_UV
-#define GET_UV(origuv,iposw) (ROUNDING_VAR_NAME > Epsilon ? origuv/iposw : origuv)
-#endif
 #ifndef GETUV
-#define GETUV GET_UV(i.uv.xy,i.pos.w)
+	#define GETUV (i.uv.xy)
 #endif
-#else
-#ifndef GET_UV
-#define GET_UV(origuv) origuv
-#endif
-#ifndef GETUV
-#define GETUV GET_UV(i.uv.xy)
-#endif
-#endif
-
 
 #endif
 

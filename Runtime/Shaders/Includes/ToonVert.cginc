@@ -24,14 +24,12 @@ float4 round_val(const in float4 snapToPixel, const uniform in float rounding)
 
 v2f do_v2fCalc(in v2f o, const in appdata v)
 {
-	#ifdef ROUNDING_ENABLED
+	#ifdef ROUNDING_VAR_NAME
 	if (ROUNDING_VAR_NAME > Epsilon)
 	{
 		//o.localPos = round_val(v.vertex, ROUNDING_VAR_NAME);
 		o.pos = UnityObjectToClipPos(round_val(v.vertex, ROUNDING_VAR_NAME));
-		o.uv.xy = (DO_TRANSFORM(v.uv0));// * o.pos.w;
 		//o.uv1 = float4(v.uv1, v.uv2);
-		o.normal = UnityObjectToWorldNormal(round_val(float4(v.normal, 1.0), ROUNDING_VAR_NAME).xyz);
 		float4 rounded_tangent = round_val(v.tangent, ROUNDING_VAR_NAME);
 		o.tangent.xyz = UnityObjectToWorldDir(rounded_tangent).xyz;
 		o.tangent.w = rounded_tangent.w;
@@ -39,25 +37,19 @@ v2f do_v2fCalc(in v2f o, const in appdata v)
 	}
 	else
 	{
+		#endif
 		//o.localPos = v.vertex;
 		o.pos = UnityObjectToClipPos(v.vertex);
-		o.uv.xy = DO_TRANSFORM(v.uv0);
 		//o.uv1 = float4(v.uv1, v.uv2);
-		o.normal = UnityObjectToWorldNormal(v.normal);
 		o.tangent.xyz = UnityObjectToWorldDir(v.tangent);
 		o.tangent.w = v.tangent.w;
 		o.worldPos = mul(unity_ObjectToWorld, v.vertex);
+	#ifdef ROUNDING_VAR_NAME
 	}
-	#else
-	//o.localPos = v.vertex;
-	o.pos = UnityObjectToClipPos(v.vertex);
-	o.uv.xy = DO_TRANSFORM(v.uv0);
-	//o.uv1 = float4(v.uv1, v.uv2);
-	o.normal = UnityObjectToWorldNormal(v.normal);
-	o.tangent.xyz = UnityObjectToWorldDir(v.tangent);
-	o.tangent.w = v.tangent.w;
-	o.worldPos = mul(unity_ObjectToWorld, v.vertex);
 	#endif
+	o.uv.xy = (DO_TRANSFORM(v.uv0));// * o.pos.w;
+	o.uv.zw = float2(0,0);
+	o.normal = UnityObjectToWorldNormal(v.normal);
 	o.distance.w = GET_DISTANCE(v.vertex);
 	return o;
 }
