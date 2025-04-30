@@ -59,7 +59,7 @@ namespace bigi_texture
 		return total;
 	}
 
-
+	#if defined(GET_TEX_COLOR_MAINTEX)
 	float4 GetTexColor(const in float2 uv)
 	{
 		float4 color = GET_TEX_COLOR_MAINTEX(uv);
@@ -86,6 +86,7 @@ namespace bigi_texture
 		#endif
 		return color;
 	}
+	#endif
 }
 
 #endif

@@ -1,35 +1,25 @@
 ﻿#ifndef BIGI_MAINTEX_H
 #define BIGI_MAINTEX_H
-
+#ifndef NO_MAINTEX
 #ifndef MULTI_TEXTURE
-	#ifndef MAINTEX_DECLARED
+	#ifndef MAINTEX_NAME
 	#include <HLSLSupport.cginc>
-	UNITY_DECLARE_TEX2D(_MainTex);
+	#define MAINTEX_NAME _MainTex
+	UNITY_DECLARE_TEX2D(MAINTEX_NAME);
 	float4 _MainTex_ST;
-	#define MAINTEX_DECLARED
 	#endif
 
 	#ifndef GET_TEX_COLOR_MAINTEX
 	#include <HLSLSupport.cginc>
-	#define GET_TEX_COLOR_MAINTEX(uv) UNITY_SAMPLE_TEX2D(_MainTex,uv)
-	#endif
-
-	#ifndef SAMPLE_TEX2D
-	#include <HLSLSupport.cginc>
-	#define SAMPLE_TEX2D(texName,uv) UNITY_SAMPLE_TEX2D_SAMPLER(texName, _MainTex, uv)
-	#endif
-
-	#ifndef DO_TRANSFORM
-	#include <UnityCG.cginc>
-	#define DO_TRANSFORM(tc) TRANSFORM_TEX(tc, _MainTex)
+	#define GET_TEX_COLOR_MAINTEX(uv) UNITY_SAMPLE_TEX2D(MAINTEX_NAME,uv)
 	#endif
 
 #else
-	#ifndef MAINTEX_DECLARED
+	#ifndef MAINTEX_NAME
 	#include <HLSLSupport.cginc>
-	UNITY_DECLARE_TEX2DARRAY(_MainTexArray);
+	#define MAINTEX_NAME _MainTexArray
+	UNITY_DECLARE_TEX2DARRAY(MAINTEX_NAME);
 	float4 _MainTexArray_ST;
-	#define MAINTEX_DECLARED
 	#endif
 
 	#ifndef OTHER_TEXTURE_ID_REF
@@ -42,16 +32,24 @@
 	#define GET_TEX_COLOR_MAINTEX(uv) UNITY_SAMPLE_TEX2DARRAY(_MainTexArray,float3(uv,OTHER_TEXTURE_ID_REF))
 	#endif
 
+#endif
+#endif
+
+#ifdef MAINTEX_NAME
 	#ifndef SAMPLE_TEX2D
 	#include <HLSLSupport.cginc>
-	#define SAMPLE_TEX2D(texName,uv) UNITY_SAMPLE_TEX2D_SAMPLER(texName, _MainTexArray, uv)
+	#define SAMPLE_TEX2D(texName,uv) UNITY_SAMPLE_TEX2D_SAMPLER(texName, MAINTEX_NAME, uv)
 	#endif
 
 	#ifndef DO_TRANSFORM
 	#include <UnityCG.cginc>
-	#define DO_TRANSFORM(tc) TRANSFORM_TEX(tc, _MainTexArray)
+	#define DO_TRANSFORM(tc) TRANSFORM_TEX(tc, MAINTEX_NAME)
 	#endif
 
+#else
+	#ifndef DO_TRANSFORM
+	#define DO_TRANSFORM(tc) (tc)
+	#endif
 #endif
 
 #define DECAL_PARAMS(num) \

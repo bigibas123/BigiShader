@@ -11,6 +11,7 @@
 	#endif
 #endif
 
+#ifdef SAMPLE_TEX2D
 #ifndef GET_MASK_COLOR
 	#include <HLSLSupport.cginc>
 	UNITY_DECLARE_TEX2D_NOSAMPLER(_Mask);
@@ -18,14 +19,10 @@
 #endif
 
 #ifndef GET_AO
-	#ifdef AMBIENT_OCCLUSION_ENABLED
-		#include <HLSLSupport.cginc>
-		UNITY_DECLARE_TEX2D_NOSAMPLER(_OcclusionMap);
-		#include "./BigiMainTex.cginc"
-		#define GET_AO(uv) SAMPLE_TEX2D(_OcclusionMap, uv).g
-	#else
-		#define GET_AO(uv) 1.0
-	#endif
+	#include <HLSLSupport.cginc>
+	UNITY_DECLARE_TEX2D_NOSAMPLER(_OcclusionMap);
+	#include "./BigiMainTex.cginc"
+	#define GET_AO(uv) SAMPLE_TEX2D(_OcclusionMap, uv).g
 #endif
 
 #ifndef GET_NORMAL
@@ -49,6 +46,18 @@
 	#else
 		#define GET_SPEC_SMOOTH(uv) (half4(0, 0, 0, 0))
 	#endif
+#endif
+
+#else
+
+#ifndef GET_AO
+	#define GET_AO(uv) 1.0
+#endif
+
+#ifndef GET_SPEC_SMOOTH
+	#define GET_SPEC_SMOOTH(uv) (half4(0, 0, 0, 0))
+#endif
+
 #endif
 
 #ifndef GET_SPACEY

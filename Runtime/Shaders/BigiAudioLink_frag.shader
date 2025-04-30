@@ -57,7 +57,6 @@ Shader "Bigi/AudioLink_frag" {
 		[Header(Ambient Occlusion)]
 		[Space]
 		[NoScaleOffset] _OcclusionMap ("Ambient occlusion map", 2D) = "white" {}
-		[Toggle(AMBIENT_OCCLUSION_ENABLED)] _AOEnabled ("Enabled Ambient Occlusion",Range(0.0,1.0)) = 0.0
 		_OcclusionStrength("Occlusion Strength", Range(0, 1.0)) = 1.0
 
 		[Space]

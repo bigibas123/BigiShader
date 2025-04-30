@@ -1,6 +1,5 @@
 Shader "Bigi/ALTest" {
 	Properties {
-		[MainTexture] _MainTex ("Texture", 2D) = "black"
 	}
 	SubShader {
 		Blend SrcAlpha OneMinusSrcAlpha
@@ -22,6 +21,7 @@ Shader "Bigi/ALTest" {
 			CGPROGRAM
 			#pragma vertex bigi_toon_vert
 			#pragma fragment frag
+			#define NO_MAINTEX
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
 			#pragma target 3.0
 			#define EXTERNAL_AUDIOLINK_ON

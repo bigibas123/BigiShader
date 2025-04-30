@@ -43,17 +43,11 @@ namespace cc.dingemans.bigibas123.bigishader
 							or nameof(Decal2Enabled)
 							or nameof(Decal3Enabled)
 							or nameof(EnableSpecularSmooth)
-							or nameof(AOEnabled)
 							or nameof(MultiTexture)
 							=> true,
 						_ => false
 					};
 				});
-			}
-
-			if (mats.All(m => !AOEnabled.GetBool(m)) && !m_ShowHiddenProps)
-			{
-				materialProperties.RemoveAll(p => p.name == "_" + nameof(AOEnabled));
 			}
 
 			if (mats.All(m => !Decal1Enabled.GetBool(m)) && !m_ShowHiddenProps)
@@ -260,13 +254,6 @@ namespace cc.dingemans.bigibas123.bigishader
 				{
 					kw.Set(m, hasSpecMap);
 				}
-			}
-
-			if (AOEnabled.Present(m) && OcclusionMap.Present(m))
-			{
-				bool hasAOMap = (OcclusionMap.GetTexture(m) is not null);
-				AOEnabled.Set(m, hasAOMap);
-				m.shader.keywordSpace.FindKeyword("AMBIENT_OCCLUSION_ENABLED").Set(m, hasAOMap);
 			}
 
 			Decal1Enabled.Set(m, Decal1.TexturePresent(m) && Decal1.GetTexture(m) is not null);
@@ -496,7 +483,6 @@ namespace cc.dingemans.bigibas123.bigishader
 		OcclusionMap_ST,
 		OcclusionMap_TexelSize,
 		OcclusionMap_HDR,
-		AOEnabled,
 		OcclusionStrength,
 		AL_Mode,
 		AL_Theme_Weight,

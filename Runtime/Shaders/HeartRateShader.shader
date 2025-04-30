@@ -21,6 +21,7 @@ Shader "Bigi/HeartRate" {
 		#include <UnityCG.cginc>
 		#include <Packages/com.llealloo.audiolink/Runtime/Shaders/SmoothPixelFont.cginc>
 		#define NO_RESET_MINAMBIENT
+		#define NO_MAINTEX
 		#define DO_TRANSFORM(UV) (UV)
 		#define GETUV (i.uv)
 		#define GET_TEX_COLOR(UV)  (determineValue(UV))
