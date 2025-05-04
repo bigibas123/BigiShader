@@ -1,9 +1,10 @@
 Shader "Bigi/AudioLink_frag" {
 	Properties {
 		[MainTexture] _MainTex ("Texture", 2D) = "black" {}
-		[Toggle(DO_ALPHA_PLS)] _UsesAlpha("Is transparent", Float) = 1
+		[Toggle(DO_ALPHA_PLS)] _UsesAlpha("Is transparent (NOT ANIMATABLE)", Float) = 1
 		[Enum(UnityEngine.Rendering.CullMode)] _Cull ("Culling", Float) = 2
 		_Alpha_Threshold ("Alpha threshold",Range(-0.01,1.0)) = 0.99
+		_Alpha_Multiplier ("Alpha Multiplier", Range(0.0,2.0)) = 1.0
 
 		[Header(ZWriteZTest Settings)]
 		[Header(Opaque Forward Base)]
@@ -27,24 +28,24 @@ Shader "Bigi/AudioLink_frag" {
 		[Header(Normal mapping)]
 		[Space]
 		[NoScaleOffset] [Normal] _BumpMap("Normal Map", 2D) = "bump" {}
-		[Toggle(NORMAL_MAPPING)] _UsesNormalMap("Enable normal map", Float) = 1
+		[Toggle(NORMAL_MAPPING)] _UsesNormalMap("Enable normal map (NOT ANIMATABLE)", Float) = 1
 		[Space]
 		[Space]
 		[Header(Decals)]
 		[NoScaleOffset] _Decal1 ("Decal 1", 2D) = "black" {}
-		[Toggle(DECAL_1_ENABLED)] _Decal1Enabled ("Enable decal 1", Float) = 0
+		[Toggle(DECAL_1_ENABLED)] _Decal1Enabled ("Enable decal 1 (NOT ANIMATABLE)", Float) = 0
 		[Enum(Replace,0,Multiply,1,Screen,2,Add,3,Subtract,4)] _Decal1_BlendMode ("Decal 1 blend mode",Range(0,4)) = 0
 		_Decal1_Opacity ("Decal 1 opacity", Range(0.0,1.0)) = 1.0
 		_Decal1_Position ("Decal 1 Position & Size", Vector) = (0.0,0.0,1.0,1.0)
 		[Space]
 		[NoScaleOffset] _Decal2 ("Decal 2", 2D) = "black" {}
-		[Toggle(DECAL_2_ENABLED)] _Decal2Enabled ("Enable decal 2", Float) = 0
+		[Toggle(DECAL_2_ENABLED)] _Decal2Enabled ("Enable decal 2 (NOT ANIMATABLE)", Float) = 0
 		[Enum(Replace,0,Multiply,1,Screen,2,Add,3,Subtract,4)] _Decal2_BlendMode ("Decal 2 blend mode",Range(0,4)) = 0
 		_Decal2_Opacity ("Decal 2 opacity", Range(0.0,1.0)) = 1.0
 		_Decal2_Position ("Decal 2 Position & Size", Vector) = (0.0,0.0,1.0,1.0)
 		[Space]
 		[NoScaleOffset] _Decal3 ("Decal 3", 2D) = "black" {}
-		[Toggle(DECAL_3_ENABLED)] _Decal3Enabled ("Enable decal 3", Float) = 0
+		[Toggle(DECAL_3_ENABLED)] _Decal3Enabled ("Enable decal 3 (NOT ANIMATABLE)", Float) = 0
 		[Enum(Replace,0,Multiply,1,Screen,2,Add,3,Subtract,4)] _Decal3_BlendMode ("Decal 3 blend mode",Range(0,4)) = 0
 		_Decal3_Opacity ("Decal 3 opacity", Range(0.0,1.0)) = 1.0
 		_Decal3_Position ("Decal 3 Position & Size", Vector) = (0.0,0.0,1.0,1.0)
@@ -52,7 +53,7 @@ Shader "Bigi/AudioLink_frag" {
 		[Header(Specular and Smooth)]
 		[Space]
 		[NoScaleOffset] _SpecSmoothMap ("Specular (rgb) and Smoothness (a) map", 2D) = "black" {}
-		[Toggle(SPECSMOOTH_MAP_ENABLED)] _EnableSpecularSmooth ("Enable Specular & Smoothness map", Range(0.0,1.0)) = 0.0
+		[Toggle(SPECSMOOTH_MAP_ENABLED)] _EnableSpecularSmooth ("Enable Specular & Smoothness map (NOT ANIMATABLE)", Range(0.0,1.0)) = 0.0
 
 		[Header(Ambient Occlusion)]
 		[Space]
@@ -74,7 +75,7 @@ Shader "Bigi/AudioLink_frag" {
 		_LightEnvironmentMultiplier ("Environment Multiplier",Range(0.0,5.0)) = 1.0
 		_LightMainMultiplier ("Main Light Multiplier",Range(0.0,5.0)) = 1.0
 		_VRSLGIStrength ("VRSL-GI Strength", Range(0.0,2.0)) = 0.25
-		[Toggle(LTCGI_ENABLED)] _EnableLTCGI ("Enable LTCGI", Range(0.0,1.0)) = 0.0
+		[Toggle(LTCGI_ENABLED)] _EnableLTCGI ("Enable LTCGI (NOT ANIMATABLE)", Range(0.0,1.0)) = 0.0
 		_LTCGIStrength ("LTCGI Strenght", Range(0.0,5.0)) = 1.0
 
 		[Header(Audiolink)]
@@ -96,15 +97,21 @@ Shader "Bigi/AudioLink_frag" {
 
 		[Header(TV Square)]
 		[Space]
-		[Toggle(PROTV_SQUARE_ENABLED)] _EnableProTVSquare ("Enable ProTV texture render", Range(0.0,1.0)) = 0.0
+		[Toggle(PROTV_SQUARE_ENABLED)] _EnableProTVSquare ("Enable ProTV texture render (NOT ANIMATABLE)", Range(0.0,1.0)) = 0.0
 		[ToggleUI] _SquareTVTest ("Enable temporarily to display tv location", Range(0.0,1.0)) = 0.0
 		_TV_Square_Opacity ("TV opacity", Range(0.0,1.0)) = 1.0
 		_TV_Square_Position ("TV Position & Size", Vector) = (0.0,0.0,1.0,1.0)
+		
+		[Header(Stencil settings (NOT ANIMATABLE))]
+		[Space]
+		[IntRange] _MainStencilRef ("Write this stencil value for the main avatar passes", Range(0, 255)) = 148
+        [IntRange] _MainStencilWriteMask ("Use this mask while writing main passes", Range(0, 255)) = 255
+        [Enum(UnityEngine.Rendering.StencilOp)] _MainStencilPass ("Operation on the value of the stencil buffer in main passes", Float) = 2
 
 		[Header(Multi Texture)]
 		[Space]
 		_MainTexArray ("Other textures", 2DArray) = "" {}
-		[Toggle(MULTI_TEXTURE)] _MultiTexture("Use multi texture", Float) = 0
+		[Toggle(MULTI_TEXTURE)] _MultiTexture("Use multi texture (NOT ANIMATABLE)", Float) = 0
 		_OtherTextureId ("Other texture Id", Int) = 0
 
 
@@ -134,10 +141,10 @@ Shader "Bigi/AudioLink_frag" {
 			ZTest [_ZTestOFWB]
 			Blend One OneMinusSrcAlpha
 			Stencil {
-				Ref 180 //148 + 32 // 1011 0100 // VRSLGI + Own stencil bit
+				Ref [_MainStencilRef]
 				Comp Always
-				WriteMask 180
-				Pass Replace
+				WriteMask [_MainStencilWriteMask]
+				Pass [_MainStencilPass]
 			}
 			CGPROGRAM
 			#pragma vertex bigi_toon_vert
@@ -178,10 +185,10 @@ Shader "Bigi/AudioLink_frag" {
 			ZTest [_ZTestTFWB]
 			Blend SrcAlpha OneMinusSrcAlpha
 			Stencil {
-				Ref 180 //148 + 32 // 1011 0100 // VRSLGI + Own stencil bit
+				Ref [_MainStencilRef]
 				Comp Always
-				WriteMask 180
-				Pass Replace
+				WriteMask [_MainStencilWriteMask]
+				Pass [_MainStencilPass]
 			}
 			CGPROGRAM
 			#define TRANSPARENT_FORWARD_BASE
@@ -245,10 +252,10 @@ Shader "Bigi/AudioLink_frag" {
 			ZTest [_ZTestFWA]
 			Blend SrcAlpha One
 			Stencil {
-				Ref 180 //148 + 32 // 1011 0100 // VRSLGI + Own stencil bit
+				Ref [_MainStencilRef]
 				Comp Always
-				WriteMask 180
-				Pass Replace
+				WriteMask [_MainStencilWriteMask]
+				Pass [_MainStencilPass]
 			}
 			CGPROGRAM
 			#pragma vertex bigi_toon_vert
@@ -290,11 +297,13 @@ Shader "Bigi/AudioLink_frag" {
 			ZWrite Off
 			ZTest [_ZTestOL]
 			AlphaToMask On
+			// Check if Stencil bits are set right and do not draw on those bits
+			// Can't use my own bit as a flag since vrslgi needs 148 exactly to not draw over the avatar
 			Stencil {
-				Ref 0
-				ReadMask 32
+				Ref [_MainStencilRef]
 				WriteMask 0
-				Comp GEqual
+				ReadMask [_MainStencilWriteMask]
+				Comp NotEqual
 			}
 			CGPROGRAM
 			#pragma vertex vert

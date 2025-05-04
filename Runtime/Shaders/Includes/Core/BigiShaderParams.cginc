@@ -5,6 +5,7 @@
 #define BIGI_UNIFORMS
 
 uniform float _Alpha_Threshold;
+uniform float _Alpha_Multiplier;
 
 #ifndef BIGI_UNIFORMS_DMXAL
 #define BIGI_UNIFORMS_DMXAL

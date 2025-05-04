@@ -50,6 +50,12 @@ namespace cc.dingemans.bigibas123.bigishader
 				});
 			}
 
+			if (mats.All(m => !UsesAlpha.GetBool(m)))
+			{
+				materialProperties.RemoveAll(p => p.name == "_" + nameof(Alpha_Threshold));
+				materialProperties.RemoveAll(p => p.name == "_" + nameof(Alpha_Multiplier));
+			}
+
 			if (mats.All(m => !Decal1Enabled.GetBool(m)) && !m_ShowHiddenProps)
 			{
 				materialProperties.RemoveAll(p =>
@@ -197,7 +203,7 @@ namespace cc.dingemans.bigibas123.bigishader
 						(CompareFunction)ZTestTFWB.GetInt(m) != CompareFunction.Never);
 					if (Alpha_Threshold.GetFloat(m) < 0.0f)
 					{
-						Alpha_Threshold.Set(m, 0.0f);
+						Alpha_Threshold.Set(m, 0.99f);
 					}
 				}
 				else
@@ -206,6 +212,7 @@ namespace cc.dingemans.bigibas123.bigishader
 					ZTestTFWB.Set(m, (int)CompareFunction.Never);
 					ZWriteTFWB.Set(m, false);
 					Alpha_Threshold.Set(m, -0.01f);
+					Alpha_Multiplier.Set(m, 1.0f);
 				}
 			}
 
@@ -443,6 +450,7 @@ namespace cc.dingemans.bigibas123.bigishader
 		UsesAlpha,
 		Cull,
 		Alpha_Threshold,
+		Alpha_Multiplier,
 		ZWriteOFWB,
 		ZTestOFWB,
 		ZWriteTFWB,
@@ -527,5 +535,8 @@ namespace cc.dingemans.bigibas123.bigishader
 		Decal3_ST,
 		Decal3_TexelSize,
 		Decal3_HDR,
+		MainStencilRef,
+		MainStencilWriteMask,
+		MainStencilPass
 	}
 }

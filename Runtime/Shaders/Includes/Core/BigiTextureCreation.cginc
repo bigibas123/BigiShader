@@ -63,6 +63,9 @@ namespace bigi_texture
 	float4 GetTexColor(const in float2 uv)
 	{
 		float4 color = GET_TEX_COLOR_MAINTEX(uv);
+		#ifdef DO_ALPHA_PLS
+		color.a  *= _Alpha_Multiplier;
+		#endif
 		#ifdef DECAL_1_ENABLED
 		if ((_Decal1_Opacity > Epsilon) && (IsInsidePos(_Decal1_Position,uv)))
 		{
