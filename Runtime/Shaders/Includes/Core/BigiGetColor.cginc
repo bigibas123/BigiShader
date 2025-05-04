@@ -15,6 +15,7 @@
 #ifndef GET_MASK_COLOR
 	#include <HLSLSupport.cginc>
 	UNITY_DECLARE_TEX2D_NOSAMPLER(_Mask);
+	float4 _Mask_ST;
 	#define GET_MASK_COLOR(uv) SAMPLE_TEX2D(_Mask, uv)
 #endif
 
