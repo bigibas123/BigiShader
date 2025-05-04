@@ -20,7 +20,7 @@ Shader "Bigi/AudioLink_frag" {
 
 		[Header(Extra textures)]
 		[Space]
-		[NoScaleOffset] _Mask ("Mask", 2D) = "black" {}
+		_Mask ("Mask", 2D) = "black" {}
 		_EmissionStrength ("Emission strength", Range(0.0,2.0)) = 1.0
 		[Space]
 		_Spacey ("Spacey Texture", 2D) = "black" {}
@@ -105,8 +105,8 @@ Shader "Bigi/AudioLink_frag" {
 		[Header(Stencil settings (NOT ANIMATABLE))]
 		[Space]
 		[IntRange] _MainStencilRef ("Write this stencil value for the main avatar passes", Range(0, 255)) = 148
-        [IntRange] _MainStencilWriteMask ("Use this mask while writing main passes", Range(0, 255)) = 255
-        [Enum(UnityEngine.Rendering.StencilOp)] _MainStencilPass ("Operation on the value of the stencil buffer in main passes", Float) = 2
+		[IntRange] _MainStencilWriteMask ("Use this mask while writing main passes", Range(0, 255)) = 255
+		[Enum(UnityEngine.Rendering.StencilOp)] _MainStencilPass ("Operation on the value of the stencil buffer in main passes", Float) = 2
 
 		[Header(Multi Texture)]
 		[Space]

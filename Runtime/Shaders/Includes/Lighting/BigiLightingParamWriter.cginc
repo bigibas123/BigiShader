@@ -13,7 +13,8 @@ namespace b_light
 {
 	void setVars()
 	{
-		IFZEROAPPLY(_Alpha_Threshold, 1.0);
+		IFZEROAPPLY(_Alpha_Threshold, 1.0 - Epsilon);
+		IFZEROAPPLY(_Alpha_Multiplier, 1.0);
 		IFZEROAPPLY(_DMX_Weight, 0.0);
 		IFZEROAPPLY(_AL_Theme_Weight, 0.0);
 		IFZEROAPPLY(_DMX_Group, 0.0);
