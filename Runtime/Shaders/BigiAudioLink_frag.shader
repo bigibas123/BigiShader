@@ -253,9 +253,11 @@ Shader "Bigi/AudioLink_frag" {
 			Blend SrcAlpha One
 			Stencil {
 				Ref [_MainStencilRef]
-				Comp Always
-				WriteMask [_MainStencilWriteMask]
-				Pass [_MainStencilPass]
+				Comp Equal
+				ReadMask [_MainStencilWriteMask]
+				WriteMask 0
+				Pass Keep
+				Fail Keep
 			}
 			CGPROGRAM
 			#pragma vertex bigi_toon_vert
@@ -304,6 +306,9 @@ Shader "Bigi/AudioLink_frag" {
 				WriteMask 0
 				ReadMask [_MainStencilWriteMask]
 				Comp NotEqual
+				Pass Keep
+				Fail Keep
+				
 			}
 			CGPROGRAM
 			#pragma vertex vert
