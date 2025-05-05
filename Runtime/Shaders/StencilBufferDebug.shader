@@ -20,8 +20,7 @@
         struct appdata
         {
             float4 vertex : POSITION;
-            float2 uv1 : TEXCOORD1; //Lightmap Uvs
-            float2 uv2 : TEXCOORD2; //Realtime lightmap Uvs
+            float4 uv0 : TEXCOORD0;
             uint vertexId : SV_VertexID;
             UNITY_VERTEX_INPUT_INSTANCE_ID
         };
@@ -29,7 +28,7 @@
         struct v2f
         {
             UNITY_POSITION(pos); //float4 pos : SV_POSITION;
-            float4 lightmapUV : TEXCOORD0;
+            float4 uv : TEXCOORD0;
             UNITY_VERTEX_INPUT_INSTANCE_ID
             UNITY_VERTEX_OUTPUT_STEREO
         };
@@ -43,8 +42,7 @@
             UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
             
             o.pos = UnityObjectToClipPos(v.vertex);
-            o.lightmapUV.xy = v.uv1.xy; // * unity_LightmapST.xy + unity_LightmapST.zw;
-            o.lightmapUV.zw = v.uv2.xy; // * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
+            o.uv = v.uv0;
             return o;
         }
 
@@ -100,7 +98,7 @@
                     break;
                 }
             }
-            half2 currentPos = (((abs(i.lightmapUV.xy) * 64.0) % 1.0)) * 3.0;
+            half2 currentPos = (((abs(i.uv.xy) * 64.0) % 1.0)) * 3.0;
             const float eps = 0.1;
             if ((currentPos.x < eps && currentPos.x > -eps) || (currentPos.y < eps && currentPos.y > -eps))
             {
