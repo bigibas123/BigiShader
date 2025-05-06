@@ -5,7 +5,6 @@ Shader "Bigi/LogoPlane" {
 		_AL_Weight("Audiolink Intensity",Range(0.0,1.0)) = 0.0
 		_MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.2
 		[Toggle(ALPHA_MUL)] _Alpha_Multiply("Multiply alpha with itself", Float) = 1
-		[Toggle(LTCGI_ENABLED)] _EnableLTCGI ("Enable LTCGI", Range(0.0,1.0)) = 0.0
 	}
 	SubShader {
 		Blend SrcAlpha OneMinusSrcAlpha
@@ -109,7 +108,6 @@ Shader "Bigi/LogoPlane" {
 			Blend SrcAlpha OneMinusSrcAlpha
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
-			#pragma shader_feature_local_fragment LTCGI_ENABLED
 			#pragma shader_feature_local_fragment ALPHA_MUL
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
@@ -130,7 +128,6 @@ Shader "Bigi/LogoPlane" {
 			Blend One One
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
-			#pragma shader_feature_local_fragment LTCGI_ENABLED
 			#pragma shader_feature_local_fragment ALPHA_MUL
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
@@ -153,7 +150,6 @@ Shader "Bigi/LogoPlane" {
 			Blend SrcAlpha OneMinusSrcAlpha
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
-			#pragma shader_feature_local_fragment LTCGI_ENABLED
 			#pragma shader_feature_local_fragment ALPHA_MUL
 
 			#pragma vertex vert alpha
@@ -176,7 +172,6 @@ Shader "Bigi/LogoPlane" {
 			Blend One One
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
-			#pragma shader_feature_local_fragment LTCGI_ENABLED
 			#pragma shader_feature_local_fragment ALPHA_MUL
 
 			#pragma vertex vert alpha

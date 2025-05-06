@@ -235,19 +235,6 @@ namespace cc.dingemans.bigibas123.bigishader
 				ZWriteTFWB.Set(m, false);
 			}
 
-			{
-				bool ltcgiIncluded;
-				#if LTCGI_INCLUDED
-				ltcgiIncluded = true;
-				#else
-				ltcgiIncluded = false;
-				#endif
-				// ReSharper disable ConditionIsAlwaysTrueOrFalse
-				EnableLTCGI.Set(m, ltcgiIncluded);
-				m.shader.keywordSpace.FindKeyword("LTCGI_ENABLED").Set(m, ltcgiIncluded);
-				// ReSharper restore ConditionIsAlwaysTrueOrFalse
-			}
-
 			if (SpecSmoothMap.TexturePresent(m) && EnableSpecularSmooth.Present(m))
 			{
 				bool hasSpecMap = (SpecSmoothMap.GetTexture(m) is not null);
@@ -485,7 +472,6 @@ namespace cc.dingemans.bigibas123.bigishader
 		LightEnvironmentMultiplier,
 		LightMainMultiplier,
 		VRSLGIStrength,
-		EnableLTCGI,
 		LTCGIStrength,
 		VRCLVStrength,
 		OcclusionMap,

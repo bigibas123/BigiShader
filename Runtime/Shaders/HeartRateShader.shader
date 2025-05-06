@@ -5,7 +5,6 @@ Shader "Bigi/HeartRate" {
 		[Toggle(FLIP_XY)] _FlipXy ("Flip X&Y UV", Range(0.0,1.0)) = 1.0
 		[Toggle(INVERT_Y)] _InvertY ("Invert Y UV", Range(0.0,1.0)) = 0.0
 		[Toggle(INVERT_X)] _InvertX ("Invert X UV", Range(0.0,1.0)) = 0.0
-		[Toggle(LTCGI_ENABLED)] _EnableLTCGI ("Enable LTCGI", Range(0.0,1.0)) = 0.0
 	}
 	SubShader {
 		Blend SrcAlpha OneMinusSrcAlpha
@@ -14,7 +13,6 @@ Shader "Bigi/HeartRate" {
 		}
 
 		CGINCLUDE
-		#pragma shader_feature_local_fragment LTCGI_ENABLED
 		#pragma shader_feature_local_vertex FLIP_XY
 		#pragma shader_feature_local_vertex INVERT_Y
 		#pragma shader_feature_local_vertex INVERT_X

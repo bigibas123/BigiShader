@@ -16,9 +16,7 @@
 #include "../External/VRSL/VRSLGI-ParameterSettings.cginc"
 #endif
 
-#ifdef LTCGI_ENABLED
 #include "../External/LTCGI/LTCGI-Functions.cginc"
-#endif
 
 namespace b_light
 {
@@ -144,14 +142,12 @@ namespace b_light
     	output.rgb += GetLightVolumesLighting(wi) * albedo;
     	#endif
 
-        #ifdef LTCGI_ENABLED
         UnityIndirect ltcgiIndirect;
         ltcgiIndirect.diffuse = 0;
         ltcgiIndirect.specular = 0;
         get_LTCGI(wi, ltcgiIndirect, specularTint.a);
         output.rgb += ltcgiIndirect.diffuse * albedo;
         output.rgb += ltcgiIndirect.specular;
-        #endif
 
         #ifdef UNITY_PASS_FORWARDBASE
         b_vrslgi::setParams();

@@ -5,7 +5,7 @@
 
 #include <UnityLightingCommon.cginc>
 #include "../../Core/BigiShaderStructs.cginc"
-#include "Packages/at.pimaker.ltcgi/Shaders/LTCGI_structs.cginc"
+#include <Packages/at.pimaker.ltcgi/Shaders/LTCGI_structs.cginc>
 
 void callback_diffuse(inout UnityIndirect acc, in ltcgi_output output);
 void callback_specular(inout UnityIndirect acc, in ltcgi_output output);
@@ -16,7 +16,7 @@ void callback_specular(inout UnityIndirect acc, in ltcgi_output output);
 #define LTCGI_V2_SPECULAR_CALLBACK callback_specular
 
 
-#include "Packages/at.pimaker.ltcgi/Shaders/LTCGI.cginc"
+#include <Packages/at.pimaker.ltcgi/Shaders/LTCGI.cginc>
 #include "../../Core/BigiShaderParams.cginc"
 
 // now we declare LTCGI APIv2 functions for real
