@@ -39,6 +39,7 @@ namespace b_light
 		IFZEROAPPLY(_LightSmoothness, 1.0);
 		IFZEROAPPLY(_LightSteps, 128);
 		IFZEROAPPLY(_LTCGIStrength, 1.0);
+		IFZEROAPPLY(_VRCLVStrength, 1.0);
 
 		IFZEROAPPLY(_LightVertexMultiplier, 1.0);
 		IFZEROAPPLY(_LightEnvironmentMultiplier, 1.0);

@@ -51,6 +51,7 @@ uniform float _DoMirrorThing;
 #endif
 
 uniform float _LTCGIStrength;
+uniform float _VRCLVStrength;
 
 uniform half _LightVertexMultiplier;
 uniform half _LightEnvironmentMultiplier;

@@ -2,6 +2,15 @@
 {
     SubShader
     {
+        
+        Stencil
+        {
+            Comp Equal
+            WriteMask 0
+            Pass Keep
+        }
+        Cull Off
+        ZWrite Off
         Blend SrcAlpha OneMinusSrcAlpha
         Tags
         {
@@ -120,12 +129,6 @@
         #define FRAG(stencilVal) fixed4 frag(v2f i) : SV_Target {  return doFrag(i,stencilVal); }
         ENDHLSL
 
-        Stencil
-        {
-            Comp Equal
-            WriteMask 0
-            Pass Keep
-        }
 
         Pass
         {

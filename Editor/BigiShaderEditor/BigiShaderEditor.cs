@@ -487,6 +487,7 @@ namespace cc.dingemans.bigibas123.bigishader
 		VRSLGIStrength,
 		EnableLTCGI,
 		LTCGIStrength,
+		VRCLVStrength,
 		OcclusionMap,
 		OcclusionMap_ST,
 		OcclusionMap_TexelSize,

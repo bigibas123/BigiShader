@@ -9,6 +9,8 @@
 
 #include "../Core/BigiShaderStructs.cginc"
 
+// TODO Ifdef on RED_SIM
+#include "../External/VRCLV/VRCLightVolumes.cginc"
 
 #ifdef UNITY_PASS_FORWARDBASE
 #include "../External/VRSL/VRSLGI-ParameterSettings.cginc"
@@ -136,6 +138,11 @@ namespace b_light
                                 vertexEnvMainStrengths.y)
         );
         float4 output = unity_pbs_output;
+	
+    	// TODO Define guards for enable/disable include until license is figured out
+    	#ifdef UNITY_PASS_FORWARDBASE
+    	output.rgb += GetLightVolumesLighting(wi) * albedo;
+    	#endif
 
         #ifdef LTCGI_ENABLED
         UnityIndirect ltcgiIndirect;
