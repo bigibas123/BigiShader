@@ -261,6 +261,7 @@ Shader "Bigi/AudioLink_frag" {
 			}
 			CGPROGRAM
 			#pragma vertex bigi_toon_vert
+			#pragma geometry bigi_geom
 			#pragma fragment frag
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
 			#include_with_pragmas "./Includes/Pragmas/CustomVariants.cginc"
@@ -268,6 +269,7 @@ Shader "Bigi/AudioLink_frag" {
 			#include "./Includes/Lighting/NormalDefines.cginc"
 			#include "./Includes/Lighting/LightUtilsDefines.cginc"
 			#include "./Includes/Effects/BigiEffects.cginc"
+			#include "./Includes/GeomProcessor.cginc"
 
 			fragOutput frag(v2f i)
 			{
