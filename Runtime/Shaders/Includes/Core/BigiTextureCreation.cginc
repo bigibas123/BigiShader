@@ -1,6 +1,7 @@
 ﻿#ifndef BIGI_TEXTURE_CREATION_H
 #define BIGI_TEXTURE_CREATION_H
 #include "./BigiMainTex.cginc"
+#include "../External/ProTV/BigiProTV.cginc"
 
 #define NOT_ONE (1.0 + Epsilon)
 
@@ -87,6 +88,13 @@ namespace bigi_texture
 			color = DoMix(color, decalColor, _Decal3_Opacity, _Decal3_BlendMode);
 		}
 		#endif
+		PROTV_PRESENT(tvAvailable);
+		if ((_SquareTVTest || (tvAvailable && _TV_Square_Opacity > Epsilon)) && IsInsidePos(_TV_Square_Position, uv))
+		{
+			const float4 decalColor = GET_PROTV(CalcDecalUv(_TV_Square_Position, uv));
+			color = DoMix(color, decalColor, max(_TV_Square_Opacity, _SquareTVTest), 0.0);
+		}
+
 		return color;
 	}
 	#endif

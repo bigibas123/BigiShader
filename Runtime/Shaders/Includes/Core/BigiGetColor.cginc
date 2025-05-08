@@ -2,13 +2,8 @@
 #define BIGI_GETCOLOR_H
 
 #ifndef GET_TEX_COLOR
-	#ifndef PROTV_SQUARE_ENABLED
 		#include "./BigiTextureCreation.cginc"
 		#define GET_TEX_COLOR(uv) bigi_texture::GetTexColor(uv)
-	#else
-		#include "../External/ProTV/BigiProTV.cginc"
-		#define GET_TEX_COLOR(uv) b_protv_util::getTexColor(uv)
-	#endif
 #endif
 
 #ifdef SAMPLE_TEX2D

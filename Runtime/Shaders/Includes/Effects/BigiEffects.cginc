@@ -81,16 +81,16 @@ namespace b_effects
 		{
 			PROTV_PRESENT(tvPresent);
 			//ProTV Check
-			if (!tvPresent)
+			if (tvPresent)
+			{
+				float4 protvColor = GET_PROTV(uv);
+				doMixProperly(mix, protvColor.rgb, mask.g * protvColor.a, 1.0);
+			}
+			else
 			{
 				// no video texture
 				float4 spaceyColor = GET_SPACEY(staticTexturePos);
 				doMixProperly(mix, spaceyColor.rgb, mask.g * spaceyColor.a, 1.0);
-			}
-			else
-			{
-				float4 protvColor = GET_PROTV(uv);
-				doMixProperly(mix, protvColor.rgb, mask.g * protvColor.a, 1.0);
 			}
 		}
 
