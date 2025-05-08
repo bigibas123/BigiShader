@@ -5,7 +5,6 @@
 //#pragma enable_d3d11_debug_symbols
 //#pragma use_dxc
 
-//#pragma warning(disable : 3568) // unknown pragma ignored
 #pragma warning (default : 3571) // "pow(f,e) will not work for negative f"; however in majority of our calls to pow we know f is not negative
 #pragma warning (default : 3206) // implicit truncation of vector type
 #pragma warning (default : 3205) // conversion of larger type to smaller

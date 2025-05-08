@@ -60,7 +60,7 @@ namespace b_effects
 		{
 			GET_SOUND_COLOR(soundC);
 			float maskWeight;
-			if (_AL_Mode != b_sound::AudioLinkMode::ALM_WireFrame)
+			if (bsoundSet.AL_Mode != b_sound::AudioLinkMode::ALM_WireFrame)
 			{
 				maskWeight = mask.b;
 			}

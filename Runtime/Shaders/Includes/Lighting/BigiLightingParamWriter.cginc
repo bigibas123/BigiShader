@@ -45,7 +45,14 @@ namespace b_light
 		IFZEROAPPLY(_LightEnvironmentMultiplier, 1.0);
 		IFZEROAPPLY(_LightMainMultiplier, 1.0);
 
-		IFZEROAPPLY(_AL_Mode, 0.0)
+		IFZEROAPPLY(_AL_Mode, 0.0);
+		#ifdef BIGI_BLOCK_WIREFRAME
+		_AL_BlockWireFrame = 1;
+		#else
+		IFZEROAPPLY(_AL_BlockWireFrame, 0.0);
+		#endif
+		
+		
 		#ifdef ROUNDING_VAR_NAME
 		IFZEROAPPLY(ROUNDING_VAR_NAME, 0.0);
 		#else

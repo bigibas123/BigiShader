@@ -11,6 +11,7 @@ uniform float _Alpha_Multiplier;
 #define BIGI_UNIFORMS_DMXAL
 
 uniform uint _AL_Mode;
+uniform uint _AL_BlockWireFrame;
 
 uniform float _DMX_Weight;
 uniform float _AL_Theme_Weight;

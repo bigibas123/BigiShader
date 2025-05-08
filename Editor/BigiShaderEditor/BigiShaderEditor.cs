@@ -480,6 +480,7 @@ namespace cc.dingemans.bigibas123.bigishader
 		OcclusionMap_HDR,
 		OcclusionStrength,
 		AL_Mode,
+		AL_BlockWireFrame,
 		AL_Theme_Weight,
 		AL_TC_BassReactive,
 		AL_WireFrameWidth,

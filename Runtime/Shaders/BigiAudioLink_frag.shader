@@ -81,6 +81,7 @@ Shader "Bigi/AudioLink_frag" {
 		[Header(Audiolink)]
 		[Space]
 		[Enum(Flat,0,CenterOut,1,WireFrame,2)] _AL_Mode ("Audiolink mode", Range(0,2)) = 0
+		[ToggleUI] _AL_BlockWireFrame ("Block wireframe mode, fallback to CenterOut", Range(0,1)) = 0
 		[Space]
 		_AL_Theme_Weight("Weight", Range(0.0, 1.0)) = 1.0
 		_AL_TC_BassReactive("Bassreactivity", Range(0.0,1.0)) = 0.75
