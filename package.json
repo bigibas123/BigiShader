@@ -2,7 +2,7 @@
   "name": "cc.dingemans.bigibas123.bigishader",
   "displayName": "Bigibas123's shaders",
   "version": "1.6.0",
-  "license": "LGPL-3.0",
+  "license": "LGPL-3.0-only",
   "author": {
 	"name": "bigibas123"
   },

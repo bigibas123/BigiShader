@@ -1,4 +1,4 @@
-Shader "Bigi/AudioLink_frag" {
+Shader "Bigi/Main" {
 	Properties {
 		[MainTexture] _MainTex ("Texture", 2D) = "black" {}
 		[Toggle(DO_ALPHA_PLS)] _UsesAlpha("Is transparent (NOT ANIMATABLE)", Float) = 1
