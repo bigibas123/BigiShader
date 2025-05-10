@@ -127,7 +127,6 @@ Shader "Bigi/HeartRate" {
 			Blend SrcAlpha OneMinusSrcAlpha
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
-			#pragma shader_feature_local_fragment _ ALPHA_MUL
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
 			ENDCG
@@ -147,7 +146,6 @@ Shader "Bigi/HeartRate" {
 			Blend One One
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
-			#pragma shader_feature_local_fragment _ ALPHA_MUL
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
 			ENDCG
@@ -169,8 +167,6 @@ Shader "Bigi/HeartRate" {
 			Blend SrcAlpha OneMinusSrcAlpha
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
-			#pragma shader_feature_local_fragment _ ALPHA_MUL
-
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
 			ENDCG
@@ -191,8 +187,6 @@ Shader "Bigi/HeartRate" {
 			Blend One One
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
-			#pragma shader_feature_local_fragment _ ALPHA_MUL
-
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
 			ENDCG
