@@ -10,17 +10,24 @@
 
 namespace b_light
 {
-    float3 GetLightVolumesLighting(const in world_info wi)
-    {
-        float3 L0 = float3(0, 0, 0);
-        float3 L1r = float3(0, 0, 0);
-        float3 L1g = float3(0, 0, 0);
-        float3 L1b = float3(0, 0, 0);
+	float3 GetLightVolumesLighting(const in world_info wi)
+	{
+		if (_UdonLightVolumeEnabled && _UdonLightVolumeCount > 0)
+		{
+			float3 L0 = float3(0, 0, 0);
+			float3 L1r = float3(0, 0, 0);
+			float3 L1g = float3(0, 0, 0);
+			float3 L1b = float3(0, 0, 0);
 
-        LightVolumeSH(wi.worldPos, L0, L1r, L1g, L1b);
+			LightVolumeSH(wi.worldPos, L0, L1r, L1g, L1b);
 
-        return LightVolumeEvaluate(wi.normal, L0, L1r, L1g, L1b) * _VRCLVStrength;
-    }
+			return LightVolumeEvaluate(wi.normal, L0, L1r, L1g, L1b) * _VRCLVStrength;
+		}
+		else
+		{
+			return float3(0.0, 0.0, 0.0);
+		}
+	}
 }
 
 
