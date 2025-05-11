@@ -2,7 +2,12 @@ fileFormatVersion: 2
 guid: 8a99ff97b2650d7429bac9b889aac4e2
 ShaderImporter:
   externalObjects: {}
-  defaultTextures: []
+  defaultTextures:
+  - _Spacey: {fileID: 2800000, guid: d090602925af39f48acceb55e58c25bb, type: 3}
+  - _Decal1: {fileID: 2800000, guid: d090602925af39f48acceb55e58c25bb, type: 3}
+  - _Decal2: {fileID: 2800000, guid: d090602925af39f48acceb55e58c25bb, type: 3}
+  - _Decal3: {fileID: 2800000, guid: d090602925af39f48acceb55e58c25bb, type: 3}
+  - _SpecSmoothMap: {fileID: 2800000, guid: d090602925af39f48acceb55e58c25bb, type: 3}
   nonModifiableTextures: []
   userData: 
   assetBundleName: 
