@@ -1,5 +1,10 @@
 ﻿Shader "Bigi/StencilBufferDebug"
 {
+    
+    Properties
+    {
+        [IntRange] _Scale ("Grid scale",Range(1,128)) = 64
+    }
     SubShader
     {
         
@@ -25,7 +30,8 @@
         #include <UnityInstancing.cginc>
         #define SHIFT_AND_BYTE(val,shift) (((val >> (shift * 8)) & 0xFF) / 16.0)
         #define CONVERT_HEX(val) float3(SHIFT_AND_BYTE(0x##val,2),SHIFT_AND_BYTE(0x##val,1),SHIFT_AND_BYTE(0x##val,0))
-
+        uniform float _Scale;
+        
         struct appdata
         {
             float4 vertex : POSITION;
@@ -107,7 +113,7 @@
                     break;
                 }
             }
-            half2 currentPos = (((abs(i.uv.xy) * 64.0) % 1.0)) * 3.0;
+            half2 currentPos = (((abs(i.uv.xy) * _Scale) % 1.0)) * 3.0;
             const float eps = 0.1;
             if ((currentPos.x < eps && currentPos.x > -eps) || (currentPos.y < eps && currentPos.y > -eps))
             {
