@@ -74,7 +74,7 @@ Shader "Bigi/Main" {
 		_LightVertexMultiplier ("Vertex Multiplier",Range(0.0,5.0)) = 1.0
 		_LightEnvironmentMultiplier ("Environment Multiplier",Range(0.0,5.0)) = 1.0
 		_LightMainMultiplier ("Main Light Multiplier",Range(0.0,5.0)) = 1.0
-		_VRSLGIStrength ("VRSL-GI Strength", Range(0.0,2.0)) = 0.25
+		_VRSLGIStrength ("VRSL-GI Strength", Range(0.0,5.0)) = 0.25
 		_LTCGIStrength ("LTCGI Strenght", Range(0.0,5.0)) = 1.0
 		_VRCLVStrength ("VRC Light Volumes Strength",Range(0.0,5.0)) = 1.0
 
