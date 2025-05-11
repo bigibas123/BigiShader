@@ -1,8 +1,6 @@
 ﻿Shader "Bigi/Skybox/Transparent"
 {
-    Properties
-    {
-    }
+    Properties {}
 
     SubShader
     {
@@ -41,7 +39,7 @@
 
         half4 skybox_frag(v2f i)
         {
-            return half4(0,0,0, 0);
+            return half4(0, 0, 0, 0);
         }
         ENDCG
 
