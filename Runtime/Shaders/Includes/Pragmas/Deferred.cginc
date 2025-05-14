@@ -4,6 +4,4 @@
 #include_with_pragmas "./VRCLighting.cginc"
 #pragma multi_compile_prepassfinal
 
-#define DEFERRED_PASS
-
 #endif

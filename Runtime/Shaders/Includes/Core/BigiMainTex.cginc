@@ -2,34 +2,32 @@
 #define BIGI_MAINTEX_H
 #ifndef NO_MAINTEX
 #ifndef MULTI_TEXTURE
-	#ifndef MAINTEX_NAME
-	#include <HLSLSupport.cginc>
-	#define MAINTEX_NAME _MainTex
-	UNITY_DECLARE_TEX2D(MAINTEX_NAME);
-	float4 _MainTex_ST;
-	#endif
 
 	#ifndef GET_TEX_COLOR_MAINTEX
 	#include <HLSLSupport.cginc>
+		#ifndef MAINTEX_NAME
+			#define MAINTEX_NAME _MainTex
+			UNITY_DECLARE_TEX2D(MAINTEX_NAME);
+		float4 _MainTex_ST;
+		#endif
 	#define GET_TEX_COLOR_MAINTEX(uv) UNITY_SAMPLE_TEX2D(MAINTEX_NAME,uv)
 	#endif
 
 #else
-	#ifndef MAINTEX_NAME
-	#include <HLSLSupport.cginc>
-	#define MAINTEX_NAME _MainTexArray
-	UNITY_DECLARE_TEX2DARRAY(MAINTEX_NAME);
-	float4 _MainTexArray_ST;
-	#endif
-
-	#ifndef OTHER_TEXTURE_ID_REF
-		uniform int _OtherTextureId;
-		#define OTHER_TEXTURE_ID_REF _OtherTextureId
-	#endif
 
 	#ifndef GET_TEX_COLOR_MAINTEX
 	#include <HLSLSupport.cginc>
-	#define GET_TEX_COLOR_MAINTEX(uv) UNITY_SAMPLE_TEX2DARRAY(_MainTexArray,float3(uv,OTHER_TEXTURE_ID_REF))
+		#ifndef OTHER_TEXTURE_ID_REF
+			uniform int _OtherTextureId;
+			#define OTHER_TEXTURE_ID_REF _OtherTextureId
+		#endif
+		#ifndef MAINTEX_NAME
+			#define MAINTEX_NAME _MainTexArray
+			UNITY_DECLARE_TEX2DARRAY(MAINTEX_NAME);
+			float4 _MainTexArray_ST;
+		#endif
+
+		#define GET_TEX_COLOR_MAINTEX(uv) UNITY_SAMPLE_TEX2DARRAY(_MainTexArray,float3(uv,OTHER_TEXTURE_ID_REF))
 	#endif
 
 #endif

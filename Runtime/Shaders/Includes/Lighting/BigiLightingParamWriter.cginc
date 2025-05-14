@@ -7,7 +7,8 @@
 #define Epsilon UNITY_HALF_MIN
 #endif
 
-#define IFZEROAPPLY(varName, val) if (varName < Epsilon && varName > -Epsilon){ varName = val;}
+//#define IFZEROAPPLY(varName, val) if (varName < Epsilon && varName > -Epsilon){ varName = val;}
+#define IFZEROAPPLY(varName, val) {varName = val;}
 
 namespace b_light
 {
@@ -38,12 +39,19 @@ namespace b_light
 		IFZEROAPPLY(_Voronoi, 0.0);
 		IFZEROAPPLY(_LightSmoothness, 1.0);
 		IFZEROAPPLY(_LightSteps, 128);
+		#if defined(UNITY_PASS_FORWARDBASE)
 		IFZEROAPPLY(_LTCGIStrength, 1.0);
 		IFZEROAPPLY(_VRCLVStrength, 1.0);
+		#endif
 
 		IFZEROAPPLY(_LightVertexMultiplier, 1.0);
 		IFZEROAPPLY(_LightEnvironmentMultiplier, 1.0);
-		IFZEROAPPLY(_LightMainMultiplier, 1.0);
+		
+		#if defined(UNITY_PASS_FORWARDBASE) || defined(UNITY_PASS_FORWARDADD)
+		IFZEROAPPLY(BIGI_LIGHT_MAIN_MULTI, 1.0);
+		#endif
+		
+		IFZEROAPPLY(_FinalLightMultiply, 1.0);
 
 		IFZEROAPPLY(_AL_Mode, 0.0);
 		#ifdef BIGI_BLOCK_WIREFRAME

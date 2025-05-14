@@ -42,7 +42,6 @@ namespace cc.dingemans.bigibas123.bigishader
 							or nameof(Decal1Enabled)
 							or nameof(Decal2Enabled)
 							or nameof(Decal3Enabled)
-							or nameof(EnableSpecularSmooth)
 							or nameof(MultiTexture)
 							=> true,
 						_ => false
@@ -233,21 +232,6 @@ namespace cc.dingemans.bigibas123.bigishader
 			if (!ZWriteOFWB.GetBool(m))
 			{
 				ZWriteTFWB.Set(m, false);
-			}
-
-			if (SpecSmoothMap.TexturePresent(m) && EnableSpecularSmooth.Present(m))
-			{
-				bool hasSpecMap = (SpecSmoothMap.GetTexture(m) is not null);
-				LocalKeyword kw = m.shader.keywordSpace.FindKeyword("SPECSMOOTH_MAP_ENABLED");
-				if (EnableSpecularSmooth.GetBool(m) != hasSpecMap)
-				{
-					EnableSpecularSmooth.Set(m, hasSpecMap);
-				}
-
-				if (kw.IsEnabled(m) != hasSpecMap)
-				{
-					kw.Set(m, hasSpecMap);
-				}
 			}
 
 			Decal1Enabled.Set(m, Decal1.TexturePresent(m) && Decal1.GetTexture(m) is not null);
@@ -454,7 +438,6 @@ namespace cc.dingemans.bigibas123.bigishader
 		SpecSmoothMap_ST,
 		SpecSmoothMap_TexelSize,
 		SpecSmoothMap_HDR,
-		EnableSpecularSmooth,
 		Spacey,
 		Spacey_ST,
 		Spacey_TexelSize,
@@ -468,9 +451,11 @@ namespace cc.dingemans.bigibas123.bigishader
 		LightSteps,
 		MinAmbient,
 		Transmissivity,
+		FinalLightMultiply,
 		LightVertexMultiplier,
 		LightEnvironmentMultiplier,
 		LightMainMultiplier,
+		LightAddMultiplier,
 		VRSLGIStrength,
 		LTCGIStrength,
 		VRCLVStrength,

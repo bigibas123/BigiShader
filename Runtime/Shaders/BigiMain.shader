@@ -53,8 +53,7 @@ Shader "Bigi/Main" {
 		[Header(Specular and Smooth)]
 		[Space]
 		[NoScaleOffset] _SpecSmoothMap ("Specular (rgb) and Smoothness (a) map", 2D) = "black" {}
-		[Toggle(SPECSMOOTH_MAP_ENABLED)] _EnableSpecularSmooth ("Enable Specular & Smoothness map (NOT ANIMATABLE)", Range(0.0,1.0)) = 0.0
-
+		
 		[Header(Ambient Occlusion)]
 		[Space]
 		[NoScaleOffset] _OcclusionMap ("Ambient occlusion map", 2D) = "white" {}
@@ -71,9 +70,11 @@ Shader "Bigi/Main" {
 
 		[Header(Lighting System strengths)]
 		[Space]
+		_FinalLightMultiply ("Master Light Multiplier",Range(0.0,5.0)) = 1.0
 		_LightVertexMultiplier ("Vertex Multiplier",Range(0.0,5.0)) = 1.0
 		_LightEnvironmentMultiplier ("Environment Multiplier",Range(0.0,5.0)) = 1.0
 		_LightMainMultiplier ("Main Light Multiplier",Range(0.0,5.0)) = 1.0
+		_LightAddMultiplier ("Added Pixel Light Multiplier",Range(0.0,5.0)) = 1.0
 		_VRSLGIStrength ("VRSL-GI Strength", Range(0.0,5.0)) = 0.25
 		_LTCGIStrength ("LTCGI Strenght", Range(0.0,5.0)) = 1.0
 		_VRCLVStrength ("VRC Light Volumes Strength",Range(0.0,5.0)) = 1.0

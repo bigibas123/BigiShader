@@ -51,12 +51,25 @@ uniform uint _LightSteps;
 uniform float _DoMirrorThing;
 #endif
 
+#ifdef UNITY_PASS_FORWARDBASE
 uniform float _LTCGIStrength;
 uniform float _VRCLVStrength;
+#endif
 
 uniform half _LightVertexMultiplier;
 uniform half _LightEnvironmentMultiplier;
+
+#if defined(UNITY_PASS_FORWARDBASE)
 uniform half _LightMainMultiplier;
+#define BIGI_LIGHT_MAIN_MULTI (_LightMainMultiplier)
+#elif defined(UNITY_PASS_FORWARDADD)
+uniform half _LightAddMultiplier;
+#define BIGI_LIGHT_MAIN_MULTI (_LightAddMultiplier)
+#else
+#define BIGI_LIGHT_MAIN_MULTI (0.0)
+#endif
+
+uniform half _FinalLightMultiply;
 
 #ifndef ROUNDING_VAR_NAME
 		uniform float _Rounding;

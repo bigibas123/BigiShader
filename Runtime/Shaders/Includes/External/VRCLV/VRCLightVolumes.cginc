@@ -10,8 +10,9 @@
 
 namespace b_light
 {
-	float3 GetLightVolumesLighting(const in world_info wi)
+	void GetLightVolumesLighting(const in world_info wi, inout UnityIndirect result)
 	{
+		#ifdef UNITY_PASS_FORWARDBASE
 		if (_UdonLightVolumeEnabled && _UdonLightVolumeCount > 0)
 		{
 			float3 L0 = float3(0, 0, 0);
@@ -21,12 +22,21 @@ namespace b_light
 
 			LightVolumeSH(wi.worldPos, L0, L1r, L1g, L1b);
 
-			return LightVolumeEvaluate(wi.normal, L0, L1r, L1g, L1b) * _VRCLVStrength;
+			// Derived from: OneMinusReflectivityFromMetallic()
+			// unity_ColorSpaceDielectricSpec.a - metallic * unity_ColorSpaceDielectricSpec.a = oneMinusReflectivity
+			// metallic * unity_ColorSpaceDielectricSpec.a = unity_ColorSpaceDielectricSpec.a - oneMinusReflectivity
+			// metallic = (unity_ColorSpaceDielectricSpec.a - oneMinusReflectivity) / unity_ColorSpaceDielectricSpec.a
+			//float metallic = ((unity_ColorSpaceDielectricSpec.a - wi.oneMinusReflectivity)/unity_ColorSpaceDielectricSpec.a);
+			
+			float metallic = 0.0;
+			float3 specular = LightVolumeSpecular(wi.albedo, wi.smoothness, metallic, wi.normal, wi.worldPos,
+			                                      L0, L1r, L1g, L1b);
+			float3 diffuse = LightVolumeEvaluate(wi.normal, L0, L1r, L1g, L1b);
+			result.specular += specular * _VRCLVStrength;
+
+			result.diffuse += diffuse * _VRCLVStrength;
 		}
-		else
-		{
-			return float3(0.0, 0.0, 0.0);
-		}
+		#endif
 	}
 }
 

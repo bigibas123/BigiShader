@@ -26,7 +26,6 @@ void callback_diffuse(inout LTCGI_V2_CUSTOM_INPUT acc, in ltcgi_output output)
 	// "LTCGI_structs.cginc" to see what data you have available
 	float3 adjusted_diffuse = output.color;
 	adjusted_diffuse *= output.intensity;
-	adjusted_diffuse *= _LTCGIStrength;
 	acc.diffuse += adjusted_diffuse;
 }
 
@@ -37,20 +36,26 @@ void callback_specular(inout LTCGI_V2_CUSTOM_INPUT acc, in ltcgi_output output)
 	// to emulate total{Specular,Diffuse}Intensity from APIv1
 	float3 adjusted_specular = output.color;
 	adjusted_specular *= output.intensity;
-	adjusted_specular *= _LTCGIStrength;
 	acc.specular += adjusted_specular;
 }
 
-void get_LTCGI(in b_light::world_info wi, inout LTCGI_V2_CUSTOM_INPUT acc, in half smoothness)
+void GetLTCGI(const in b_light::world_info wi, inout LTCGI_V2_CUSTOM_INPUT result)
 {
+	#ifdef UNITY_PASS_FORWARDBASE
+	LTCGI_V2_CUSTOM_INPUT acc;
+	acc.specular = 0.0;
+	acc.diffuse = 0.0;
 	LTCGI_Contribution(
 		acc, // our accumulator
 		wi.worldPos, // world position of the shaded point
 		wi.normal, // world space normal
 		wi.viewDir, // view vector to shaded point, normalized
-		1.0f - smoothness, // roughness
+		1.0f - wi.smoothness, // roughness
 		wi.shadowmapUvs.xy // shadowmap coordinates (the normal Unity ones, they should be in sync with LTCGI maps)
 	);
+	result.specular += (acc.specular * _VRCLVStrength);
+	result.diffuse += ((acc.diffuse * wi.albedo) * _VRCLVStrength);
+	#endif
 }
 
 #endif

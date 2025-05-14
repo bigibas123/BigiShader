@@ -1,26 +1,22 @@
 #ifndef BIGI_LIGHT_UTILS_H
 #define BIGI_LIGHT_UTILS_H
 
+#include <UnityPBSLighting.cginc>
 #include <UnityCG.cginc>
 #include <UnityStandardUtils.cginc>
 #include <UnityLightingCommon.cginc>
-#include <UnityPBSLighting.cginc>
 #include <AutoLight.cginc>
 
 #include "../Core/BigiShaderStructs.cginc"
+#include "../Core/BigiGetColor.cginc"
 
-// TODO Ifdef on RED_SIM
 #include "../External/VRCLV/VRCLightVolumes.cginc"
-
-#ifdef UNITY_PASS_FORWARDBASE
-#include "../External/VRSL/VRSLGI-ParameterSettings.cginc"
-#endif
-
 #include "../External/LTCGI/LTCGI-Functions.cginc"
+#include "../External/VRSL/BigiVRSL.cginc"
 
 namespace b_light
 {
-    world_info setup_world(in float3 worldPos, in fixed attenuation, in float3 normal, in float4 shadowmapUV)
+    world_info setup_world(in float4 albedo, in float3 worldPos, in fixed attenuation, in float3 normal, in float4 shadowmapUV, float4 specularTint, float ambientOcclusion)
     {
         world_info wi;
 
@@ -34,8 +30,17 @@ namespace b_light
         wi.viewDir = normalize(_WorldSpaceCameraPos - worldPos);
         wi.worldPos = worldPos;
 
-        wi.normal = normal;
+        wi.normal = normalize(normal);
         wi.shadowmapUvs = shadowmapUV;
+
+    	//wi.albedo = albedo;
+    	wi.smoothness = specularTint.a;
+    	wi.albedo = float4(1.0,1.0,1.0,1.0);
+    	wi.albedo = EnergyConservationBetweenDiffuseAndSpecular(
+			wi.albedo, specularTint.rgb, wi.oneMinusReflectivity
+		);
+    	wi.specular = specularTint.rgb;
+    	wi.ambientOcclusion = ambientOcclusion;
         return wi;
     }
 
@@ -66,17 +71,17 @@ namespace b_light
         return direction;
     }
 
-    UnityIndirect CreateIndirectLight(UnityIndirect indirectLight, in world_info wi, in float3 vertexLightColor,
-                                      in half smoothness, in half vertexStrength, in half envStrength)
+    UnityIndirect CreateIndirectLight(inout UnityIndirect indirectLight, const in world_info wi, const in float3 vertexLightColor,
+    	const in half vertexStrength, const in half envStrength)
     {
         indirectLight.diffuse += (vertexLightColor * vertexStrength);
 
-        #if defined(FORWARD_BASE_PASS)
+        #if defined(UNITY_PASS_FORWARDBASE)
 		indirectLight.diffuse += (max(0, ShadeSH9(float4(wi.normal, 1))) * envStrength);
 
 		float3 reflectionDir = reflect(-wi.viewDir, wi.normal);
 		Unity_GlossyEnvironmentData envData;
-		envData.roughness = 1 - smoothness;
+		envData.roughness = 1 - wi.smoothness;
 		envData.reflUVW = BoxProjection(
 			reflectionDir, wi.worldPos,
 			unity_SpecCube0_ProbePosition,
@@ -110,53 +115,28 @@ namespace b_light
         return indirectLight;
     }
 
-    float4 _get_lighting(in float3 normal, in float3 worldPos, in float3 vertexLightColor, in half attenuation,
-                         in half minAmbient, in half4 specularTint, in fixed ambientOcclusion,
-                         float4 shadowmapUV, in half3 vertexEnvMainStrengths)
+    float4 _get_lighting(const in world_info wi, const in float3 vertexLightColor, const in half3 vertexEnvMainStrengths)
     {
-        float3 albedo = float4(1.0, 1.0, 1.0, 1.0);
-        albedo *= 1.0;
-
-        normal = normalize(normal);
-        const world_info wi = setup_world(worldPos, attenuation, normal, shadowmapUV);
-
-        float oneMinusReflectivity;
-        albedo = EnergyConservationBetweenDiffuseAndSpecular(
-            albedo, specularTint.rgb, oneMinusReflectivity
-        );
         UnityIndirect unityIndirect;
         unityIndirect.diffuse = 0;
         unityIndirect.specular = 0;
+    	
+    	CreateIndirectLight(unityIndirect, wi, vertexLightColor, vertexEnvMainStrengths.x,vertexEnvMainStrengths.y);
+    	
+		GetLightVolumesLighting(wi, unityIndirect);
+    	GetLTCGI(wi, unityIndirect);
+    	GetVRSLGI(wi, unityIndirect);
+		
+    	
         float4 unity_pbs_output = UNITY_BRDF_PBS(
-            albedo, specularTint.rgb,
-            oneMinusReflectivity, specularTint.a,
+            wi.albedo, wi.specular,
+            wi.oneMinusReflectivity, wi.smoothness,
             wi.normal, wi.viewDir,
-            CreateLight(wi, vertexEnvMainStrengths.z),
-            CreateIndirectLight(unityIndirect, wi, vertexLightColor, specularTint.a, vertexEnvMainStrengths.x,
-                                vertexEnvMainStrengths.y)
+            CreateLight(wi, vertexEnvMainStrengths.z),unityIndirect
+            
         );
-        float4 output = unity_pbs_output;
-	
-    	// TODO Define guards for enable/disable include until license is figured out
-    	#ifdef UNITY_PASS_FORWARDBASE
-    	output.rgb += GetLightVolumesLighting(wi) * albedo;
-    	#endif
 
-        UnityIndirect ltcgiIndirect;
-        ltcgiIndirect.diffuse = 0;
-        ltcgiIndirect.specular = 0;
-        get_LTCGI(wi, ltcgiIndirect, specularTint.a);
-        output.rgb += ltcgiIndirect.diffuse * albedo;
-        output.rgb += ltcgiIndirect.specular;
-
-        #ifdef UNITY_PASS_FORWARDBASE
-        b_vrslgi::setParams();
-        output.rgb += VRSLGI(wi.worldPos, wi.normal, 1.0 - specularTint.a, wi.viewDir, albedo,
-                             float2(oneMinusReflectivity, specularTint.a), wi.shadowmapUvs.xy, ambientOcclusion);
-        #endif
-
-        //output = max(minAmbient,output);
-        return saturate(output);
+    	return saturate(unity_pbs_output);
     }
 
     float4 doStep(in const float4 inLight, in const half smoothness, in const uint steps)
@@ -167,21 +147,23 @@ namespace b_light
         return smoothedPart + steppedPart;
     }
 
-    float4 get_lighting(in float3 normal, in float3 worldPos, in float3 vertexLightColor, in fixed ambientOcclusion,
+    float4 get_lighting(in float4 albedo, in float3 normal, in float3 worldPos, in float3 vertexLightColor, in fixed ambientOcclusion,
                         in half occlusionStrength, in half attenuation, in float4 shadowMapUv,
                         in half minAmbient, in half transmissivity, in half lightSmoothness,
-                        in uint lightSteps, in half4 specSmooth, in half3 vertexEnvMainStrengths)
+                        in uint lightSteps, in half4 specSmooth, in half3 vertexEnvMainStrengths, in float finalMultiply)
     {
         const half scaledAO = lerp(1, ambientOcclusion, occlusionStrength);
         attenuation = attenuation * scaledAO;
 
-        float4 total = _get_lighting(normal, worldPos, vertexLightColor, attenuation, minAmbient, specSmooth,
-                                     scaledAO, shadowMapUv, vertexEnvMainStrengths);
+    	world_info wi = setup_world(albedo, worldPos, attenuation, normal, shadowMapUv, specSmooth, scaledAO);
+    	
+        float4 total = _get_lighting(wi,vertexLightColor, vertexEnvMainStrengths);
         if (transmissivity > Epsilon)
         {
-            total += _get_lighting(normal * -1.0, worldPos, vertexLightColor, attenuation, 0, specSmooth,
-                                   scaledAO, shadowMapUv, vertexEnvMainStrengths) * transmissivity;
+        	wi.normal = wi.normal * -1.0;
+            total += _get_lighting(wi,vertexLightColor, vertexEnvMainStrengths) * transmissivity;
         }
+    	total.rgb = total.rgb * finalMultiply;
         total = doStep(total, lightSmoothness, lightSteps);
         total.rgba = float4(
             clamp(total.rgb, minAmbient, 5.0),

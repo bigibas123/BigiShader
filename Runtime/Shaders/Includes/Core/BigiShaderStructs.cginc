@@ -17,6 +17,11 @@ namespace b_light
 		float3 viewDir;
 		float3 worldPos;
 
+		float smoothness;
+		float oneMinusReflectivity;
+		float ambientOcclusion;
+		float3 albedo;
+		float3 specular;
 		float3 normal;
 		float4 shadowmapUvs;
 	};

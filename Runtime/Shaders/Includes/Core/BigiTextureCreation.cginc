@@ -7,8 +7,9 @@
 
 namespace bigi_texture
 {
-	bool IsInsidePos(const in float4 dp, const in float2 uv)
+	bool IsInsidePos(const in float4 dp, in float2 uv)
 	{
+		uv = uv % 1.0;
 		const float4 corners = float4(dp.x, dp.y, dp.x + dp.z, dp.y + dp.w);
 		return ((uv.x >= corners.x && uv.x <= corners.z) || (corners.z >= 1.0 && uv.x <= (corners.z % 1.0)))
 			&& ((uv.y >= corners.y && uv.y <= corners.w) || (corners.w >= 1.0 && uv.y <= (corners.w % 1.0)));

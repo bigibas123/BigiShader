@@ -24,7 +24,8 @@ Shader "Bigi/ALTest" {
 			#define NO_MAINTEX
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
 			#pragma target 3.0
-			#define EXTERNAL_AUDIOLINK_ON
+			#define GET_TEX_COLOR(uv) float4(1.0,1.0,1.0,1.0)
+
 			#include "./Includes/ToonVert.cginc"
 			#include "./Includes/Lighting/BigiLightingParamWriter.cginc"
 			#include <Packages/com.llealloo.audiolink/Runtime/Shaders/AudioLink.cginc>

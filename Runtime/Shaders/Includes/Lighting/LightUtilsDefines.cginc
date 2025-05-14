@@ -27,6 +27,7 @@ unity_4LightAtten0, o.worldPos, o.normal \
 
 #define BIGI_GETLIGHT_DEFAULT(outName) UNITY_LIGHT_ATTENUATION(shadowAtt, i, i.worldPos.xyz);\
     const fixed4 outName = b_light::get_lighting(\
+    GET_TEX_COLOR(GETUV),\
     i.normal,\
     i.worldPos,\
     GET_VERTEXLIGHT(),\
@@ -39,6 +40,7 @@ unity_4LightAtten0, o.worldPos, o.normal \
     _LightSmoothness,\
     _LightSteps,\
     GET_SPEC_SMOOTH(GETUV),\
-    half3(_LightVertexMultiplier, _LightEnvironmentMultiplier, _LightMainMultiplier)\
+    half3(_LightVertexMultiplier, _LightEnvironmentMultiplier, BIGI_LIGHT_MAIN_MULTI),\
+    _FinalLightMultiply\
     )
 #endif
