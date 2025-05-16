@@ -76,8 +76,17 @@ namespace b_light
     {
         indirectLight.diffuse += (vertexLightColor * vertexStrength);
 
-        #if defined(UNITY_PASS_FORWARDBASE)
-		indirectLight.diffuse += (max(0, ShadeSH9(float4(wi.normal, 1))) * envStrength);
+        #ifdef UNITY_PASS_FORWARDBASE
+    	if ((!_UdonLightVolumeEnabled) || (_UdonLightVolumeCount <= 0))
+    	{
+    		// No VRC light volumes active
+    		indirectLight.diffuse += (max(0, ShadeSH9(float4(wi.normal, 1))) * envStrength);
+    	}else
+    	{
+    		// VRC Light volumes active
+    		// Unsure if I should use this Since VRCLV only samples unity_SHA and not unity_SHB or unity_SHC
+    		//indirectLight.diffuse += (max(0, ShadeSH3Order(float4(wi.normal, 1))) * envStrength);
+    	}
 
 		float3 reflectionDir = reflect(-wi.viewDir, wi.normal);
 		Unity_GlossyEnvironmentData envData;
