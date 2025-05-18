@@ -1,11 +1,6 @@
 ﻿#ifndef H_INCLUDE_BIGISHADER_STRUCT
 #define H_INCLUDE_BIGISHADER_STRUCT
 
-#ifndef Epsilon
-#include <UnityCG.cginc>
-#define Epsilon UNITY_HALF_MIN
-#endif
-
 #ifndef BIGI_LIGHT_BLIGHT_DEFINED
 #define BIGI_LIGHT_BLIGHT_DEFINED
 namespace b_light

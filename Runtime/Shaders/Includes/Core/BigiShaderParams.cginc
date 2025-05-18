@@ -38,7 +38,9 @@ uniform float4 _TV_Square_Position;
 uniform float _EmissionStrength;
 uniform float _MinAmbient;
 uniform float _Transmissivity;
+#ifndef UNITY_STANDARD_INPUT_INCLUDED
 uniform float _OcclusionStrength;
+#endif
 uniform float _Smoothness;
 uniform float _SpecularIntensity;
 

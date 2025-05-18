@@ -102,6 +102,7 @@
 			#pragma shader_feature_local_vertex DO_HOVER
 			#pragma vertex vert
 			#pragma fragment frag
+			#include "./Includes/Epsilon.cginc"
 
 			fixed4 frag(v2f i) : SV_Target
 			{
@@ -129,6 +130,7 @@
 			#pragma shader_feature_local_vertex DO_HOVER
 			#pragma vertex vert
 			#pragma fragment frag
+			#include "./Includes/Epsilon.cginc"
 
 			fixed4 frag(v2f i) : SV_Target
 			{

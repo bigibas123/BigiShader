@@ -1,5 +1,6 @@
 ﻿#ifndef BIGI_TEXTURE_CREATION_H
 #define BIGI_TEXTURE_CREATION_H
+#include "../Epsilon.cginc"
 #include "./BigiMainTex.cginc"
 #include "../External/ProTV/BigiProTV.cginc"
 

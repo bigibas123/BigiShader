@@ -8,17 +8,23 @@
 
 #ifdef SAMPLE_TEX2D
 #ifndef GET_MASK_COLOR
-	#include <HLSLSupport.cginc>
-	UNITY_DECLARE_TEX2D_NOSAMPLER(_Mask);
+	#ifndef UNITY_STANDARD_INPUT_INCLUDED
+		#include <HLSLSupport.cginc>
+		UNITY_DECLARE_TEX2D_NOSAMPLER(_Mask);
+	#else
+		sampler2D _Mask;
+	#endif
 	float4 _Mask_ST;
 	#define GET_MASK_COLOR(uv) SAMPLE_TEX2D(_Mask, uv)
 #endif
 
 #ifndef GET_AO
-	#include <HLSLSupport.cginc>
-	UNITY_DECLARE_TEX2D_NOSAMPLER(_OcclusionMap);
+	#ifndef UNITY_STANDARD_INPUT_INCLUDED
+		#include <HLSLSupport.cginc>
+		UNITY_DECLARE_TEX2D_NOSAMPLER(_OcclusionMap);
+	#endif
 	#include "./BigiMainTex.cginc"
-	#define GET_AO(uv) SAMPLE_TEX2D(_OcclusionMap, uv).g
+	#define GET_AO(uv) (SAMPLE_TEX2D(_OcclusionMap,uv).g)
 #endif
 
 #ifndef GET_NORMAL
@@ -32,12 +38,14 @@
 	#endif
 #endif
 
-#ifndef GET_SPEC_SMOOTH
+#ifndef GET_SPEC_GLOSS
 	#include "./BigiShaderParams.cginc"
-		#include <HLSLSupport.cginc>
-		UNITY_DECLARE_TEX2D_NOSAMPLER(_SpecSmoothMap);
-		#include "./BigiMainTex.cginc"
-		#define GET_SPEC_SMOOTH(uv) (SAMPLE_TEX2D(_SpecSmoothMap, uv))
+	#ifndef UNITY_STANDARD_INPUT_INCLUDED
+	#include <HLSLSupport.cginc>
+	UNITY_DECLARE_TEX2D_NOSAMPLER(_SpecGlossMap);
+	#endif
+	#include "./BigiMainTex.cginc"
+		#define GET_SPEC_GLOSS(uv) (SAMPLE_TEX2D(_SpecGlossMap, uv))
 #endif
 
 #else
@@ -46,8 +54,8 @@
 	#define GET_AO(uv) 1.0
 #endif
 
-#ifndef GET_SPEC_SMOOTH
-	#define GET_SPEC_SMOOTH(uv) (half4(0, 0, 0, 0))
+#ifndef GET_SPEC_GLOSS
+	#define GET_SPEC_GLOSS(uv) (half4(0, 0, 0, 0))
 #endif
 
 #endif

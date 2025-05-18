@@ -140,6 +140,7 @@ Shader "Bigi/ALTest" {
 			#pragma fragment frag
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
 
+			#include "./Includes/Epsilon.cginc"
 			#include "./Includes/ToonVert.cginc"
 			#include "./Includes/Lighting/LightUtilsDefines.cginc"
 

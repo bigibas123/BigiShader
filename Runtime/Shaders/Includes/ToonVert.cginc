@@ -3,6 +3,7 @@
 #include <UnityCG.cginc>
 #include <AutoLight.cginc>
 
+#include "./Epsilon.cginc"
 #include "./Core/BigiShaderStructs.cginc"
 #include "./Core/BigiShaderParams.cginc"
 #include "./Core/BigiMainTex.cginc"

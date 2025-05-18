@@ -1,5 +1,7 @@
 #ifndef BIGI_SOUND_UTILS
 #define BIGI_SOUND_UTILS
+#include "../Epsilon.cginc"
+
 
 #ifndef BIGI_DMXAL_INCLUDES
 #define BIGI_DMXAL_INCLUDES

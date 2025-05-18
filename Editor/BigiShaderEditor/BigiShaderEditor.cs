@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
@@ -43,6 +41,7 @@ namespace cc.dingemans.bigibas123.bigishader
 							or nameof(Decal2Enabled)
 							or nameof(Decal3Enabled)
 							or nameof(MultiTexture)
+							or nameof(SpecSmoothMap)
 							=> true,
 						_ => false
 					};
@@ -241,6 +240,12 @@ namespace cc.dingemans.bigibas123.bigishader
 			m.shader.keywordSpace.FindKeyword("DECAL_2_ENABLED").Set(m, Decal2Enabled.GetBool(m));
 			m.shader.keywordSpace.FindKeyword("DECAL_3_ENABLED").Set(m, Decal3Enabled.GetBool(m));
 
+			if (SpecSmoothMap.TexturePresent(m) && !SpecGlossMap.TexturePresent(m))
+			{
+				var tex = SpecSmoothMap.GetTexture(m);
+				SpecGlossMap.Set(m,tex);
+			}
+			
 			var proTVEnabled = EnableProTVSquare.GetBool(m);
 			EnableProTVSquare.Set(m, proTVEnabled);
 			m.shader.keywordSpace.FindKeyword("PROTV_SQUARE_ENABLED").Set(m, proTVEnabled);
@@ -377,7 +382,7 @@ namespace cc.dingemans.bigibas123.bigishader
 
 		public static bool TexturePresent(this BigiProperty prop, Material material)
 		{
-			return prop.Present(material) && material.HasTexture(prop.GetPropertyId());
+			return prop.Present(material) && material.HasTexture(prop.GetPropertyId()) && (material.GetTexture(prop.GetPropertyId()) is not null);
 		}
 	}
 
@@ -438,6 +443,10 @@ namespace cc.dingemans.bigibas123.bigishader
 		SpecSmoothMap_ST,
 		SpecSmoothMap_TexelSize,
 		SpecSmoothMap_HDR,
+		SpecGlossMap,
+		SpecGlossMap_ST,
+		SpecGlossMap_TexelSize,
+		SpecGlossMap_HDR,
 		Spacey,
 		Spacey_ST,
 		Spacey_TexelSize,

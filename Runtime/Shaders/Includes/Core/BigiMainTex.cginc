@@ -7,10 +7,16 @@
 	#include <HLSLSupport.cginc>
 		#ifndef MAINTEX_NAME
 			#define MAINTEX_NAME _MainTex
+			#ifndef UNITY_STANDARD_INPUT_INCLUDED
 			UNITY_DECLARE_TEX2D(MAINTEX_NAME);
-		float4 _MainTex_ST;
+			float4 _MainTex_ST;
+			#endif
 		#endif
-	#define GET_TEX_COLOR_MAINTEX(uv) UNITY_SAMPLE_TEX2D(MAINTEX_NAME,uv)
+	#ifndef UNITY_STANDARD_INPUT_INCLUDED
+		#define GET_TEX_COLOR_MAINTEX(uv) UNITY_SAMPLE_TEX2D(MAINTEX_NAME,uv)
+	#else
+		#define GET_TEX_COLOR_MAINTEX(uv) (tex2D(MAINTEX_NAME, uv))
+	#endif
 	#endif
 
 #else
@@ -35,8 +41,12 @@
 
 #ifdef MAINTEX_NAME
 	#ifndef SAMPLE_TEX2D
-	#include <HLSLSupport.cginc>
-	#define SAMPLE_TEX2D(texName,uv) UNITY_SAMPLE_TEX2D_SAMPLER(texName, MAINTEX_NAME, uv)
+	#ifndef UNITY_STANDARD_INPUT_INCLUDED
+		#include <HLSLSupport.cginc>
+		#define SAMPLE_TEX2D(texName,uv) (UNITY_SAMPLE_TEX2D_SAMPLER(texName, MAINTEX_NAME, uv))
+	#else
+		#define SAMPLE_TEX2D(texName, uv) (tex2D(texName, uv))
+	#endif
 	#endif
 
 	#ifndef DO_TRANSFORM

@@ -7,6 +7,7 @@
 #include <UnityLightingCommon.cginc>
 #include <AutoLight.cginc>
 
+#include "../Epsilon.cginc"
 #include "../Core/BigiShaderStructs.cginc"
 #include "../Core/BigiGetColor.cginc"
 

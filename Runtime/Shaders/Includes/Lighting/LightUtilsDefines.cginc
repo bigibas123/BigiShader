@@ -39,7 +39,7 @@ unity_4LightAtten0, o.worldPos, o.normal \
     _Transmissivity,\
     _LightSmoothness,\
     _LightSteps,\
-    GET_SPEC_SMOOTH(GETUV),\
+    GET_SPEC_GLOSS(GETUV),\
     half3(_LightVertexMultiplier, _LightEnvironmentMultiplier, BIGI_LIGHT_MAIN_MULTI),\
     _FinalLightMultiply\
     )

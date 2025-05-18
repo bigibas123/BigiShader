@@ -27,6 +27,7 @@ Shader "Bigi/LogoPlane" {
 		#define OTHER_BIGI_TEXTURES
 		#define NO_RESET_MINAMBIENT
 
+		#include "./Includes/Epsilon.cginc"
 		#include "./Includes/ToonVert.cginc"
 		#include "./Includes/Lighting/BigiLightingParamWriter.cginc"
 		#include "./Includes/Effects/SoundUtilsDefines.cginc"

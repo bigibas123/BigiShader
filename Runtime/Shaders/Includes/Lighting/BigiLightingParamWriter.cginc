@@ -1,11 +1,7 @@
 ﻿#ifndef BIGI_LIGHTING_PARAM_WRITER
 #define BIGI_LIGHTING_PARAM_WRITER
+#include "../Epsilon.cginc"
 #include "../Core/BigiShaderParams.cginc"
-
-#ifndef Epsilon
-#include <UnityCG.cginc>
-#define Epsilon UNITY_HALF_MIN
-#endif
 
 //#define IFZEROAPPLY(varName, val) if (varName < Epsilon && varName > -Epsilon){ varName = val;}
 #define IFZEROAPPLY(varName, val) {varName = val;}

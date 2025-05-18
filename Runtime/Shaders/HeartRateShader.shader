@@ -23,6 +23,7 @@ Shader "Bigi/HeartRate" {
 		#define DO_TRANSFORM(UV) (UV)
 		#define GETUV (i.uv)
 		#define GET_TEX_COLOR(UV)  (determineValue(UV))
+		#include "./Includes/Epsilon.cginc"
 		#include "./Includes/ToonVert.cginc"
 		#include "./Includes/Lighting/BigiLightingParamWriter.cginc"
 		#include "./Includes/Effects/SoundUtilsDefines.cginc"
