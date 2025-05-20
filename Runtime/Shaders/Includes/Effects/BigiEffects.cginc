@@ -80,11 +80,10 @@ namespace b_effects
 		}
 		//Screenspace images or uv-based ProTV
 		{
-			PROTV_PRESENT(tvPresent);
 			//ProTV Check
-			if (tvPresent)
+			if (PROTV_PRESENT())
 			{
-				float4 protvColor = GET_PROTV(uv);
+				float4 protvColor = b_protv_util::getTexColor(uv);
 				doMixProperly(mix, protvColor.rgb, mask.g * protvColor.a, 1.0);
 			}
 			else

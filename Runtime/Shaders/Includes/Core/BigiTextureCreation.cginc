@@ -90,10 +90,10 @@ namespace bigi_texture
 			color = DoMix(color, decalColor, _Decal3_Opacity, _Decal3_BlendMode);
 		}
 		#endif
-		PROTV_PRESENT(tvAvailable);
-		if ((_SquareTVTest || (tvAvailable && _TV_Square_Opacity > Epsilon)) && IsInsidePos(_TV_Square_Position, uv))
+
+		if ((_SquareTVTest || (PROTV_PRESENT() && _TV_Square_Opacity > Epsilon)) && IsInsidePos(_TV_Square_Position, uv))
 		{
-			const float4 decalColor = GET_PROTV(CalcDecalUv(_TV_Square_Position, uv));
+			const float4 decalColor = b_protv_util::getTexColor(CalcDecalUv(_TV_Square_Position, uv));
 			color = DoMix(color, decalColor, max(_TV_Square_Opacity, _SquareTVTest), 0.0);
 		}
 
