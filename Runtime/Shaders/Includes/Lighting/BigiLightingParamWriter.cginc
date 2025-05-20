@@ -3,8 +3,8 @@
 #include "../Epsilon.cginc"
 #include "../Core/BigiShaderParams.cginc"
 
-//#define IFZEROAPPLY(varName, val) if (varName < Epsilon && varName > -Epsilon){ varName = val;}
-#define IFZEROAPPLY(varName, val) {varName = val;}
+#define IFZEROAPPLY(varName, val) if (varName < Epsilon && varName > -Epsilon){ varName = val;}
+//#define IFZEROAPPLY(varName, val) {varName = val;}
 
 namespace b_light
 {
@@ -38,6 +38,7 @@ namespace b_light
 		#if defined(UNITY_PASS_FORWARDBASE)
 		IFZEROAPPLY(_LTCGIStrength, 1.0);
 		IFZEROAPPLY(_VRCLVStrength, 1.0);
+		IFZEROAPPLY(_VRSLGIStrength, 0.25);
 		#endif
 
 		IFZEROAPPLY(_LightVertexMultiplier, 1.0);
@@ -67,10 +68,7 @@ namespace b_light
 		IFZEROAPPLY(_DoMirrorThing, 0.0);
 		#endif
 		#endif
-
-		#ifdef UNITY_PASS_FORWARDBASE
-		IFZEROAPPLY(_VRSLGIStrength, 0.25);
-		#endif
+		
 	}
 }
 
