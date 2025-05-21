@@ -17,12 +17,18 @@ namespace b_light
 		IFZEROAPPLY(_DMX_Group, 0.0);
 		IFZEROAPPLY(_AL_TC_BassReactive, 1.0);
 		IFZEROAPPLY(_OutlineWidth, 0.0);
-		IFZEROAPPLY(_SquareTVTest, 0.0);
-		IFZEROAPPLY(_TV_Square_Opacity, 0.0);
-		IFZEROAPPLY(_TV_Square_Position.x, 0.0);
-		IFZEROAPPLY(_TV_Square_Position.y, 0.0);
-		IFZEROAPPLY(_TV_Square_Position.z, 0.0);
-		IFZEROAPPLY(_TV_Square_Position.w, 0.0);
+		#ifdef BIGI_PROTV_TEST_VAR
+		IFZEROAPPLY(BIGI_PROTV_TEST_VAR, 0.0);
+		#endif
+		#ifdef BIGI_PROTV_OPACITY_VAR
+		IFZEROAPPLY(BIGI_PROTV_OPACITY_VAR, 0.0);
+		#endif
+		#ifdef BIGI_PROTV_POSITION_VAR
+		IFZEROAPPLY(BIGI_PROTV_POSITION_VAR.x, 0.0);
+		IFZEROAPPLY(BIGI_PROTV_POSITION_VAR.y, 0.0);
+		IFZEROAPPLY(BIGI_PROTV_POSITION_VAR.z, 0.0);
+		IFZEROAPPLY(BIGI_PROTV_POSITION_VAR.w, 0.0);
+		#endif
 		IFZEROAPPLY(_EmissionStrength, 0.5);
 		#ifndef NO_RESET_MINAMBIENT
 		IFZEROAPPLY(_MinAmbient, 0.20);

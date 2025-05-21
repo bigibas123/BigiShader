@@ -25,9 +25,15 @@ uniform float _AL_WireFrameWidth;
 uniform float _OutlineWidth;
 
 //TV
+#ifndef BIGI_PROTV_PARAMS_DEFINED
+#define BIGI_PROTV_PARAMS_DEFINED
 uniform float _SquareTVTest;
+#define BIGI_PROTV_TEST_VAR _SquareTVTest
 uniform float _TV_Square_Opacity;
+#define BIGI_PROTV_OPACITY_VAR _TV_Square_Opacity
 uniform float4 _TV_Square_Position;
+#define BIGI_PROTV_POSITION_VAR _TV_Square_Position
+#endif
 
 #endif
 

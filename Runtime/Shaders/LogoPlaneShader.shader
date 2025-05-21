@@ -1,78 +1,30 @@
-Shader "Bigi/LogoPlane" {
-	Properties {
+Shader "Bigi/LogoPlane"
+{
+	Properties
+	{
 		_MainTexArray ("Texture", 2DArray) = "black" {}
 		_Logo_FlipBookID ("CellNumber", Int) = 0
 		_AL_Weight("Audiolink Intensity",Range(0.0,1.0)) = 0.0
 		_MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.2
-		[Toggle(ALPHA_MUL)] _Alpha_Multiply("Multiply alpha with itself", Float) = 1
+		[ToggleUI] _Alpha_Non_Premul("Non premultiplied colors (Multiplies alpha with main color)", Float) = 1
 	}
-	SubShader {
+	SubShader
+	{
 		Blend SrcAlpha OneMinusSrcAlpha
-		Tags {
+		Tags
+		{
 			"RenderType" = "Transparent" "Queue" = "Transparent" "IgnoreProjector" = "True" "LightMode" = "ForwardBase" "VRCFallback"="Hidden" "LTCGI"="ALWAYS" "PreviewType" = "Plane"
 		}
 
-		CGINCLUDE
-		#ifndef MULTI_TEXTURE
-		#define MULTI_TEXTURE
-		#endif
-
-
-		#include <UnityCG.cginc>
-		uniform float _AL_Weight;
-
-		uniform int _Logo_FlipBookID;
-		#define MULTI_TEXTURE
-		#define OTHER_TEXTURE_ID_REF _Logo_FlipBookID
-		#define OTHER_BIGI_TEXTURES
-		#define NO_RESET_MINAMBIENT
-
-		#include "./Includes/Epsilon.cginc"
-		#include "./Includes/ToonVert.cginc"
-		#include "./Includes/Lighting/BigiLightingParamWriter.cginc"
-		#include "./Includes/Effects/SoundUtilsDefines.cginc"
-
-
-		v2f vert(appdata v)
+		Pass
 		{
-			b_light::setVars();
-			return bigi_toon_vert(v);
-		}
-
-		fragOutput frag(v2f i)
-		{
-			b_light::setVars();
-			fragOutput o;
-			UNITY_INITIALIZE_OUTPUT(fragOutput, o);
-			UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i)
-			fixed4 orig_color = GET_TEX_COLOR(GETUV);
-			clip(orig_color.a - Epsilon);
-			#ifdef ALPHA_MUL
-			orig_color.a = orig_color.a * orig_color.a;
-			#endif
-
-
-			BIGI_GETLIGHT_DEFAULT(lighting);
-			fixed4 normal_color = orig_color * lighting;
-
-			_AL_Theme_Weight = _AL_Weight;
-			float4 distance = float4(1.0/3.0,1.0/3.0,1.0/3.0,0.0);
-			GET_SOUND_COLOR(sound);
-
-			o.color = lerp(normal_color,fixed4(sound.rgb, normal_color.a), sound.a);
-			o.color.a = orig_color.a;
-			//o.color = orig_color;
-			UNITY_APPLY_FOG(i.fogCoord, o.color);
-			return o;
-		}
-		ENDCG
-
-		Pass {
+			Name "DepthPrepass"
 			ColorMask 0
 			Cull Off
 			ZWrite On
 			ZTest Less
 			CGPROGRAM
+			#include "./Includes/LogoPlane.cginc"
 			#pragma vertex vertd alpha
 			#pragma fragment fragd alpha
 			v2f vertd(appdata v)
@@ -93,8 +45,10 @@ Shader "Bigi/LogoPlane" {
 			ENDCG
 		}
 
-		Pass {
-			Tags {
+		Pass
+		{
+			Tags
+			{
 				"RenderType" = "Transparent"
 				"Queue" = "Transparent-1"
 				"IgnoreProjector" = "True"
@@ -109,15 +63,18 @@ Shader "Bigi/LogoPlane" {
 			Blend SrcAlpha OneMinusSrcAlpha
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
-			#pragma shader_feature_local_fragment ALPHA_MUL
+			#include "./Includes/LogoPlane.cginc"
+			#pragma shader_feature_local_fragment ALPHA_NON_PREMUL
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
 			ENDCG
 		}
 
-		Pass {
+		Pass
+		{
 			Name "TransparentForwardAddBack"
-			Tags {
+			Tags
+			{
 				"RenderType" = "Transparent"
 				"Queue" = "Transparent-1"
 				"IgnoreProjector" = "True"
@@ -129,15 +86,18 @@ Shader "Bigi/LogoPlane" {
 			Blend One One
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
-			#pragma shader_feature_local_fragment ALPHA_MUL
+			#include "./Includes/LogoPlane.cginc"
+			#pragma shader_feature_local_fragment ALPHA_NON_PREMUL
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
 			ENDCG
 		}
 
-		Pass {
+		Pass
+		{
 			Name "TransparentForwardBaseFront"
-			Tags {
+			Tags
+			{
 				"RenderType" = "Transparent"
 				"Queue" = "Transparent"
 				"IgnoreProjector" = "True"
@@ -151,7 +111,8 @@ Shader "Bigi/LogoPlane" {
 			Blend SrcAlpha OneMinusSrcAlpha
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
-			#pragma shader_feature_local_fragment ALPHA_MUL
+			#include "./Includes/LogoPlane.cginc"
+			#pragma shader_feature_local_fragment ALPHA_NON_PREMUL
 
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
@@ -159,9 +120,11 @@ Shader "Bigi/LogoPlane" {
 		}
 
 
-		Pass {
+		Pass
+		{
 			Name "TransparentForwardAddFront"
-			Tags {
+			Tags
+			{
 				"RenderType" = "Transparent"
 				"Queue" = "Transparent"
 				"IgnoreProjector" = "True"
@@ -173,10 +136,82 @@ Shader "Bigi/LogoPlane" {
 			Blend One One
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
-			#pragma shader_feature_local_fragment ALPHA_MUL
+			#include "./Includes/LogoPlane.cginc"
+			#pragma shader_feature_local_fragment ALPHA_NON_PREMUL
 
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
+			ENDCG
+		}
+
+		Pass
+		{
+			Name "META"
+			Tags
+			{
+				"LightMode"="Meta"
+			}
+			Cull Off
+			CGPROGRAM
+			#include_with_pragmas "./Includes/Pragmas/Meta.cginc"
+			#include <UnityCG.cginc>
+			#include <UnityMetaPass.cginc>
+			#include <UnityStandardInput.cginc>
+			#include "./Includes/Core/BigiGetColor.cginc"
+			uniform float _AL_Weight;
+			uniform float _Alpha_Non_Premul;
+
+			struct v2f_meta
+			{
+				float4 pos : SV_POSITION;
+				float4 uv : TEXCOORD0;
+				#ifdef EDITOR_VISUALIZATION
+			    float2 vizUV        : TEXCOORD1;
+			    float4 lightCoord   : TEXCOORD2;
+				#endif
+			};
+			
+			v2f_meta vert_meta(VertexInput v)
+			{
+				v2f_meta o;
+				o.pos = UnityMetaVertexPosition(v.vertex, v.uv1.xy, v.uv2.xy, unity_LightmapST,
+											unity_DynamicLightmapST);
+				o.uv = TexCoords(v);
+				#ifdef EDITOR_VISUALIZATION
+			    o.vizUV = 0;
+			    o.lightCoord = 0;
+			    if (unity_VisualizationMode == EDITORVIZ_TEXTURE)
+			        o.vizUV = UnityMetaVizUV(unity_EditorViz_UVIndex, v.uv0.xy, v.uv1.xy, v.uv2.xy, unity_EditorViz_Texture_ST);
+			    else if (unity_VisualizationMode == EDITORVIZ_SHOWLIGHTMASK)
+			    {
+			        o.vizUV = v.uv1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
+			        o.lightCoord = mul(unity_EditorViz_WorldToLight, mul(unity_ObjectToWorld, float4(v.vertex.xyz, 1)));
+			    }
+				#endif
+				return o;
+			}
+
+			float4 frag_meta2(v2f_meta i): SV_Target
+			{
+				UnityMetaInput o;
+				UNITY_INITIALIZE_OUTPUT(UnityMetaInput, o);
+				const fixed4 orig_color = GET_TEX_COLOR(GETUV);
+				clip(orig_color.a - 1.0);
+				o.Albedo = orig_color;
+				o.Emission = orig_color * _AL_Weight;
+				o.SpecularColor = orig_color;
+				#ifdef EDITOR_VISUALIZATION
+				o.VizUV = i.vizUV;
+				o.LightCoord = i.lightCoord;
+				#endif
+				return UnityMetaFragment(o);
+			}
+
+			#pragma vertex vert_meta
+			#pragma fragment frag_meta2
+			#pragma shader_feature _EMISSION
+			#pragma shader_feature _METALLICGLOSSMAP
+			#pragma shader_feature ___ _DETAIL_MULX2
 			ENDCG
 		}
 

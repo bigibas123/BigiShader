@@ -147,24 +147,13 @@ Shader "Bigi/World (WIP)"
             }
             Cull Off
             CGPROGRAM
+            #include_with_pragmas "./Includes/Pragmas/Meta.cginc"
             #include"UnityStandardMeta.cginc"
 
             #include "./Includes/Core/BigiShaderParams.cginc"
             #include "./Includes/Core/BigiGetColor.cginc"
             #include "./Includes/Effects/BigiEffects.cginc"
-
-            /*
-			struct UnityMetaInput
-			{
-				half3 Albedo;
-				half3 Emission;
-				half3 SpecularColor;
-				#ifdef EDITOR_VISUALIZATION
-					float2 VizUV;
-					float4 LightCoord;
-				#endif
-			};
-             */
+            
             float4 frag_meta2(v2f_meta i): SV_Target
             {
                 FragmentCommonData data = UNITY_SETUP_BRDF_INPUT(i.uv);

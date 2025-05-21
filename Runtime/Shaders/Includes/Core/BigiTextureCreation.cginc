@@ -66,7 +66,7 @@ namespace bigi_texture
 	float4 GetTexColor(const in float2 uv)
 	{
 		float4 color = GET_TEX_COLOR_MAINTEX(uv);
-		#ifdef DO_ALPHA_PLS
+		#if defined(DO_ALPHA_PLS) && defined(TRANSPARENT_FORWARD_BASE)
 		color.a  *= _Alpha_Multiplier;
 		#endif
 		#ifdef DECAL_1_ENABLED
@@ -90,12 +90,16 @@ namespace bigi_texture
 			color = DoMix(color, decalColor, _Decal3_Opacity, _Decal3_BlendMode);
 		}
 		#endif
-
-		if ((_SquareTVTest || (PROTV_PRESENT() && _TV_Square_Opacity > Epsilon)) && IsInsidePos(_TV_Square_Position, uv))
+		#if defined(BIGI_PROTV_OPACITY_VAR) && defined(BIGI_PROTV_POSITION_VAR)
+		#ifndef BIGI_PROTV_TEST_VAR
+		#define BIGI_PROTV_TEST_VAR (false)
+		#endif
+		if ((BIGI_PROTV_TEST_VAR || (PROTV_PRESENT() && BIGI_PROTV_OPACITY_VAR > Epsilon)) && IsInsidePos(BIGI_PROTV_POSITION_VAR, uv))
 		{
-			const float4 decalColor = b_protv_util::getTexColor(CalcDecalUv(_TV_Square_Position, uv));
-			color = DoMix(color, decalColor, max(_TV_Square_Opacity, _SquareTVTest), 0.0);
+			const float4 decalColor = b_protv_util::getTexColor(CalcDecalUv(BIGI_PROTV_POSITION_VAR, uv));
+			color = DoMix(color, decalColor, max(BIGI_PROTV_OPACITY_VAR, BIGI_PROTV_TEST_VAR), 0.0);
 		}
+		#endif
 
 		return color;
 	}
