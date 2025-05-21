@@ -2,8 +2,7 @@
 #define H_BIGI_VRC_LIGHT_VOLUMES_INCL
 // Query VRC Lightvolumes (by RED_SIM) for light volumes
 
-//#include <Packages/red.sim.lightvolumes/Shaders/LightVolumes.cginc>
-#include "./LightVolumes.cginc"
+#include <Packages/red.sim.lightvolumes/Shaders/LightVolumes.cginc>
 
 #include "../../Core/BigiShaderStructs.cginc"
 #include "../../Core/BigiShaderParams.cginc"

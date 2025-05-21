@@ -11,7 +11,8 @@
   "vpmDependencies": {
 	"lygia": ">=1.1.7",
 	"com.llealloo.audiolink": ">=0.2.6",
-	"at.pimaker.ltcgi": ">= 1.6.0"
+	"at.pimaker.ltcgi": ">= 1.6.0",
+    "red.sim.lightvolumes": ">= 1.0.0"
   },
   "url": "https://github.com/bigibas123/BigiShader.git",
   "legacyFolders": {},
