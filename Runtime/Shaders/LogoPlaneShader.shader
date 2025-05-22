@@ -64,7 +64,6 @@ Shader "Bigi/LogoPlane"
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
 			#include "./Includes/LogoPlane.cginc"
-			#pragma shader_feature_local_fragment ALPHA_NON_PREMUL
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
 			ENDCG
@@ -87,7 +86,6 @@ Shader "Bigi/LogoPlane"
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
 			#include "./Includes/LogoPlane.cginc"
-			#pragma shader_feature_local_fragment ALPHA_NON_PREMUL
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
 			ENDCG
@@ -112,7 +110,6 @@ Shader "Bigi/LogoPlane"
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
 			#include "./Includes/LogoPlane.cginc"
-			#pragma shader_feature_local_fragment ALPHA_NON_PREMUL
 
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
@@ -137,7 +134,6 @@ Shader "Bigi/LogoPlane"
 			CGPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
 			#include "./Includes/LogoPlane.cginc"
-			#pragma shader_feature_local_fragment ALPHA_NON_PREMUL
 
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
