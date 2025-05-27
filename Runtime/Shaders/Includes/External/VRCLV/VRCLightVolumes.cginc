@@ -21,14 +21,7 @@ namespace b_light
 
 			LightVolumeSH(wi.worldPos, L0, L1r, L1g, L1b);
 
-			// Derived from: OneMinusReflectivityFromMetallic()
-			// unity_ColorSpaceDielectricSpec.a - metallic * unity_ColorSpaceDielectricSpec.a = oneMinusReflectivity
-			// metallic * unity_ColorSpaceDielectricSpec.a = unity_ColorSpaceDielectricSpec.a - oneMinusReflectivity
-			// metallic = (unity_ColorSpaceDielectricSpec.a - oneMinusReflectivity) / unity_ColorSpaceDielectricSpec.a
-			float metallic = ((unity_ColorSpaceDielectricSpec.a - wi.oneMinusReflectivity)/unity_ColorSpaceDielectricSpec.a);
-			
-			// float metallic = 0.0;
-			float3 specular = LightVolumeSpecular(wi.albedo, wi.smoothness, metallic, wi.normal, wi.worldPos,
+			float3 specular = LightVolumeSpecular(wi.albedo, wi.smoothness, wi.normal, wi.viewDir,
 			                                      L0, L1r, L1g, L1b);
 			float3 diffuse = LightVolumeEvaluate(wi.normal, L0, L1r, L1g, L1b);
 			result.specular += specular * _VRCLVStrength;
