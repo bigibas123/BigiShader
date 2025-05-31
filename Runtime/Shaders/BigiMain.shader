@@ -140,8 +140,8 @@ Shader "Bigi/Main"
             Name "OpaqueForwardBase"
             Tags
             {
-                "Queue" = "AlphaTest"
-                "RenderType" = "AlphaTest"
+                "Queue" = "Geometry"
+                "RenderType" = "Geometry"
                 "LightMode" = "ForwardBase"
                 "LTCGI"="ALWAYS"
             }
