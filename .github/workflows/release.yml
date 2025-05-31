@@ -22,7 +22,7 @@ jobs:
         with: 
           fetch-tags: true
       - run: |
-          git fetch --unshallow --tags
+          git fetch --tags
           echo $?
           git tag --list
       
@@ -39,7 +39,7 @@ jobs:
 
       - name: Parse git tag version
         id: tag_version
-        uses: madhead/semver-utils@v3.1.0
+        uses: madhead/semver-utils@v4.3.0
         with:
           lenient: false
           version: ${{ env.old_tag }}
