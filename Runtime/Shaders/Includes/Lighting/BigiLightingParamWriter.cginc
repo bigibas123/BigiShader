@@ -17,6 +17,9 @@ namespace b_light
 		IFZEROAPPLY(_DMX_Group, 0.0);
 		IFZEROAPPLY(_AL_TC_BassReactive, 1.0);
 		IFZEROAPPLY(_OutlineWidth, 0.0);
+		#ifdef BIGI_PROTV_ON_VAR
+		IFZEROAPPLY(BIGI_PROTV_ON_VAR, 0.0);
+		#endif
 		#ifdef BIGI_PROTV_TEST_VAR
 		IFZEROAPPLY(BIGI_PROTV_TEST_VAR, 0.0);
 		#endif

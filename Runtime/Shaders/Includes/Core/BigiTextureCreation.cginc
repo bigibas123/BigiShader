@@ -90,11 +90,11 @@ namespace bigi_texture
 			color = DoMix(color, decalColor, _Decal3_Opacity, _Decal3_BlendMode);
 		}
 		#endif
-		#if defined(BIGI_PROTV_OPACITY_VAR) && defined(BIGI_PROTV_POSITION_VAR)
+		#if defined(BIGI_PROTV_OPACITY_VAR) && defined(BIGI_PROTV_POSITION_VAR) && defined(BIGI_PROTV_ON_VAR)
 		#ifndef BIGI_PROTV_TEST_VAR
 		#define BIGI_PROTV_TEST_VAR (false)
 		#endif
-		if ((BIGI_PROTV_TEST_VAR || (PROTV_PRESENT() && BIGI_PROTV_OPACITY_VAR > Epsilon)) && IsInsidePos(BIGI_PROTV_POSITION_VAR, uv))
+		if (BIGI_PROTV_ON_VAR && ((BIGI_PROTV_TEST_VAR || (PROTV_PRESENT() && BIGI_PROTV_OPACITY_VAR > Epsilon)) && IsInsidePos(BIGI_PROTV_POSITION_VAR, uv)))
 		{
 			const float4 decalColor = b_protv_util::getTexColor(CalcDecalUv(BIGI_PROTV_POSITION_VAR, uv));
 			color = DoMix(color, decalColor, max(BIGI_PROTV_OPACITY_VAR, BIGI_PROTV_TEST_VAR), 0.0);

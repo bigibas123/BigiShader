@@ -102,9 +102,9 @@ Shader "Bigi/World (WIP)"
 
         [Header(TV Square)]
         [Space]
-        [Toggle(PROTV_SQUARE_ENABLED)] _EnableProTVSquare ("Enable ProTV texture render (NOT ANIMATABLE)", Range(0.0,1.0)) = 0.0
+        [ToggleUI] _EnableProTVSquare ("Enable ProTV texture render", Range(0.0,1.0)) = 0.0
+        _TV_Square_Opacity ("TV opacity", Range(0.0,1.0)) = 0.0
         [ToggleUI] _SquareTVTest ("Enable temporarily to display tv location", Range(0.0,1.0)) = 0.0
-        _TV_Square_Opacity ("TV opacity", Range(0.0,1.0)) = 1.0
         _TV_Square_Position ("TV Position & Size", Vector) = (0.0,0.0,1.0,1.0)
 
         [Header(Stencil settings (NOT ANIMATABLE))]

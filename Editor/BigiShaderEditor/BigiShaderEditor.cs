@@ -80,7 +80,7 @@ namespace cc.dingemans.bigibas123.bigishader
 				}
 			}
 
-			if (mats.All(m => !(EnableProTVSquare.GetBool(m) || m.IsKeywordEnabled("PROTV_SQUARE_ENABLED"))) &&
+			if (mats.All(m => !(EnableProTVSquare.GetBool(m))) &&
 			    !m_ShowHiddenProps)
 			{
 				materialProperties.RemoveAll(p =>
@@ -245,10 +245,6 @@ namespace cc.dingemans.bigibas123.bigishader
 				var tex = SpecSmoothMap.GetTexture(m);
 				SpecGlossMap.Set(m,tex);
 			}
-			
-			var proTVEnabled = EnableProTVSquare.GetBool(m);
-			EnableProTVSquare.Set(m, proTVEnabled);
-			m.shader.keywordSpace.FindKeyword("PROTV_SQUARE_ENABLED").Set(m, proTVEnabled);
 		}
 
 		private static void MakeZTestSafe(Material material, BigiProperty property)
@@ -484,8 +480,8 @@ namespace cc.dingemans.bigibas123.bigishader
 		Rounding,
 		DoMirrorThing,
 		EnableProTVSquare,
-		SquareTVTest,
 		TV_Square_Opacity,
+		SquareTVTest,
 		TV_Square_Position,
 		MainTexArray,
 		MainTexArray_ST,
