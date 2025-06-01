@@ -22,7 +22,7 @@ jobs:
         with: 
           fetch-tags: true
       - run: |
-          git fetch --tags
+          git fetch --unshallow --tags
           echo $?
           git tag --list
       
