@@ -30,9 +30,11 @@
 #ifndef GET_NORMAL
 	#ifdef NORMAL_MAPPING
 		#include <HLSLSupport.cginc>
+		#include <UnityCG.cginc>
 		UNITY_DECLARE_TEX2D_NOSAMPLER(_BumpMap);
+		float4 _BumpMap_ST;
 		#include "./BigiMainTex.cginc"
-		#define GET_NORMAL(uv) SAMPLE_TEX2D(_BumpMap, uv)
+		#define GET_NORMAL(uv) SAMPLE_TEX2D(_BumpMap, TRANSFORM_TEX(uv,_BumpMap))
 	#else
 		#define GET_NORMAL(uv) #error "Trying to get normal while normal mapping is disabled"
 	#endif
@@ -43,9 +45,10 @@
 	#ifndef UNITY_STANDARD_INPUT_INCLUDED
 	#include <HLSLSupport.cginc>
 	UNITY_DECLARE_TEX2D_NOSAMPLER(_SpecGlossMap);
+	float4 _SpecGlossMap_ST;
 	#endif
 	#include "./BigiMainTex.cginc"
-		#define GET_SPEC_GLOSS(uv) (SAMPLE_TEX2D(_SpecGlossMap, uv))
+		#define GET_SPEC_GLOSS(uv) (SAMPLE_TEX2D(_SpecGlossMap, TRANSFORM_TEX(uv,_SpecGlossMap)))
 #endif
 
 #else

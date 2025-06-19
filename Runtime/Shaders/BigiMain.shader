@@ -29,7 +29,7 @@ Shader "Bigi/Main"
         [Space]
         [Header(Normal mapping)]
         [Space]
-        [NoScaleOffset] [Normal] _BumpMap("Normal Map", 2D) = "bump" {}
+        [Normal] _BumpMap("Normal Map", 2D) = "bump" {}
         [Toggle(NORMAL_MAPPING)] _UsesNormalMap("Enable normal map (NOT ANIMATABLE)", Float) = 1
         [Space]
         [Space]
