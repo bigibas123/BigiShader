@@ -78,7 +78,7 @@ Shader "Bigi/World (WIP)"
         _LightEnvironmentMultiplier ("Environment Multiplier",Range(0.0,5.0)) = 1.0
         _LightMainMultiplier ("Main Light Multiplier",Range(0.0,5.0)) = 1.0
         _LightAddMultiplier ("Added Pixel Light Multiplier",Range(0.0,5.0)) = 1.0
-        _VRSLGIStrength ("VRSL-GI Strength", Range(0.0,5.0)) = 0.25
+        _VRSLGIStrength ("VRSL-GI Strength", Range(0.0,5.0)) = 0.0
         _LTCGIStrength ("LTCGI Strenght", Range(0.0,5.0)) = 1.0
         _VRCLVStrength ("VRC Light Volumes Strength",Range(0.0,5.0)) = 1.0
 
@@ -106,12 +106,6 @@ Shader "Bigi/World (WIP)"
         _TV_Square_Opacity ("TV opacity", Range(0.0,1.0)) = 0.0
         [ToggleUI] _SquareTVTest ("Enable temporarily to display tv location", Range(0.0,1.0)) = 0.0
         _TV_Square_Position ("TV Position & Size", Vector) = (0.0,0.0,1.0,1.0)
-
-        [Header(Stencil settings (NOT ANIMATABLE))]
-        [Space]
-        [IntRange] _MainStencilRef ("Write this stencil value for the main avatar passes", Range(0, 255)) = 148
-        [IntRange] _MainStencilWriteMask ("Use this mask while writing main passes", Range(0, 255)) = 255
-        [Enum(UnityEngine.Rendering.StencilOp)] _MainStencilPass ("Operation on the value of the stencil buffer in main passes", Float) = 2
 
         [Header(Multi Texture)]
         [Space]

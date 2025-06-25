@@ -47,7 +47,7 @@ namespace b_light
 		#if defined(UNITY_PASS_FORWARDBASE)
 		IFZEROAPPLY(_LTCGIStrength, 1.0);
 		IFZEROAPPLY(_VRCLVStrength, 1.0);
-		IFZEROAPPLY(_VRSLGIStrength, 0.25);
+		IFZEROAPPLY(_VRSLGIStrength, 0.0);
 		#endif
 
 		IFZEROAPPLY(_LightVertexMultiplier, 1.0);
