@@ -1,7 +1,7 @@
 {
   "name": "cc.dingemans.bigibas123.bigishader",
   "displayName": "Bigibas123's shaders",
-  "version": "2.2.0-beta.2",
+  "version": "3.0.0",
   "license": "MIT-0",
   "author": {
 	"name": "bigibas123"
@@ -12,7 +12,7 @@
 	"lygia": ">=1.1.7",
 	"com.llealloo.audiolink": ">=0.2.6",
 	"at.pimaker.ltcgi": ">= 1.6.0",
-    "red.sim.lightvolumes": ">= 1.0.1"
+    "red.sim.lightvolumes": ">= 2.0.0-dev.1"
   },
   "url": "https://github.com/bigibas123/BigiShader.git",
   "legacyFolders": {},
