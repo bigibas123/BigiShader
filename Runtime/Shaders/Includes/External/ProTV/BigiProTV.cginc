@@ -35,19 +35,12 @@ namespace b_protv_util
 }
 #endif
 
-#ifdef PROTV_SQUARE_ENABLED
 #include "../../Core/BigiTextureCreation.cginc"
 #include "../../Core/BigiShaderParams.cginc"
 
 #define GET_PROTV(uv) (b_protv_util::GetProTV(uv))
 #define PROTV_PRESENT() (b_protv_util::IsProtvPresent())
 
-#else
-
-#define GET_PROTV(uv) (float4(0.0,0.0,0.0,0.0))
-#define PROTV_PRESENT() (false)
-
-#endif
 namespace b_protv_util
 {
 	float4 getTexColor(float2 uv)

@@ -27,6 +27,8 @@ uniform float _OutlineWidth;
 //TV
 #ifndef BIGI_PROTV_PARAMS_DEFINED
 #define BIGI_PROTV_PARAMS_DEFINED
+uniform float _EnableProTVSquare;
+#define BIGI_PROTV_ON_VAR _EnableProTVSquare
 uniform float _SquareTVTest;
 #define BIGI_PROTV_TEST_VAR _SquareTVTest
 uniform float _TV_Square_Opacity;
