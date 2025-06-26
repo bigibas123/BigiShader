@@ -31,7 +31,7 @@ namespace b_sound
 	*/
 	float GetAudioLink(float x)
 	{
-		x = (x  % 1.0);
+		x = (x % 1.0);
 		float totalValue = 0;
 		totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 1.0) % 1) * AUDIOLINK_WIDTH, 0)).r;
 		// totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 2.0) % 1) * AUDIOLINK_WIDTH, 1)).r;
@@ -51,8 +51,8 @@ namespace b_sound
 	half4 GetDMXOrALColor(in const ALSettings conf)
 	{
 		MixRatio mix;
-		mix.totalColor = 0;
-		mix.totalWeight = 0;
+		mix.totalColor = half3(0.0, 0.0, 0.0);
+		mix.totalWeight = max(0.0, 1.0 - (conf.AL_Theme_Weight));
 		const uint2 cord = ALPASS_FILTEREDAUDIOLINK + uint2(5, 0);
 		const float bassIntensity = AudioLinkData(cord).r;
 		//AL Theme
@@ -64,7 +64,7 @@ namespace b_sound
 				float4 color3 = AudioLinkData(ALPASS_THEME_COLOR2);
 				float4 color4 = AudioLinkData(ALPASS_THEME_COLOR3);
 				float4 intensities = float4(RGBToHSV(color1.rgb * color1.a).z, RGBToHSV(color2.rgb * color2.a).z,
-											RGBToHSV(color3.rgb * color3.a).z, RGBToHSV(color4.rgb * color4.a).z);
+				                            RGBToHSV(color3.rgb * color3.a).z, RGBToHSV(color4.rgb * color4.a).z);
 
 				float4 finalColor;
 				if (intensities.w > (Epsilon * 3.0))
@@ -99,7 +99,7 @@ namespace b_sound
 				case AudioLinkMode::ALM_WireFrame:
 					{
 						doMixProperly(mix, finalColor.rgb,
-									soundIntensity * conf.AL_Theme_Weight * GetAudioLink(conf.AL_Distance));
+						              soundIntensity * conf.AL_Theme_Weight * GetAudioLink(conf.AL_Distance));
 						break;
 					}
 				}
