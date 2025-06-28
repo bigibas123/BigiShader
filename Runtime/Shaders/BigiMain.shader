@@ -55,7 +55,7 @@ Shader "Bigi/Main"
         [Header(Specular and Smooth)]
         [Space]
         [NoScaleOffset] _SpecSmoothMap ("Specular (rgb) and Smoothness (a) map (Deprecated)", 2D) = "black" {}
-        [NoScaleOffset] _SpecGlossMap ("Specular (rgb) and Glossiness/Smoothness (a) map", 2D) = "black" {}
+        _SpecGlossMap ("Specular (rgb) and Glossiness/Smoothness (a) map", 2D) = "black" {}
 
         [Header(Ambient Occlusion)]
         [Space]

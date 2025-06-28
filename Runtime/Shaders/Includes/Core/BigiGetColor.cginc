@@ -45,10 +45,10 @@
 	#ifndef UNITY_STANDARD_INPUT_INCLUDED
 	#include <HLSLSupport.cginc>
 	UNITY_DECLARE_TEX2D_NOSAMPLER(_SpecGlossMap);
-	float4 _SpecGlossMap_ST;
 	#endif
+	float4 _SpecGlossMap_ST;
 	#include "./BigiMainTex.cginc"
-		#define GET_SPEC_GLOSS(uv) (SAMPLE_TEX2D(_SpecGlossMap, TRANSFORM_TEX(uv,_SpecGlossMap)))
+	#define GET_SPEC_GLOSS(uv) (SAMPLE_TEX2D(_SpecGlossMap, TRANSFORM_TEX(uv,_SpecGlossMap)))
 #endif
 
 #else
