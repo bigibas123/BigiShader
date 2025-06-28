@@ -18,6 +18,8 @@
 #endif
 #include <Packages/lygia/generative/voronoi.hlsl>
 
+#include "../Core/BigiShaderParams.cginc"
+
 
 namespace b_effects
 {
