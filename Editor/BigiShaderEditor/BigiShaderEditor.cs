@@ -512,9 +512,6 @@ namespace cc.dingemans.bigibas123.bigishader
 		Decal3_Position,
 		Decal3_ST,
 		Decal3_TexelSize,
-		Decal3_HDR,
-		MainStencilRef,
-		MainStencilWriteMask,
-		MainStencilPass
+		Decal3_HDR
 	}
 }

@@ -13,7 +13,7 @@
 			#endif
 		#endif
 	#ifndef UNITY_STANDARD_INPUT_INCLUDED
-		#define GET_TEX_COLOR_MAINTEX(uv) UNITY_SAMPLE_TEX2D(MAINTEX_NAME,uv)
+		#define GET_TEX_COLOR_MAINTEX(uv) UNITY_SAMPLE_TEX2D(MAINTEX_NAME,TRANSFORM_TEX(uv,MAINTEX_NAME))
 	#else
 		#define GET_TEX_COLOR_MAINTEX(uv) (tex2D(MAINTEX_NAME, uv))
 	#endif
@@ -33,13 +33,14 @@
 			float4 _MainTexArray_ST;
 		#endif
 
-		#define GET_TEX_COLOR_MAINTEX(uv) UNITY_SAMPLE_TEX2DARRAY(_MainTexArray,float3(uv,OTHER_TEXTURE_ID_REF))
+		#define GET_TEX_COLOR_MAINTEX(uv) UNITY_SAMPLE_TEX2DARRAY(_MainTexArray,float3(TRANSFORM_TEX(uv,MAINTEX_NAME),OTHER_TEXTURE_ID_REF))
 	#endif
 
 #endif
 #endif
 
 #ifdef MAINTEX_NAME
+
 	#ifndef SAMPLE_TEX2D
 	#ifndef UNITY_STANDARD_INPUT_INCLUDED
 		#include <HLSLSupport.cginc>
@@ -49,21 +50,14 @@
 	#endif
 	#endif
 
-	#ifndef DO_TRANSFORM
-	#include <UnityCG.cginc>
-	#define DO_TRANSFORM(tc) TRANSFORM_TEX(tc, MAINTEX_NAME)
-	#endif
-
-#else
-	#ifndef DO_TRANSFORM
-	#define DO_TRANSFORM(tc) (tc)
-	#endif
 #endif
+
+#include <UnityCG.cginc>
 
 #define DECAL_PARAMS(num) \
 	UNITY_DECLARE_TEX2D(_Decal##num); \
 	float4 _Decal##num##_ST; \
-	namespace b_decal { float4 GetTexColorDecal##num(const in float2 uv){return UNITY_SAMPLE_TEX2D(_Decal##num,uv);} }\
+	namespace b_decal { float4 GetTexColorDecal##num(const in float2 uv){return UNITY_SAMPLE_TEX2D(_Decal##num,TRANSFORM_TEX(uv,_Decal##num));} }\
 	uniform uint _Decal##num##_BlendMode;\
 	uniform float _Decal##num##_Opacity; \
 	uniform float4 _Decal##num##_Position; \

@@ -48,7 +48,7 @@ v2f do_v2fCalc(in v2f o, const in appdata v)
 	#ifdef ROUNDING_VAR_NAME
 	}
 	#endif
-	o.uv.xy = (DO_TRANSFORM(v.uv0));// * o.pos.w;
+	o.uv.xy = (v.uv0);// * o.pos.w;
 	o.uv.zw = float2(0,0);
 	o.normal = UnityObjectToWorldNormal(v.normal);
 	o.distance.w = GET_DISTANCE(v.vertex);

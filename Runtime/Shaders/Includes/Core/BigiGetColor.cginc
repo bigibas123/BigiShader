@@ -15,7 +15,7 @@
 		sampler2D _Mask;
 	#endif
 	float4 _Mask_ST;
-	#define GET_MASK_COLOR(uv) SAMPLE_TEX2D(_Mask, uv)
+	#define GET_MASK_COLOR(uv) SAMPLE_TEX2D(_Mask, TRANSFORM_TEX(uv,_Mask))
 #endif
 
 #ifndef GET_AO
