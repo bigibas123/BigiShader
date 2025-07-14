@@ -77,8 +77,9 @@ namespace b_effects
 		}
 		//"Emissions"
 		{
-			doMixProperly(mix, orig_color.rgb * (max(1.0, _EmissionStrength) * max(1.0, _EmissionStrength)),
-						mask.r * _EmissionStrength, 1.0);
+			fixed3 factor = max(fixed3(1.0, 1.0, 1.0), lighting.rgb) * max(
+				fixed3(1.0, 1.0, 1.0), _EmissionStrength * _EmissionStrength * 4.0);
+			doMixProperly(mix, orig_color.rgb * factor, mask.r * _EmissionStrength, 1.0);
 		}
 		//Screenspace images or uv-based ProTV
 		{
