@@ -461,7 +461,6 @@ namespace cc.dingemans.bigibas123.bigishader
 		LightEnvironmentMultiplier,
 		LightMainMultiplier,
 		LightAddMultiplier,
-		VRSLGIStrength,
 		LTCGIStrength,
 		VRCLVStrength,
 		OcclusionMap,
