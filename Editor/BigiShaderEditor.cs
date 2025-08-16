@@ -5,9 +5,9 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering;
-using static cc.dingemans.bigibas123.bigishader.BigiProperty;
+using static cc.dingemans.bigibas123.bigishader.Editor.BigiProperty;
 
-namespace cc.dingemans.bigibas123.bigishader
+namespace cc.dingemans.bigibas123.bigishader.Editor
 {
 	public class BigiShaderEditor : ShaderGUI
 	{
@@ -470,6 +470,7 @@ namespace cc.dingemans.bigibas123.bigishader
 		OcclusionStrength,
 		AL_Mode,
 		AL_BlockWireFrame,
+		AL_BandMapDistance,
 		AL_Theme_Weight,
 		AL_TC_BassReactive,
 		AL_WireFrameWidth,

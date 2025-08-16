@@ -7,6 +7,7 @@
 #define GET_SOUND_SETTINGS(set) b_sound::ALSettings set; \
 set.AL_Mode = clamp(_AL_Mode, 0, (b_sound::AudioLinkMode::ALM_WireFrame - _AL_BlockWireFrame)); \
 set.AL_Distance = distance.w;\
+set.AL_BandMapDistance = _AL_BandMapDistance;\
 set.AL_Theme_Weight = _AL_Theme_Weight; \
 set.AL_TC_BassReactive = _AL_TC_BassReactive;
 

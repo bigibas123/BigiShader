@@ -16,6 +16,7 @@ namespace b_sound
 	{
 		AudioLinkMode_e AL_Mode;
 		float AL_Distance;
+		bool AL_BandMapDistance;
 		float AL_Theme_Weight;
 		half AL_TC_BassReactive; //bool for bass reactivity of the AL_Theme
 	};
@@ -29,11 +30,11 @@ namespace b_sound
 	/*
 	Strange way of getting an autdiolink value, x [0,1] for how long ago y [0,3] for the band
 	*/
-	float GetAudioLink(float x)
+	float GetAudioLink(float x, uint band = 0)
 	{
 		x = (x % 1.0);
 		float totalValue = 0;
-		totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 1.0) % 1) * AUDIOLINK_WIDTH, 0)).r;
+		totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 1.0) % 1) * AUDIOLINK_WIDTH, band)).r;
 		// totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 2.0) % 1) * AUDIOLINK_WIDTH, 1)).r;
 		// totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 4.0) % 1) * AUDIOLINK_WIDTH, 2)).r;
 		// totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 8.0) % 1) * AUDIOLINK_WIDTH, 3)).r;
@@ -131,7 +132,8 @@ namespace b_sound
 
 	float GetWaves(in float distance)
 	{
-		return (GetAudioLink(distance) * 2.5) + Epsilon; //+ (GetAutoCorrelator(distance * 10.0) * 2.5) + 1.0;
+		return (GetAudioLink(distance) * 2.5) + Epsilon;
+		//+ (GetAutoCorrelator(distance * 10.0) * 2.5) + 1.0;
 	}
 }
 #endif

@@ -1,9 +1,8 @@
-Shader "Bigi/LogoPlane(2DArray)"
+Shader "Bigi/LogoPlane(Texture)"
 {
 	Properties
 	{
-		_MainTexArray ("Texture", 2DArray) = "black" {}
-		_Logo_FlipBookID ("CellNumber", Int) = 0
+		[MainTexture] _MainTex ("Texture", 2D) = "black" {}
 		_AL_Weight("Audiolink Intensity",Range(0.0,1.0)) = 0.0
 		_MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.2
 		[ToggleUI] _Alpha_Non_Premul("Non premultiplied colors (Multiplies alpha with main color)", Float) = 1
@@ -15,13 +14,6 @@ Shader "Bigi/LogoPlane(2DArray)"
 		{
 			"RenderType" = "Transparent" "Queue" = "Transparent" "IgnoreProjector" = "True" "LightMode" = "ForwardBase" "VRCFallback"="Hidden" "LTCGI"="ALWAYS" "PreviewType" = "Plane"
 		}
-
-		CGINCLUDE
-		uniform int _Logo_FlipBookID;
-		#define MULTI_TEXTURE
-		#define OTHER_TEXTURE_ID_REF _Logo_FlipBookID
-		#define OTHER_BIGI_TEXTURES
-		ENDCG
 
 		Pass
 		{
@@ -182,7 +174,7 @@ Shader "Bigi/LogoPlane(2DArray)"
 											unity_DynamicLightmapST);
 				#else
 				o.pos = UnityMetaVertexPosition(v.vertex, v.uv1.xy, float2(0, 0), unity_LightmapST,
-											unity_DynamicLightmapST);
+												unity_DynamicLightmapST);
 				#endif
 				o.uv = TexCoords(v);
 				#ifdef EDITOR_VISUALIZATION

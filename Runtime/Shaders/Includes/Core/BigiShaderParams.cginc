@@ -12,6 +12,7 @@ uniform float _Alpha_Multiplier;
 
 uniform uint _AL_Mode;
 uniform uint _AL_BlockWireFrame;
+uniform uint _AL_BandMapDistance;
 
 uniform float _DMX_Weight;
 uniform float _AL_Theme_Weight;

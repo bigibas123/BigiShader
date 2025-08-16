@@ -1,18 +1,10 @@
 ﻿#ifndef BIGI_LOGOPLANE
 #define BIGI_LOGOPLANE
-#ifndef MULTI_TEXTURE
-#define MULTI_TEXTURE
-#endif
-
 
 #include <UnityCG.cginc>
 uniform float _AL_Weight;
 uniform float _Alpha_Non_Premul;
 
-uniform int _Logo_FlipBookID;
-#define MULTI_TEXTURE
-#define OTHER_TEXTURE_ID_REF _Logo_FlipBookID
-#define OTHER_BIGI_TEXTURES
 #define NO_RESET_MINAMBIENT
 
 #include "./Includes/Epsilon.cginc"

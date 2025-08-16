@@ -84,6 +84,7 @@ Shader "Bigi/Main"
         [Header(Audiolink)]
         [Space]
         [Enum(Flat,0,CenterOut,1,WireFrame,2)] _AL_Mode ("Audiolink mode", Range(0,2)) = 0
+        [ToggleUI] _AL_BandMapDistance ("Spread bands over distance instead of using Bass", Range(0,1)) = 0
         [ToggleUI] _AL_BlockWireFrame ("Block wireframe mode, fallback to CenterOut", Range(0,1)) = 0
         [Space]
         _AL_Theme_Weight("Weight", Range(0.0, 1.0)) = 1.0
@@ -345,8 +346,9 @@ Shader "Bigi/Main"
                 if (AudioLinkIsAvailable())
                 {
                     float4 distance = float4(1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0,GET_DISTANCE(v.vertex));
-                    float3 offset = (normalize(v.normal.xyz) * 2.0) * (_OutlineWidth * 0.01) * b_sound::GetWaves(
-                        distance.w);
+                    float3 offset = (normalize(v.normal.xyz) * 2.0)
+                    * (_OutlineWidth * 0.01)
+                    * b_sound::GetWaves(distance.w);
 
                     offset = lerp(0.0, offset, smoothstep(0.0, Epsilon, _OutlineWidth));
                     v.vertex = v.vertex + float4(offset, 0.0);

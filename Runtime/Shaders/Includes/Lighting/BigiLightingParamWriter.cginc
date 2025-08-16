@@ -62,6 +62,7 @@ namespace b_light
 		IFZEROAPPLY(_FinalLightMultiply, 1.0);
 
 		IFZEROAPPLY(_AL_Mode, 0.0);
+		IFZEROAPPLY(_AL_BandMapDistance, 0.0);
 		#ifdef BIGI_BLOCK_WIREFRAME
 		_AL_BlockWireFrame = 1;
 		#else

@@ -13,6 +13,7 @@
 			#endif
 		#endif
 	#ifndef UNITY_STANDARD_INPUT_INCLUDED
+		#include <HLSLSupport.cginc>
 		#define GET_TEX_COLOR_MAINTEX(uv) UNITY_SAMPLE_TEX2D(MAINTEX_NAME,TRANSFORM_TEX(uv,MAINTEX_NAME))
 	#else
 		#define GET_TEX_COLOR_MAINTEX(uv) (tex2D(MAINTEX_NAME, uv))
