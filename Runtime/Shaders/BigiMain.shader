@@ -116,7 +116,7 @@ Shader "Bigi/Main"
 
     }
 
-    CustomEditor "cc.dingemans.bigibas123.bigishader.BigiShaderEditor"
+    CustomEditor "cc.dingemans.bigibas123.bigishader.Editor.BigiShaderEditor"
     SubShader
     {
         Blend SrcAlpha OneMinusSrcAlpha
