@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering;
+using VRC;
 using static cc.dingemans.bigibas123.bigishader.Editor.BigiProperty;
 
 namespace cc.dingemans.bigibas123.bigishader.Editor
@@ -18,13 +19,20 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 
 			var actualTargets = materialEditor.targets
 				.Select<object, Material>(m => m as Material)
-				.Where(m => m != null);
+				.Where(m => m != null).ToList();
 
 			EditorGUI.BeginChangeCheck();
 			foreach (var m in actualTargets)
 			{
 				CheckIfMaterialPropertiesExist(m);
+				EditorGUI.BeginChangeCheck();
 				FixupMaterial(m);
+				if (EditorGUI.EndChangeCheck())
+				{
+					// Probably won't do anything but
+					// makes a really hard to catch bug of the inspector not showing go away on my machine
+					m.MarkDirty();
+				}
 			}
 
 			EditorGUI.EndChangeCheck();
@@ -512,6 +520,9 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 		Decal3_Position,
 		Decal3_ST,
 		Decal3_TexelSize,
-		Decal3_HDR
+		Decal3_HDR,
+		StencilRef,
+		StencilWMask,
+		StencilRMask
 	}
 }

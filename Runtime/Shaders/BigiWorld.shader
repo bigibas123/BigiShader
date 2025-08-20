@@ -113,6 +113,10 @@ Shader "Bigi/World (WIP)"
         [Toggle(MULTI_TEXTURE)] _MultiTexture("Use multi texture (NOT ANIMATABLE)", Float) = 0
         _OtherTextureId ("Other texture Id", Int) = 0
 
+        [Header(Stencil (Not animatable))]
+        [IntRange] _StencilRef ("Stencil Reference Value", Range(0, 255)) = 64
+        [IntRange] _StencilWMask ("Stencil Write Mask Value", Range(0,255)) = 64
+        [IntRange] _StencilRMask ("Stencil Read Mask Value", Range(0,255)) = 64
 
     }
 

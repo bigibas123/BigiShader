@@ -113,6 +113,10 @@ Shader "Bigi/Main"
         [Toggle(MULTI_TEXTURE)] _MultiTexture("Use multi texture (NOT ANIMATABLE)", Float) = 0
         _OtherTextureId ("Other texture Id", Int) = 0
 
+        [Header(Stencil (Not animatable))]
+        [IntRange] _StencilRef ("Stencil Reference Value", Range(0, 255)) = 32
+        [IntRange] _StencilWMask ("Stencil Write Mask Value", Range(0,255)) = 32
+        [IntRange] _StencilRMask ("Stencil Read Mask Value", Range(0,255)) = 32
 
     }
 
@@ -145,9 +149,9 @@ Shader "Bigi/Main"
             Blend One OneMinusSrcAlpha
             Stencil
             {
-                Ref 32
+                Ref [_StencilRef]
                 Comp Always
-                WriteMask 32
+                WriteMask [_StencilWMask]
                 Pass Replace
             }
             CGPROGRAM
@@ -192,9 +196,9 @@ Shader "Bigi/Main"
             Blend SrcAlpha OneMinusSrcAlpha
             Stencil
             {
-                Ref 32
+                Ref [_StencilRef]
                 Comp Always
-                WriteMask 32
+                WriteMask [_StencilWMask]
                 Pass Replace
             }
             CGPROGRAM
@@ -262,9 +266,9 @@ Shader "Bigi/Main"
             Blend SrcAlpha One
             Stencil
             {
-                Ref 32
+                Ref [_StencilRef]
                 Comp Equal
-                ReadMask 32
+                ReadMask [_StencilRMask]
                 WriteMask 0
                 Pass Keep
                 Fail Keep
@@ -317,9 +321,9 @@ Shader "Bigi/Main"
             // Can't use my own bit as a flag since vrslgi needs 148 exactly to not draw over the avatar
             Stencil
             {
-                Ref 32
+                Ref [_StencilRef]
                 WriteMask 0
-                ReadMask 32
+                ReadMask [_StencilRMask]
                 Comp NotEqual
                 Pass Keep
                 Fail Keep
