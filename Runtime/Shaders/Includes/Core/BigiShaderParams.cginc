@@ -1,6 +1,7 @@
 #ifndef BIGI_SHADER_PARAMS
 #define BIGI_SHADER_PARAMS
-
+#include <HLSLSupport.cginc>
+CBUFFER_START(UnityPerMaterial)
 #ifndef BIGI_UNIFORMS
 #define BIGI_UNIFORMS
 
@@ -94,4 +95,5 @@ uniform half _FinalLightMultiply;
 #endif
 
 #endif
+CBUFFER_END
 #endif

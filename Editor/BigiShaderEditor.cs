@@ -45,6 +45,7 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 					{
 						nameof(UsesAlpha)
 							or nameof(UsesNormalMap)
+							or nameof(Uses2ndNormalMap)
 							or nameof(Decal1Enabled)
 							or nameof(Decal2Enabled)
 							or nameof(Decal3Enabled)
@@ -185,6 +186,10 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 			bool hasNormalMap = (BumpMap.GetTexture(m) is not null);
 			UsesNormalMap.Set(m, hasNormalMap);
 			m.shader.keywordSpace.FindKeyword("NORMAL_MAPPING").Set(m, hasNormalMap);
+
+			bool hasSecondNormalMap = (Bump2ndMap.GetTexture(m) is not null);
+			Uses2ndNormalMap.Set(m, hasSecondNormalMap);
+			m.shader.keywordSpace.FindKeyword("NORMAL_2ND_MAPPING").Set(m, hasSecondNormalMap);
 
 			var usingArray = MainTexArray.GetTexture(m) is not null;
 			MultiTexture.Set(m, usingArray);
@@ -420,6 +425,7 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 		}
 	}
 
+	// ReSharper disable InconsistentNaming
 	public enum BigiProperty
 	{
 		//\s_([A-Za-z_]+)
@@ -443,6 +449,15 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 		BumpMap_TexelSize,
 		BumpMap_HDR,
 		UsesNormalMap,
+		BumpScale,
+		
+		Bump2ndMap,
+		Bump2ndMap_ST,
+		Bump2ndMap_TexelSize,
+		Bump2ndMap_HDR,
+		Uses2ndNormalMap,
+		Bump2ndScale,
+		
 		SpecSmoothMap,
 		SpecSmoothMap_ST,
 		SpecSmoothMap_TexelSize,
@@ -525,4 +540,5 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 		StencilWMask,
 		StencilRMask
 	}
+	// ReSharper restore InconsistentNaming
 }

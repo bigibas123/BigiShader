@@ -2,6 +2,7 @@
 #define BIGI_CUSTOM_VARIANTS_PRAGMA
 
 #pragma shader_feature_local_fragment NORMAL_MAPPING
+#pragma shader_feature_local_fragment NORMAL_2ND_MAPPING
 #pragma shader_feature_local_fragment MULTI_TEXTURE
 #pragma shader_feature_local DO_ALPHA_PLS
 #pragma shader_feature_local_fragment DECAL_1_ENABLED

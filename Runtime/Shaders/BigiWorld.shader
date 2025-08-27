@@ -31,6 +31,11 @@ Shader "Bigi/World (WIP)"
         [Space]
         [Normal] _BumpMap("Normal Map", 2D) = "bump" {}
         [Toggle(NORMAL_MAPPING)] _UsesNormalMap("Enable normal map (NOT ANIMATABLE)", Float) = 1
+        _BumpScale ("Normal Map Scale", Range(-10,10)) = 1.0
+        [Space]
+        [Normal] _Bump2ndMap ("2nd Normal Map", 2D) = "bump" {}
+        [Toggle(NORMAL_2ND_MAPPING)] _Uses2ndNormalMap("Enable second normal map (NOT ANIMATABLE)", Float) = 1
+        _Bump2ndScale ("2nd Normal Map Scale", Range(-10,10)) = 1.0
         [Space]
         [Space]
         [Header(Decals)]

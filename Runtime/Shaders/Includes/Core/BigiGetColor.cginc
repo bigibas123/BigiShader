@@ -28,15 +28,34 @@
 #endif
 
 #ifndef GET_NORMAL
+	#ifndef NORMAL_SCALE_VAR
+		#ifndef UNITY_STANDARD_INPUT_INCLUDED
+		uniform half _BumpScale;
+		#endif
+		#define NORMAL_SCALE_VAR (_BumpScale)
+	#endif
 	#ifdef NORMAL_MAPPING
 		#include <HLSLSupport.cginc>
 		#include <UnityCG.cginc>
 		UNITY_DECLARE_TEX2D_NOSAMPLER(_BumpMap);
 		float4 _BumpMap_ST;
 		#include "./BigiMainTex.cginc"
-		#define GET_NORMAL(uv) SAMPLE_TEX2D(_BumpMap, TRANSFORM_TEX(uv,_BumpMap))
-	#else
-		#define GET_NORMAL(uv) #error "Trying to get normal while normal mapping is disabled"
+		#define GET_NORMAL(uv) (SAMPLE_TEX2D(_BumpMap, TRANSFORM_TEX(uv,_BumpMap)) * NORMAL_SCALE_VAR)
+	#endif
+#endif
+
+
+#ifndef GET_2NDNORMAL
+	#ifndef NORMAL_2ND_SCALE_VAR
+		uniform half _Bump2ndScale;
+		#define NORMAL_2ND_SCALE_VAR (_Bump2ndScale)
+	#endif
+	#ifdef NORMAL_2ND_MAPPING
+		#include <HLSLSupport.cginc>
+		#include <UnityCG.cginc>
+		UNITY_DECLARE_TEX2D_NOSAMPLER(_Bump2ndMap);
+		float4 _Bump2ndMap_ST;
+		#define GET_2NDNORMAL(uv) (SAMPLE_TEX2D(_Bump2ndMap, TRANSFORM_TEX(uv,_Bump2ndMap)) * NORMAL_2ND_SCALE_VAR)
 	#endif
 #endif
 
