@@ -23,37 +23,40 @@ namespace bigi_texture
 		return shifted;
 	}
 
-	// TODO Maybe better color mixing/layering
-	float4 DoMix(in float4 total, const in float4 input, const in float param, const in uint mode)
+	// TODO Maybe better color mixing/layering?
+	// Might already be the best it can be?
+	// I'm doing color + alpha blending and using the color blending terms
+	float4 DoMix(in float4 total, const in float4 input, const in float strength, const in uint mode)
 	{
-		const float decalWeight = (input.a * param);
+		const float decalWeight = (input.a * strength);
 		float3 result;
 		switch (mode)
 		{
 		default:
 		case 0: // Replace
 			{
-				result = input.rgb;
+				result = input.rgb * (input.a * total.a);
 				break;
 			}
 		case 1: // Multiply
 			{
-				result = total.rgb * input.rgb;
+				result = total.rgb * (input.rgb * input.a);
 				break;
 			}
 		case 2: // Screen
 			{
-				result = 1.0 - ((1.0 - total.rgb) * (1.0 - input.rgb));
+				result = (1.0 - ((1.0 - (total.rgb * total.a)) * (1.0 - (input.rgb * input.a))))
+					* ((input.a + total.a) / 2.0);
 				break;
 			}
 		case 3: // Add
 			{
-				result = total.rgb + input.rgb;
+				result = total.rgb + (input.rgb * input.a);
 				break;
 			}
 		case 4: // Subtract
 			{
-				result = total.rgb - input.rgb;
+				result = total.rgb - (input.rgb * input.a);
 				break;
 			}
 		}
@@ -94,7 +97,8 @@ namespace bigi_texture
 		#ifndef BIGI_PROTV_TEST_VAR
 		#define BIGI_PROTV_TEST_VAR (false)
 		#endif
-		if (BIGI_PROTV_ON_VAR && ((BIGI_PROTV_TEST_VAR || (PROTV_PRESENT() && BIGI_PROTV_OPACITY_VAR > Epsilon)) && IsInsidePos(BIGI_PROTV_POSITION_VAR, uv)))
+		if (BIGI_PROTV_ON_VAR && ((BIGI_PROTV_TEST_VAR || (PROTV_PRESENT() && BIGI_PROTV_OPACITY_VAR > Epsilon)) &&
+			IsInsidePos(BIGI_PROTV_POSITION_VAR, uv)))
 		{
 			const float4 decalColor = b_protv_util::getTexColor(CalcDecalUv(BIGI_PROTV_POSITION_VAR, uv));
 			color = DoMix(color, decalColor, max(BIGI_PROTV_OPACITY_VAR, BIGI_PROTV_TEST_VAR), 0.0);
