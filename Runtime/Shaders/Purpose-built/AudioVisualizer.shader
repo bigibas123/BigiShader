@@ -174,7 +174,7 @@ Shader "Bigi/AudioVisualizer" {
 				}
 			}
 
-			#include "./Includes/ColorUtil.cginc"
+			#include "../Includes/ColorUtil.cginc"
 
 			float4 frag(const g2f i) : SV_Target
 			{

@@ -23,11 +23,11 @@ Shader "Bigi/HeartRate" {
 		#define DO_TRANSFORM(UV) (UV)
 		#define GETUV (i.uv)
 		#define GET_TEX_COLOR(UV)  (determineValue(UV))
-		#include "./Includes/Epsilon.cginc"
-		#include "./Includes/ToonVert.cginc"
-		#include "./Includes/Lighting/BigiLightingParamWriter.cginc"
-		#include "./Includes/Effects/SoundUtilsDefines.cginc"
-		#include "./Includes/Lighting/LightUtilsDefines.cginc"
+		#include "../Includes/Epsilon.cginc"
+		#include "../Includes/ToonVert.cginc"
+		#include "../Includes/Lighting/BigiLightingParamWriter.cginc"
+		#include "../Includes/Effects/SoundUtilsDefines.cginc"
+		#include "../Includes/Lighting/LightUtilsDefines.cginc"
 
 		uniform int _Heartrate;
 
@@ -91,7 +91,7 @@ Shader "Bigi/HeartRate" {
 			ZWrite On
 			ZTest Less
 			CGPROGRAM
-			#include_with_pragmas "./Includes/Pragmas/VRCLighting.cginc"
+			#include_with_pragmas "../Includes/Pragmas/VRCLighting.cginc"
 			#pragma vertex vertd alpha
 			#pragma fragment fragd alpha
 			v2f vertd(appdata v)
@@ -127,7 +127,7 @@ Shader "Bigi/HeartRate" {
 			ZTest LEqual
 			Blend SrcAlpha OneMinusSrcAlpha
 			CGPROGRAM
-			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
+			#include_with_pragmas "../Includes/Pragmas/ForwardBase.cginc"
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
 			ENDCG
@@ -146,7 +146,7 @@ Shader "Bigi/HeartRate" {
 			ZTest LEqual
 			Blend One One
 			CGPROGRAM
-			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
+			#include_with_pragmas "../Includes/Pragmas/ForwardAdd.cginc"
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
 			ENDCG
@@ -167,7 +167,7 @@ Shader "Bigi/HeartRate" {
 			ZTest LEqual
 			Blend SrcAlpha OneMinusSrcAlpha
 			CGPROGRAM
-			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
+			#include_with_pragmas "../Includes/Pragmas/ForwardBase.cginc"
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
 			ENDCG
@@ -187,7 +187,7 @@ Shader "Bigi/HeartRate" {
 			ZTest LEqual
 			Blend One One
 			CGPROGRAM
-			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
+			#include_with_pragmas "../Includes/Pragmas/ForwardAdd.cginc"
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
 			ENDCG

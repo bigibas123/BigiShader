@@ -22,12 +22,12 @@ Shader "Bigi/ALTest" {
 			#pragma vertex bigi_toon_vert
 			#pragma fragment frag
 			#define NO_MAINTEX
-			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
+			#include_with_pragmas "../Includes/Pragmas/ForwardBase.cginc"
 			#pragma target 3.0
 			#define GET_TEX_COLOR(uv) float4(1.0,1.0,1.0,1.0)
 
-			#include "./Includes/ToonVert.cginc"
-			#include "./Includes/Lighting/BigiLightingParamWriter.cginc"
+			#include "../Includes/ToonVert.cginc"
+			#include "../Includes/Lighting/BigiLightingParamWriter.cginc"
 			#include <Packages/com.llealloo.audiolink/Runtime/Shaders/AudioLink.cginc>
 			#include <Packages/com.llealloo.audiolink/Runtime/Shaders/SmoothPixelFont.cginc>
 
@@ -138,11 +138,11 @@ Shader "Bigi/ALTest" {
 			#pragma target 3.0
 			#pragma vertex bigi_toon_vert
 			#pragma fragment frag
-			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
+			#include_with_pragmas "../Includes/Pragmas/ForwardAdd.cginc"
 
-			#include "./Includes/Epsilon.cginc"
-			#include "./Includes/ToonVert.cginc"
-			#include "./Includes/Lighting/LightUtilsDefines.cginc"
+			#include "../Includes/Epsilon.cginc"
+			#include "../Includes/ToonVert.cginc"
+			#include "../Includes/Lighting/LightUtilsDefines.cginc"
 
 			fragOutput frag(v2f i)
 			{
@@ -179,7 +179,7 @@ Shader "Bigi/ALTest" {
 			CGPROGRAM
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
-			#include_with_pragmas "./Includes/Pragmas/ShadowCaster.cginc"
+			#include_with_pragmas "../Includes/Pragmas/ShadowCaster.cginc"
 			#pragma target 3.0
 			#include "UnityCG.cginc"
 			uniform int _Invisibility;

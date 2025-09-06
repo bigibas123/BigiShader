@@ -63,7 +63,7 @@ Shader "Bigi/AudioVisualizer(Particle)" {
 			#pragma target 5.0
 			#pragma fragmentoption ARB_precision_hint_fastest
 
-			#include "./Includes/Lighting/BigiLightUtils.cginc"
+			#include "../Includes/Lighting/BigiLightUtils.cginc"
 
 			v2g vert(appdata v)
 			{
@@ -182,7 +182,7 @@ Shader "Bigi/AudioVisualizer(Particle)" {
 				}
 			}
 
-			#include "./Includes/ColorUtil.cginc"
+			#include "../Includes/ColorUtil.cginc"
 
 			fragOutput frag(g2f i) : SV_Target
 			{
