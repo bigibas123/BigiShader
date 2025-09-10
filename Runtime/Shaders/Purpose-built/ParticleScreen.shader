@@ -316,7 +316,9 @@ Shader "Bigi/ParticleScreen(WIP)"
 				o.pos = i.vertex;
 				#if !defined(EDITOR_VISUALIZATION)
 				o.uv.xy = i.uv1.xy;
+				#if defined(DYNAMICLIGHTMAP_ON) || defined(UNITY_PASS_META)
 				o.uv.zw = i.uv2.xy;
+				#endif
 				#endif
 				return o;
 				#endif

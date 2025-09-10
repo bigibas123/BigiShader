@@ -17,10 +17,6 @@ void b_particalizer_geomBase(triangle B_P_V2G input[3], uint pid : SV_PrimitiveI
                              inout PointStream<B_P_V2G> os,
                              uint instanceID : SV_GSInstanceID)
 {
-	if (pid % 2 == 1)
-	{	
-		return;
-	}
 	const float3 scale = 1.0 / float3(
 		length(unity_ObjectToWorld._m00_m10_m20),
 		length(unity_ObjectToWorld._m01_m11_m21),
