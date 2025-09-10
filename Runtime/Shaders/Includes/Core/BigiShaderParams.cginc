@@ -61,6 +61,9 @@ uniform float _LightSmoothness;
 uniform uint _LightSteps;
 #ifdef MIRROR_THING
 uniform float _DoMirrorThing;
+#define MIRROR_THING_VAR (_DoMirrorThing)
+#else
+#define MIRROR_THING_VAR (0.0)
 #endif
 
 #ifdef UNITY_PASS_FORWARDBASE

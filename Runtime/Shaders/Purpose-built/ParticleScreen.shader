@@ -1,4 +1,38 @@
-Shader "Bigi/ParticleScreen(WIP)"
+/*
+Modification of the ProTV/VideoScreen Shader by ArchiTechVR.
+
+This version outputs a bunch of opengl points instead of being a normal screen.
+It only request a single tris to set the min-max position of the particles
+and will generate a grid of points in object space.
+At the time of writing it is configured to generate 64x36 grid in the xy direction to neatly space out the points in a 16:9 viewport,
+These counts can be reconfigured in the `Runtime/Shaders/Includes/Jank/ParticalizerDefines.cginc` 
+file using the POINT_COUNT_* and INSTANCE_COUNT_* variables, It should be ifdef'd enough to not have to modify that file.
+If you want to add way more points to the the screen, make it consist of more triangles.
+
+
+ProTV/VideoScreen License:
+
+(based on the ISC License)
+
+Copyright (c) 2020-2024 ArchiTechVR
+
+Permission to use, copy, modify, and/or distribute this asset for any
+purpose, except for resale in whole or in part, with or without fee is hereby granted, 
+provided that the above copyright notice and this permission notice appear in all copies.
+For clarity, permission is expressly granted to distribute and sell assets and prefabs
+which make use of the functions and/or content of this asset.
+
+THE ASSET IS PROVIDED "AS IS" AND THE AUTHOR(S) DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS ASSET INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS ASSET.
+
+*/
+
+Shader "Bigi/ParticleScreen(ProTVBased)"
 {
 	Properties
 	{
@@ -71,33 +105,7 @@ Shader "Bigi/ParticleScreen(WIP)"
 				UNITY_FOG_COORDS(1)
 			};
 
-			#define B_P_V2G fragdata
-			#include "../Includes/Jank/ParticalizerDefines.cginc"
-
-			namespace b_particalizer
-			{
-				void calc_min_step(inout min_step_obj output, const in fragdata input[3], const in float4 point_counts)
-				{
-					B_P_MS_CALC(float4, vertex, input, output, xyzw, point_counts);
-					B_P_MS_CALC(float2, uv, input, output, xy, point_counts);
-					#if defined(FOG_LINEAR) || defined(FOG_EXP) || defined(FOG_EXP2)
-						B_P_MS_CALC(float1, input, output, fogCoord, z, point_counts);
-					#endif
-				}
-
-				void calc_v2g(inout fragdata output, const in min_step_obj min_step, const in float4 coords,
-							const in float3 world_scale)
-				{
-					B_P_V_CALC(vertex, min_step, output, xyzw, coords);
-					B_P_V_CALC(uv, min_step, output, xy, coords);
-					#if defined(FOG_LINEAR) || defined(FOG_EXP) || defined(FOG_EXP2)
-						B_P_V_CALC(fogCoord, min_step, output, z, coords);
-					#endif
-					output.vertex = UnityObjectToClipPos(output.vertex);
-				}
-			}
-
-			#include "../Includes/Jank/Particalizer.cginc"
+			#include "../Includes/Jank/ProTVScreen/Standard.cginc"
 
 			fragdata vertBase(vertdata v)
 			{
@@ -159,7 +167,7 @@ Shader "Bigi/ParticleScreen(WIP)"
 			// GPU Instancing support https://docs.unity3d.com/2019.4/Documentation/Manual/GPUInstancing.html
 			#pragma multi_compile_instancing
 			#include "UnityCG.cginc"
-			#include "Packages/dev.architech.protv/Resources/Shaders/ProTVCore.cginc"
+			#include <Packages/dev.architech.protv/Resources/Shaders/ProTVCore.cginc>
 
 			float2 getScreenUV(float4 screenPos)
 			{
@@ -186,29 +194,7 @@ Shader "Bigi/ParticleScreen(WIP)"
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
-			#define B_P_V2G fragdata
-			#include "../Includes/Jank/ParticalizerDefines.cginc"
-
-			namespace b_particalizer
-			{
-				void calc_min_step(inout min_step_obj output, const in fragdata input[3], const in float4 point_counts)
-				{
-					B_P_MS_CALC(float4, vertex, input, output, xyzw, point_counts);
-					B_P_MS_CALC(float2, uv, input, output, xy, point_counts);
-					B_P_MS_CALC(float4, screenPos, input, output, xyzw, point_counts);
-				}
-
-				void calc_v2g(inout fragdata output, const in min_step_obj min_step, const in float4 coords,
-							const in float3 world_scale)
-				{
-					B_P_V_CALC(vertex, min_step, output, xyzw, coords);
-					B_P_V_CALC(uv, min_step, output, xy, coords);
-					B_P_V_CALC(screenPos, min_step, output, xyzw, coords);
-					output.vertex = UnityObjectToClipPos(output.vertex);
-				}
-			}
-
-			#include "../Includes/Jank/Particalizer.cginc"
+			#include "../Includes/Jank/ProTVScreen/Overlay.cginc"
 
 			fragdata vert(const vertdata v)
 			{
@@ -268,45 +254,11 @@ Shader "Bigi/ParticleScreen(WIP)"
 			#pragma shader_feature_local _CLIP_BORDERS
 			#pragma shader_feature_local _CROP_GAMMAZONE
 			#include "UnityStandardMeta.cginc"
-			#include "Packages/dev.architech.protv/Resources/Shaders/ProTVCore.cginc"
+			#include <Packages/dev.architech.protv/Resources/Shaders/ProTVCore.cginc>
 
 			float _GIBrightness;
 
-			#define B_P_V2G v2f_meta
-			#include "../Includes/Jank/ParticalizerDefines.cginc"
-
-			namespace b_particalizer
-			{
-				void calc_min_step(inout min_step_obj output, const in v2f_meta input[3], const in float4 point_counts)
-				{
-					B_P_MS_CALC(float4, pos, input, output, xyzw, point_counts);
-					B_P_MS_CALC(float4, uv, input, output, xyzw, point_counts);
-					#ifdef EDITOR_VISUALIZATION
-					B_P_MS_CALC(float2, vizUV, input, output, xy, point_counts);
-					B_P_MS_CALC(float4, lightCoord, input, output, xyzw, point_counts);
-					#endif
-				}
-
-				void calc_v2g(inout v2f_meta output, const in min_step_obj min_step, const in float4 coords,
-							const in float3 world_scale)
-				{
-					B_P_V_CALC(pos, min_step, output, xyzw, coords);
-					B_P_V_CALC(uv, min_step, output, xyzw, coords);
-					#ifdef EDITOR_VISUALIZATION
-					B_P_V_CALC(vizUV, min_step,output, xy, point_counts);
-					B_P_V_CALC(lightCoord, min_step,output, xyzw, point_counts);
-					#endif
-					//UnityMetaVertexPosition(v.vertex, v.uv1.xy, v.uv2.xy, unity_LightmapST, unity_DynamicLightmapST);
-					#if !defined(EDITOR_VISUALIZATION)
-					output.pos = UnityMetaVertexPosition(output.pos, output.uv.xy, output.uv.zw, unity_LightmapST,
-														unity_DynamicLightmapST);
-					#else
-					output.pos = UnityObjectToClipPos(output.pos);
-					#endif
-				}
-			}
-
-			#include "../Includes/Jank/Particalizer.cginc"
+			#include "../Includes/Jank/ProTVScreen/Meta.cginc"
 
 			v2f_meta vert_meta2(const VertexInput i)
 			{
@@ -378,34 +330,7 @@ Shader "Bigi/ParticleScreen(WIP)"
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
-			#define B_P_V2G v2f
-			#include "../Includes/Jank/ParticalizerDefines.cginc"
-
-			namespace b_particalizer
-			{
-				void calc_min_step(inout min_step_obj output, const in v2f input[3], const in float4 point_counts)
-				{
-					B_P_MS_CALC(float4, pos, input, output, xyzw, point_counts);
-					B_P_MS_CALC(float3, normal, input, output, xyz, point_counts);
-				}
-
-				void calc_v2g(inout v2f output, const in min_step_obj min_step, const in float4 coords,
-							const in float3 world_scale)
-				{
-					B_P_V_CALC(pos, min_step, output, xyzw, coords);
-					B_P_V_CALC(normal, min_step, output, xyz, coords);
-					struct
-					{
-						float4 vertex;
-						float3 normal;
-					} v;
-					v.vertex = output.pos;
-					v.normal = output.normal;
-					TRANSFER_SHADOW_CASTER_NOPOS(output, output.pos)
-				}
-			}
-
-			#include "../Includes/Jank/Particalizer.cginc"
+			#include "../Includes/Jank/ProTVScreen/ShadowCaster.cginc"
 
 			v2f vertShadow(const appdata v)
 			{
@@ -456,7 +381,7 @@ Shader "Bigi/ParticleScreen(WIP)"
 			#pragma multi_compile_instancing
 
 			#include "UnityCG.cginc"
-			#include "Packages/dev.architech.protv/Resources/Shaders/ProTVCore.cginc"
+			#include <Packages/dev.architech.protv/Resources/Shaders/ProTVCore.cginc>
 
 			struct vertdata
 			{
@@ -475,29 +400,7 @@ Shader "Bigi/ParticleScreen(WIP)"
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
-			#define B_P_V2G fragdata
-			#include "../Includes/Jank/ParticalizerDefines.cginc"
-
-			namespace b_particalizer
-			{
-				void calc_min_step(inout min_step_obj output, const in fragdata input[3], const in float4 point_counts)
-				{
-					B_P_MS_CALC(float4, vertex, input, output, xyzw, point_counts);
-					B_P_MS_CALC(float2, uv, input, output, xy, point_counts);
-					B_P_MS_CALC(float4, nz, input, output, xyzw, point_counts);
-				}
-
-				void calc_v2g(inout fragdata output, const in min_step_obj min_step, const in float4 coords,
-							const in float3 world_scale)
-				{
-					B_P_V_CALC(vertex, min_step, output, xyzw, coords);
-					B_P_V_CALC(uv, min_step, output, xy, coords);
-					B_P_V_CALC(nz, min_step, output, xyzw, coords);
-					output.vertex = UnityObjectToClipPos(output.vertex);
-				}
-			}
-
-			#include "../Includes/Jank/Particalizer.cginc"
+			#include "../Includes/Jank/ProTVScreen/DepthNormals.cginc"
 
 			fragdata vertDepthNormals(vertdata v)
 			{
@@ -559,7 +462,7 @@ Shader "Bigi/ParticleScreen(WIP)"
 			#pragma multi_compile_instancing
 
 			#include "UnityCG.cginc"
-			#include "Packages/dev.architech.protv/Resources/Shaders/ProTVCore.cginc"
+			#include <Packages/dev.architech.protv/Resources/Shaders/ProTVCore.cginc>
 
 			struct vertdata
 			{
@@ -576,27 +479,7 @@ Shader "Bigi/ParticleScreen(WIP)"
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
-			#define B_P_V2G fragdata
-			#include "../Includes/Jank/ParticalizerDefines.cginc"
-
-			namespace b_particalizer
-			{
-				void calc_min_step(inout min_step_obj output, const in fragdata input[3], const in float4 point_counts)
-				{
-					B_P_MS_CALC(float4, vertex, input, output, xyzw, point_counts);
-					B_P_MS_CALC(float2, uv, input, output, xy, point_counts);
-				}
-
-				void calc_v2g(inout fragdata output, const in min_step_obj min_step, const in float4 coords,
-							const in float3 world_scale)
-				{
-					B_P_V_CALC(vertex, min_step, output, xyzw, coords);
-					B_P_V_CALC(uv, min_step, output, xy, coords);
-					output.vertex = UnityObjectToClipPos(output.vertex);
-				}
-			}
-
-			#include "../Includes/Jank/Particalizer.cginc"
+			#include "../Includes/Jank/ProTVScreen/DepthOnly.cginc"
 
 			fragdata vertDepthOnly(vertdata v)
 			{

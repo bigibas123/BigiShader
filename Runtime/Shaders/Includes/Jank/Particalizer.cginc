@@ -1,4 +1,6 @@
-﻿#ifndef PARTICALIZER_INCLUDED
+﻿
+
+#ifndef PARTICALIZER_INCLUDED
 #define PARTICALIZER_INCLUDED
 
 #if defined(PARTICALIZER_DEFINES_INCLUDED)
@@ -17,14 +19,15 @@ void b_particalizer_geomBase(triangle B_P_V2G input[3], uint pid : SV_PrimitiveI
                              inout PointStream<B_P_V2G> os,
                              uint instanceID : SV_GSInstanceID)
 {
-	const float3 scale = 1.0 / float3(
-		length(unity_ObjectToWorld._m00_m10_m20),
-		length(unity_ObjectToWorld._m01_m11_m21),
-		length(unity_ObjectToWorld._m02_m12_m22)
-	);
-
 	UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input[0]);
 	UNITY_SETUP_INSTANCE_ID(input[0]);
+	
+	const float3 scale = 1.0 / float3(
+	length(unity_ObjectToWorld._m00_m10_m20),
+	length(unity_ObjectToWorld._m01_m11_m21),
+	length(unity_ObjectToWorld._m02_m12_m22)
+);
+	
 	b_particalizer::min_step_obj min_step;
 	UNITY_INITIALIZE_OUTPUT(b_particalizer::min_step_obj, min_step);
 	
@@ -49,8 +52,10 @@ void b_particalizer_geomBase(triangle B_P_V2G input[3], uint pid : SV_PrimitiveI
 			instanceID / INSTANCE_COUNTS.x / INSTANCE_COUNTS.y/
 			INSTANCE_COUNTS.z, INSTANCE_COUNTS.w)
 	);
-
-	#define FORSHORT(axis) UNITY_UNROLL for(float i##axis = 0; i##axis < POINT_COUNTS_PER_INSTANCE.axis; ++i##axis)
+	// UNITY_UNROLL creates ~3300 instructions, without it's ~120. So I decided to avoid it
+	// UNITY_LOOP adds a couple of instructions +~10 ish. Not too bad
+	// UNITY_FASTOPT adds about the same as UNITY_LOOP
+	#define FORSHORT(axis) for(float i##axis = 0; i##axis < POINT_COUNTS_PER_INSTANCE.axis; ++i##axis)
 
 	FORSHORT(x)
 	{

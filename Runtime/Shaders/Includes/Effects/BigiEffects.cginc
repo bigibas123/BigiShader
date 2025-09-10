@@ -7,9 +7,7 @@
 #include "../ColorUtil.cginc"
 #include "./SoundUtilsDefines.cginc"
 
-#ifdef MIRROR_THING
 #include "../ScruffyRufflesAndMerlinDerivatives.cginc"
-#endif
 
 #ifndef BIGI_LYGIA_PATCHES
 #ifndef RANDOM_SCALE_4
@@ -48,12 +46,12 @@ namespace b_effects
 	}
 
 	fixed4 apply_effects(const in float4 pos,
-						const in half2 uv,
-						const in fixed4 mask,
-						const in fixed4 orig_color,
-						const in fixed4 lighting,
-						const in float4 distance,
-						const in float4 staticTexturePos
+	                     const in half2 uv,
+	                     const in fixed4 mask,
+	                     const in fixed4 orig_color,
+	                     const in fixed4 lighting,
+	                     const in float4 distance,
+	                     const in float4 staticTexturePos
 	)
 	{
 		BEffectsTracker mix;
@@ -69,7 +67,8 @@ namespace b_effects
 			}
 			else
 			{
-				maskWeight = min(distance.x, min(distance.y, distance.z)); // Get minimum distance from edge (will be 0 on edge and 1/3 in the center)
+				maskWeight = min(distance.x, min(distance.y, distance.z));
+				// Get minimum distance from edge (will be 0 on edge and 1/3 in the center)
 				//maskWeight /= pos.w; // For keeping it the same width at a distance
 				maskWeight = 1.0 - step(_AL_WireFrameWidth / 9.0, maskWeight);
 			}
@@ -99,9 +98,10 @@ namespace b_effects
 
 		//Voronoi
 		{
-			if (_Voronoi > Epsilon || (_DoMirrorThing && IsInMirror()))
+			if (_Voronoi > Epsilon || (MIRROR_THING_VAR && IsInMirror())
+			)
 			{
-				float vWeight = (_DoMirrorThing && IsInMirror()) ? 1.0 : _Voronoi;
+				float vWeight = (MIRROR_THING_VAR && IsInMirror()) ? 1.0 : _Voronoi;
 				//TODO move somewhere earlier so it respects lighting
 				doMixProperly(mix, get_voronoi(uv) * lighting, vWeight, mix.totalWeight + vWeight);
 			}
@@ -112,7 +112,7 @@ namespace b_effects
 			if (_MonoChrome > Epsilon)
 			{
 				doMixProperly(mix, Monochromize(mix.totalColor, orig_color.a), _MonoChrome,
-							mix.totalWeight + _MonoChrome);
+				              mix.totalWeight + _MonoChrome);
 			}
 		}
 

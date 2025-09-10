@@ -77,7 +77,7 @@ namespace b_light
 		#endif
 		#ifdef MIRROR_THING
 		#ifndef NO_RESET_MIRROR_THING
-		IFZEROAPPLY(_DoMirrorThing, 0.0);
+		IFZEROAPPLY(MIRROR_THING_VAR, 0.0);
 		#endif
 		#endif
 		
