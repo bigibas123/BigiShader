@@ -85,7 +85,8 @@ Shader "Bigi/ParticleScreen(WIP)"
 					#endif
 				}
 
-				void calc_v2g(inout fragdata output, const in min_step_obj min_step, const in float4 coords)
+				void calc_v2g(inout fragdata output, const in min_step_obj min_step, const in float4 coords,
+							const in float3 world_scale)
 				{
 					B_P_V_CALC(vertex, min_step, output, xyzw, coords);
 					B_P_V_CALC(uv, min_step, output, xy, coords);
@@ -197,7 +198,8 @@ Shader "Bigi/ParticleScreen(WIP)"
 					B_P_MS_CALC(float4, screenPos, input, output, xyzw, point_counts);
 				}
 
-				void calc_v2g(inout fragdata output, const in min_step_obj min_step, const in float4 coords)
+				void calc_v2g(inout fragdata output, const in min_step_obj min_step, const in float4 coords,
+							const in float3 world_scale)
 				{
 					B_P_V_CALC(vertex, min_step, output, xyzw, coords);
 					B_P_V_CALC(uv, min_step, output, xy, coords);
@@ -285,7 +287,8 @@ Shader "Bigi/ParticleScreen(WIP)"
 					#endif
 				}
 
-				void calc_v2g(inout v2f_meta output, const in min_step_obj min_step, const in float4 coords)
+				void calc_v2g(inout v2f_meta output, const in min_step_obj min_step, const in float4 coords,
+							const in float3 world_scale)
 				{
 					B_P_V_CALC(pos, min_step, output, xyzw, coords);
 					B_P_V_CALC(uv, min_step, output, xyzw, coords);
@@ -295,7 +298,8 @@ Shader "Bigi/ParticleScreen(WIP)"
 					#endif
 					//UnityMetaVertexPosition(v.vertex, v.uv1.xy, v.uv2.xy, unity_LightmapST, unity_DynamicLightmapST);
 					#if !defined(EDITOR_VISUALIZATION)
-					output.pos = UnityMetaVertexPosition(output.pos,output.uv.xy,output.uv.zw,unity_LightmapST, unity_DynamicLightmapST);
+					output.pos = UnityMetaVertexPosition(output.pos, output.uv.xy, output.uv.zw, unity_LightmapST,
+														unity_DynamicLightmapST);
 					#else
 					output.pos = UnityObjectToClipPos(output.pos);
 					#endif
@@ -385,7 +389,8 @@ Shader "Bigi/ParticleScreen(WIP)"
 					B_P_MS_CALC(float3, normal, input, output, xyz, point_counts);
 				}
 
-				void calc_v2g(inout v2f output, const in min_step_obj min_step, const in float4 coords)
+				void calc_v2g(inout v2f output, const in min_step_obj min_step, const in float4 coords,
+							const in float3 world_scale)
 				{
 					B_P_V_CALC(pos, min_step, output, xyzw, coords);
 					B_P_V_CALC(normal, min_step, output, xyz, coords);
@@ -396,7 +401,7 @@ Shader "Bigi/ParticleScreen(WIP)"
 					} v;
 					v.vertex = output.pos;
 					v.normal = output.normal;
-					TRANSFER_SHADOW_CASTER_NOPOS(output,output.pos)
+					TRANSFER_SHADOW_CASTER_NOPOS(output, output.pos)
 				}
 			}
 
@@ -482,7 +487,8 @@ Shader "Bigi/ParticleScreen(WIP)"
 					B_P_MS_CALC(float4, nz, input, output, xyzw, point_counts);
 				}
 
-				void calc_v2g(inout fragdata output, const in min_step_obj min_step, const in float4 coords)
+				void calc_v2g(inout fragdata output, const in min_step_obj min_step, const in float4 coords,
+							const in float3 world_scale)
 				{
 					B_P_V_CALC(vertex, min_step, output, xyzw, coords);
 					B_P_V_CALC(uv, min_step, output, xy, coords);
@@ -581,7 +587,8 @@ Shader "Bigi/ParticleScreen(WIP)"
 					B_P_MS_CALC(float2, uv, input, output, xy, point_counts);
 				}
 
-				void calc_v2g(inout fragdata output, const in min_step_obj min_step, const in float4 coords)
+				void calc_v2g(inout fragdata output, const in min_step_obj min_step, const in float4 coords,
+							const in float3 world_scale)
 				{
 					B_P_V_CALC(vertex, min_step, output, xyzw, coords);
 					B_P_V_CALC(uv, min_step, output, xy, coords);

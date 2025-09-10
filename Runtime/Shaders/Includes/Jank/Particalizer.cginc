@@ -70,7 +70,7 @@ void b_particalizer_geomBase(triangle B_P_V2G input[3], uint pid : SV_PrimitiveI
 					UNITY_INITIALIZE_OUTPUT(B_P_V2G, curVal);
 					UNITY_TRANSFER_INSTANCE_ID(input[0], curVal);
 					UNITY_TRANSFER_VERTEX_OUTPUT_STEREO(input[0], curVal);
-					b_particalizer::calc_v2g(curVal, min_step, float4(x, y, z, w));
+					b_particalizer::calc_v2g(curVal, min_step, float4(x, y, z, w),scale);
 					os.Append(curVal);
 					os.RestartStrip();
 				}

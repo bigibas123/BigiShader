@@ -25,7 +25,7 @@ namespace b_particalizer
 
 	void calc_min_step(inout min_step_obj output, const in B_P_V2G input[3], const in float4 point_counts);
 
-	void calc_v2g(inout B_P_V2G output, const in min_step_obj min_step, const in float4 coords);
+	void calc_v2g(inout B_P_V2G output, const in min_step_obj min_step, const in float4 coords, const in float3 world_scale);
 }
 
 
