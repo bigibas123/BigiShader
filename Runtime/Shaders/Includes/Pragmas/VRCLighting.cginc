@@ -9,6 +9,7 @@
 #pragma warning (default : 3206) // implicit truncation of vector type
 #pragma warning (default : 3205) // conversion of larger type to smaller
 
+#include_with_pragmas "./StageDefines.cginc"
 
 #pragma fragmentoption ARB_precision_hint_fastest
 #pragma multi_compile_instancing

@@ -31,6 +31,7 @@ Shader "Bigi/LogoPlane(2DArray)"
 			ZWrite On
 			ZTest Less
 			CGPROGRAM
+			#include_with_pragmas "./Includes/Pragmas/StageDefines.cginc"
 			#include "./Includes/LogoPlane.cginc"
 			#pragma vertex vertd alpha
 			#pragma fragment fragd alpha

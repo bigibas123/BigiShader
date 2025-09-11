@@ -32,7 +32,7 @@ Shader "Bigi/AudioVisualizer(Particle)" {
 			#pragma geometry geom
 			#pragma vertex vert
 			#pragma fragment frag
-			#pragma multi_compile_instancing
+			#include_with_pragmas "../Includes/Pragmas/ForwardBase.cginc"
 			#include <UnityCG.cginc>
 			#include <Packages/com.llealloo.audiolink/Runtime/Shaders/AudioLink.cginc>
 
@@ -184,7 +184,7 @@ Shader "Bigi/AudioVisualizer(Particle)" {
 
 			#include "../Includes/ColorUtil.cginc"
 
-			fragOutput frag(g2f i) : SV_Target
+			fragOutput frag(g2f i)
 			{
 				fragOutput o;
 				UNITY_INITIALIZE_OUTPUT(fragOutput, o);

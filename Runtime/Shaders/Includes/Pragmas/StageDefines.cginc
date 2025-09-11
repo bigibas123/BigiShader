@@ -1,0 +1,12 @@
+﻿#ifndef BIGI_PRAGMA_STAGEDEFINES_INCLUDED
+#define BIGI_PRAGMA_STAGEDEFINES_INCLUDED
+
+
+#pragma multi_compile_local_vertex BIGI_VERTEX_STAGE
+#pragma multi_compile_local_fragment BIGI_FRAGMENT_STAGE
+#pragma multi_compile_local_hull BIGI_HULL_STAGE
+#pragma multi_compile_local_domain BIGI_DOMAIN_STAGE
+#pragma multi_compile_local_geometry BIGI_GEOMETRY_STAGE
+#pragma multi_compile_local_raytracing BIGI_RAYTRACING_STAGE
+
+#endif

@@ -1,6 +1,8 @@
 ﻿#ifndef BIGI_CUSTOM_VARIANTS_PRAGMA
 #define BIGI_CUSTOM_VARIANTS_PRAGMA
 
+#include_with_pragmas "./StageDefines.cginc"
+
 #pragma shader_feature_local_fragment NORMAL_MAPPING
 #pragma shader_feature_local_fragment NORMAL_2ND_MAPPING
 #pragma shader_feature_local_fragment MULTI_TEXTURE

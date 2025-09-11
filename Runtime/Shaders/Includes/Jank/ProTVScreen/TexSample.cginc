@@ -145,7 +145,7 @@ namespace b_particalizer
 
 	float4 GetOffset(const in B_P_V2G input)
 	{
-		return float4(0.0f, 0.0f, 1.0 - RGBToHSV(SampleTexture(input).rgb).z, 0.0f);
+		return float4(0.0f, 0.0f, (1.0 - RGBToHSV(SampleTexture(input).rgb).z) - 0.5, 0.0f);
 	}
 }
 
