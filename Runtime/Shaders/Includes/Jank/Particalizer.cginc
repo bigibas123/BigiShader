@@ -1,6 +1,4 @@
-﻿
-
-#ifndef PARTICALIZER_INCLUDED
+﻿#ifndef PARTICALIZER_INCLUDED
 #define PARTICALIZER_INCLUDED
 
 #if defined(PARTICALIZER_DEFINES_INCLUDED)
@@ -21,22 +19,22 @@ void b_particalizer_geomBase(triangle B_P_V2G input[3], uint pid : SV_PrimitiveI
 {
 	UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input[0]);
 	UNITY_SETUP_INSTANCE_ID(input[0]);
-	
+
 	const float3 scale = 1.0 / float3(
-	length(unity_ObjectToWorld._m00_m10_m20),
-	length(unity_ObjectToWorld._m01_m11_m21),
-	length(unity_ObjectToWorld._m02_m12_m22)
-);
-	
+		length(unity_ObjectToWorld._m00_m10_m20),
+		length(unity_ObjectToWorld._m01_m11_m21),
+		length(unity_ObjectToWorld._m02_m12_m22)
+	);
+
 	b_particalizer::min_step_obj min_step;
 	UNITY_INITIALIZE_OUTPUT(b_particalizer::min_step_obj, min_step);
-	
+
 	UNITY_INITIALIZE_OUTPUT(B_P_V2G, min_step.step);
 	UNITY_INITIALIZE_OUTPUT(B_P_V2G, min_step.min);
-	
+
 	UNITY_TRANSFER_INSTANCE_ID(input[0], min_step.step);
 	UNITY_TRANSFER_INSTANCE_ID(input[0], min_step.min);
-	
+
 	UNITY_TRANSFER_VERTEX_OUTPUT_STEREO(input[0], min_step.step);
 	UNITY_TRANSFER_VERTEX_OUTPUT_STEREO(input[0], min_step.min);
 
@@ -44,13 +42,10 @@ void b_particalizer_geomBase(triangle B_P_V2G input[3], uint pid : SV_PrimitiveI
 
 
 	float4 instanceIds = int4(
-		glsl_mod(instanceID, INSTANCE_COUNTS.x),
-		glsl_mod(instanceID / INSTANCE_COUNTS.x, INSTANCE_COUNTS.y),
-		glsl_mod(instanceID / INSTANCE_COUNTS.x / INSTANCE_COUNTS.y,
-		         INSTANCE_COUNTS.z),
-		glsl_mod(
-			instanceID / INSTANCE_COUNTS.x / INSTANCE_COUNTS.y/
-			INSTANCE_COUNTS.z, INSTANCE_COUNTS.w)
+		glsl_mod(((float)instanceID), INSTANCE_COUNTS.x),
+		glsl_mod(((float)instanceID) / INSTANCE_COUNTS.x, INSTANCE_COUNTS.y),
+		glsl_mod(((float)instanceID) / INSTANCE_COUNTS.x / INSTANCE_COUNTS.y, INSTANCE_COUNTS.z),
+		glsl_mod(((float)instanceID) / INSTANCE_COUNTS.x / INSTANCE_COUNTS.y/INSTANCE_COUNTS.z, INSTANCE_COUNTS.w)
 	);
 	// UNITY_UNROLL creates ~3300 instructions, without it's ~120. So I decided to avoid it
 	// UNITY_LOOP adds a couple of instructions +~10 ish. Not too bad
@@ -75,7 +70,7 @@ void b_particalizer_geomBase(triangle B_P_V2G input[3], uint pid : SV_PrimitiveI
 					UNITY_INITIALIZE_OUTPUT(B_P_V2G, curVal);
 					UNITY_TRANSFER_INSTANCE_ID(input[0], curVal);
 					UNITY_TRANSFER_VERTEX_OUTPUT_STEREO(input[0], curVal);
-					b_particalizer::calc_v2g(curVal, min_step, float4(x, y, z, w),scale);
+					b_particalizer::calc_v2g(curVal, min_step, float4(x, y, z, w), scale);
 					os.Append(curVal);
 					os.RestartStrip();
 				}
