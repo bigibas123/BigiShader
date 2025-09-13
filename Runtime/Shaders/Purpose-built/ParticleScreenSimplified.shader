@@ -37,7 +37,7 @@
 			#pragma vertex simple_vert
 			#pragma geometry b_particalizer_geomBase
 			#pragma fragment simple_frag
-			#include <Packages/lygia/generative/random.hlsl>
+			#include <Packages/lygia/generative/cnoise.hlsl>
 
 			#include_with_pragmas "../Includes/Pragmas/ForwardBase.cginc"
 			#include_with_pragmas "../Includes/Pragmas/CustomVariants.cginc"
@@ -110,7 +110,7 @@
 					}
 					else
 					{
-						output.pos.z += (random(output.uv) - 0.5) * _WavinessFactor;
+						output.pos.z += cnoise((output.uv * 4.0) + float2(_Time.y/8.0,_Time.y/4.0)) * _WavinessFactor;
 					}
 					output.pos = UnityObjectToClipPos(output.pos);
 				}

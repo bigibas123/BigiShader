@@ -16,10 +16,11 @@
 float4 round_val(const in float4 snapToPixel, const uniform in float rounding)
 {
 	float gridSize = 1.0 / (rounding + Epsilon);
-	float4 vt = snapToPixel;
+	float4 vt;
 	vt.xyz = snapToPixel.xyz / snapToPixel.w;
 	vt.xy = floor(gridSize * vt.xy) / gridSize;
 	vt.xyz *= snapToPixel.w;
+	vt.w = snapToPixel.w;
 	return vt;
 }
 

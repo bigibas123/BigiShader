@@ -227,6 +227,7 @@ Shader "Bigi/Main"
                 #else
                 v2f o;
                 UNITY_INITIALIZE_OUTPUT(v2f, o);
+                o.pos = asfloat(-1); // Discard this vertex basically. Results in NaN
                 return o;
                 #endif
             }
