@@ -35,6 +35,7 @@ Shader "Bigi/AudioVisualizer" {
 			#pragma multi_compile_instancing
 			#include <UnityCG.cginc>
 			#include <Packages/com.llealloo.audiolink/Runtime/Shaders/AudioLink.cginc>
+			#include "../Includes/ColorUtil.cginc"
 
 			struct appdata
 			{
@@ -58,6 +59,17 @@ Shader "Bigi/AudioVisualizer" {
 
 			#pragma target 5.0
 			#pragma fragmentoption ARB_precision_hint_fastest
+			CBUFFER_START(UnityPerMaterial)
+			uniform float _AudioMult;
+			uniform float _Size;
+			uniform float _Spacing;
+			CBUFFER_END
+			#define INSTANCE_COUNT (32)
+			#define QUAD_COUNT (AUDIOLINK_ETOTALBINS / INSTANCE_COUNT)
+			#define TOTAL_QUADS (INSTANCE_COUNT * QUAD_COUNT)
+
+			#define SIZE (_Size)
+			#define SPACING (SIZE * 2.0 * (_Spacing + 1.0))
 
 			v2g vert(appdata v)
 			{
@@ -118,8 +130,6 @@ Shader "Bigi/AudioVisualizer" {
 				addTriangleC(qq.topLeft, qq.upRight, qq.bottomRight, os);
 			}
 
-			uniform float _AudioMult;
-
 			quadContainer makeVertQuad(v2g m, const in float size)
 			{
 				quadContainer res;
@@ -140,16 +150,7 @@ Shader "Bigi/AudioVisualizer" {
 				res.upRight.vertex.y += size;
 				return res;
 			}
-
-			uniform float _Size;
-			uniform float _Spacing;
-			#define INSTANCE_COUNT (32)
-			#define QUAD_COUNT (AUDIOLINK_ETOTALBINS / INSTANCE_COUNT)
-			#define TOTAL_QUADS (INSTANCE_COUNT * QUAD_COUNT)
-
-			#define SIZE (_Size)
-			#define SPACING (SIZE * 2.0 * (_Spacing + 1.0))
-
+			
 			[instance(INSTANCE_COUNT)]
 			[maxvertexcount(6 * QUAD_COUNT * 2)]
 			void geom(
@@ -173,8 +174,7 @@ Shader "Bigi/AudioVisualizer" {
 					addQuad(main, os);
 				}
 			}
-
-			#include "../Includes/ColorUtil.cginc"
+			
 
 			float4 frag(const g2f i) : SV_Target
 			{

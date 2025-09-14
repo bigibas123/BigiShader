@@ -30,7 +30,9 @@
         #include <UnityInstancing.cginc>
         #define SHIFT_AND_BYTE(val,shift) (((val >> (shift * 8)) & 0xFF) / 16.0)
         #define CONVERT_HEX(val) float3(SHIFT_AND_BYTE(0x##val,2),SHIFT_AND_BYTE(0x##val,1),SHIFT_AND_BYTE(0x##val,0))
+        CBUFFER_START(UnityPerMaterial)
         uniform float _Scale;
+        CBUFFER_END
         
         struct appdata
         {

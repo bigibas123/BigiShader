@@ -62,8 +62,20 @@ Shader "Bigi/AudioVisualizer(Particle)" {
 
 			#pragma target 5.0
 			#pragma fragmentoption ARB_precision_hint_fastest
+			CBUFFER_START(UnityPerMaterial)
+			uniform float _AudioMult;
+			uniform float _Size;
+			uniform float _Spacing;
+			CBUFFER_END
+			#define INSTANCE_COUNT (32)
+			#define QUAD_COUNT (AUDIOLINK_ETOTALBINS / INSTANCE_COUNT)
+			#define TOTAL_QUADS (INSTANCE_COUNT * QUAD_COUNT)
+
+			#define SIZE (_Size)
+			#define SPACING (SIZE * 2.0 * (_Spacing + 1.0))
 
 			#include "../Includes/Lighting/BigiLightUtils.cginc"
+			#include "../Includes/ColorUtil.cginc"
 
 			v2g vert(appdata v)
 			{
@@ -126,8 +138,6 @@ Shader "Bigi/AudioVisualizer(Particle)" {
 				addTriangleC(qq.topLeft, qq.upRight, qq.bottomRight, os);
 			}
 
-			uniform float _AudioMult;
-
 			quadContainer makeVertQuad(v2g m, const in float size)
 			{
 				quadContainer res;
@@ -148,15 +158,6 @@ Shader "Bigi/AudioVisualizer(Particle)" {
 				res.upRight.vertex.y += size;
 				return res;
 			}
-
-			uniform float _Size;
-			uniform float _Spacing;
-			#define INSTANCE_COUNT (32)
-			#define QUAD_COUNT (AUDIOLINK_ETOTALBINS / INSTANCE_COUNT)
-			#define TOTAL_QUADS (INSTANCE_COUNT * QUAD_COUNT)
-
-			#define SIZE (_Size)
-			#define SPACING (SIZE * 2.0 * (_Spacing + 1.0))
 
 			[instance(INSTANCE_COUNT)]
 			[maxvertexcount(6 * QUAD_COUNT * 2)]
@@ -181,8 +182,6 @@ Shader "Bigi/AudioVisualizer(Particle)" {
 					addQuad(main, os);
 				}
 			}
-
-			#include "../Includes/ColorUtil.cginc"
 
 			fragOutput frag(g2f i)
 			{

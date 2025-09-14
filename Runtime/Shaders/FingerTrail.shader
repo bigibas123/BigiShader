@@ -26,8 +26,10 @@
 				#include <UnityCG.cginc>
 				#include "./Includes/ColorUtil.cginc"
 				#include "./Includes/Effects/BigiSoundUtils.cginc"
+				CBUFFER_START(UnityPerMaterial)
 				uniform float _Brightness;
 				uniform float _Hue;
+				CBUFFER_END
 
 				struct appdata_t
 				{

@@ -43,7 +43,9 @@
 			#include_with_pragmas "../Includes/Pragmas/CustomVariants.cginc"
 			#include "../Includes/External/ProTV/BigiProTV.cginc"
 			#include "../Includes/ColorUtil.cginc"
+			CBUFFER_START(UnityPerMaterial)
 			uniform float _WavinessFactor;
+			CBUFFER_END
 
 			struct appdata
 			{

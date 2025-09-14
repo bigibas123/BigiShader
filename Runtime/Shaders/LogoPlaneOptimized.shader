@@ -153,9 +153,11 @@ Shader "Bigi/LogoPlane(Texture)"
 			#include <UnityCG.cginc>
 			#include <UnityMetaPass.cginc>
 			#include <UnityStandardInput.cginc>
+			#define BIG_SHADER_PARAMS_CUSTOM_PARAMS \
+				uniform float _AL_Weight; \
+				uniform float _Alpha_Non_Premul;
+			
 			#include "./Includes/Core/BigiGetColor.cginc"
-			uniform float _AL_Weight;
-			uniform float _Alpha_Non_Premul;
 
 			struct v2f_meta
 			{

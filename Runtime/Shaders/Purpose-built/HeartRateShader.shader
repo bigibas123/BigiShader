@@ -16,20 +16,18 @@ Shader "Bigi/HeartRate" {
 		#pragma shader_feature_local_vertex FLIP_XY
 		#pragma shader_feature_local_vertex INVERT_Y
 		#pragma shader_feature_local_vertex INVERT_X
-		#include <UnityCG.cginc>
 		#include <Packages/com.llealloo.audiolink/Runtime/Shaders/SmoothPixelFont.cginc>
 		#define NO_RESET_MINAMBIENT
 		#define NO_MAINTEX
 		#define DO_TRANSFORM(UV) (UV)
 		#define GETUV (i.uv)
 		#define GET_TEX_COLOR(UV)  (determineValue(UV))
+		#define BIG_SHADER_PARAMS_CUSTOM_PARAMS uniform int _Heartrate;
 		#include "../Includes/Epsilon.cginc"
 		#include "../Includes/ToonVert.cginc"
 		#include "../Includes/Lighting/BigiLightingParamWriter.cginc"
 		#include "../Includes/Effects/SoundUtilsDefines.cginc"
 		#include "../Includes/Lighting/LightUtilsDefines.cginc"
-
-		uniform int _Heartrate;
 
 		// Code taken and modified from: https://github.com/llealloo/audiolink/blob/965842714afbca8194c5a25882b8cd70a0ed434a/AudioLinkSandboxUnityProject/Assets/AudioLinkSandbox/Shaders/NewTextTest.shader#L51
 		float4 determineValue(in float2 uv)

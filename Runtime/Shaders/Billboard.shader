@@ -22,10 +22,12 @@
 		#include <HLSLSupport.cginc>
 
 		UNITY_DECLARE_TEX2DARRAY(_MainTexArray);
+		CBUFFER_START(UnityPerMaterial)
 		float4 _MainTexArray_ST;
+		uniform int _TextureId;
+		CBUFFER_END
 		#ifndef BIGI_OTHER_TEXTURE_ID_DEFINED
 		#define BIGI_OTHER_TEXTURE_ID_DEFINED
-		uniform int _TextureId;
 		#define OTHER_TEXTURE_ID_REF _TextureId
 		#endif
 		#define GET_TEX_COLOR(uv) UNITY_SAMPLE_TEX2DARRAY(_MainTexArray, float3(uv, OTHER_TEXTURE_ID_REF))

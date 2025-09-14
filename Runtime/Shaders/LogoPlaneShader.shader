@@ -17,9 +17,9 @@ Shader "Bigi/LogoPlane(2DArray)"
 		}
 
 		CGINCLUDE
-		uniform int _Logo_FlipBookID;
 		#define MULTI_TEXTURE
 		#define OTHER_TEXTURE_ID_REF _Logo_FlipBookID
+		#define BIGI_UNIFORMS_TEXARRAY_REF uniform int _Logo_FlipBookID;
 		#define OTHER_BIGI_TEXTURES
 		ENDCG
 
@@ -161,9 +161,7 @@ Shader "Bigi/LogoPlane(2DArray)"
 			#include <UnityCG.cginc>
 			#include <UnityMetaPass.cginc>
 			#include <UnityStandardInput.cginc>
-			#include "./Includes/Core/BigiGetColor.cginc"
-			uniform float _AL_Weight;
-			uniform float _Alpha_Non_Premul;
+			#include "./Includes/LogoPlane.cginc"
 
 			struct v2f_meta
 			{

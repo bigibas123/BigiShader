@@ -2,8 +2,9 @@
 #define BIGI_LOGOPLANE
 
 #include <UnityCG.cginc>
-uniform float _AL_Weight;
-uniform float _Alpha_Non_Premul;
+#define BIG_SHADER_PARAMS_CUSTOM_PARAMS \
+	uniform float _AL_Weight; \
+	uniform float _Alpha_Non_Premul;
 
 #define NO_RESET_MINAMBIENT
 

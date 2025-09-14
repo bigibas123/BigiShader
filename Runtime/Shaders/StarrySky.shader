@@ -15,8 +15,15 @@ SubShader {
 
     CGINCLUDE
     #include "UnityCG.cginc"
-    
-    float _Rotation;
+    CBUFFER_START(UnityPerMaterial)
+        float _Rotation;
+        half4 _FrontTex_HDR;
+        half4 _BackTex_HDR;
+        half4 _LeftTex_HDR;
+        half4 _RightTex_HDR;
+        half4 _UpTex_HDR;
+        half4 _DownTex_HDR;
+    CBUFFER_END
 
     float3 RotateAroundYInDegrees (float3 vertex, float degrees)
     {
@@ -61,7 +68,6 @@ SubShader {
         #pragma fragment frag
         #pragma target 2.0
         sampler2D _FrontTex;
-        half4 _FrontTex_HDR;
         half4 frag (v2f i) : SV_Target { return skybox_frag(i,_FrontTex, _FrontTex_HDR); }
         ENDCG
     }
@@ -71,7 +77,6 @@ SubShader {
         #pragma fragment frag
         #pragma target 2.0
         sampler2D _BackTex;
-        half4 _BackTex_HDR;
         half4 frag (v2f i) : SV_Target { return skybox_frag(i,_BackTex, _BackTex_HDR); }
         ENDCG
     }
@@ -81,7 +86,6 @@ SubShader {
         #pragma fragment frag
         #pragma target 2.0
         sampler2D _LeftTex;
-        half4 _LeftTex_HDR;
         half4 frag (v2f i) : SV_Target { return skybox_frag(i,_LeftTex, _LeftTex_HDR); }
         ENDCG
     }
@@ -91,7 +95,6 @@ SubShader {
         #pragma fragment frag
         #pragma target 2.0
         sampler2D _RightTex;
-        half4 _RightTex_HDR;
         half4 frag (v2f i) : SV_Target { return skybox_frag(i,_RightTex, _RightTex_HDR); }
         ENDCG
     }
@@ -101,7 +104,6 @@ SubShader {
         #pragma fragment frag
         #pragma target 2.0
         sampler2D _UpTex;
-        half4 _UpTex_HDR;
         half4 frag (v2f i) : SV_Target { return skybox_frag(i,_UpTex, _UpTex_HDR); }
         ENDCG
     }
@@ -111,7 +113,6 @@ SubShader {
         #pragma fragment frag
         #pragma target 2.0
         sampler2D _DownTex;
-        half4 _DownTex_HDR;
         half4 frag (v2f i) : SV_Target { return skybox_frag(i,_DownTex, _DownTex_HDR); }
         ENDCG
     }

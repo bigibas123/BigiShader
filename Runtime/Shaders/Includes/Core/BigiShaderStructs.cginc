@@ -37,7 +37,11 @@ struct appdata
 	float2 uv2 : TEXCOORD2; //Realtime lightmap Uvs
 	float2 uv3 : TEXCOORD3;
 	uint vertexId : SV_VertexID;
+	#ifdef UNITY_VERTEX_INPUT_INSTANCE_ID
 	UNITY_VERTEX_INPUT_INSTANCE_ID
+	#else
+	#warning "Instancing not enabled"
+	#endif
 };
 #endif
 

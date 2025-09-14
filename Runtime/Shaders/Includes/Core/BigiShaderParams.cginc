@@ -8,6 +8,15 @@ CBUFFER_START(UnityPerMaterial)
 uniform float _Alpha_Threshold;
 uniform float _Alpha_Multiplier;
 
+#ifdef BIGI_UNIFORMS_TEXTURE
+BIGI_UNIFORMS_TEXTURE
+#define BIGI_TEXTURE_UNIFORMS_DEFINED
+#endif
+
+#ifdef BIGI_UNIFORMS_TEXARRAY_REF
+BIGI_UNIFORMS_TEXARRAY_REF
+#endif
+
 #ifndef BIGI_UNIFORMS_DMXAL
 #define BIGI_UNIFORMS_DMXAL
 
@@ -96,7 +105,10 @@ uniform half _FinalLightMultiply;
 #endif
 
 #endif
+#endif
 
+#ifdef BIG_SHADER_PARAMS_CUSTOM_PARAMS
+BIG_SHADER_PARAMS_CUSTOM_PARAMS
 #endif
 CBUFFER_END
 #endif

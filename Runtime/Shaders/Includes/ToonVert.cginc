@@ -5,8 +5,8 @@
 
 #include "./Epsilon.cginc"
 #include "./Core/BigiShaderStructs.cginc"
-#include "./Core/BigiShaderParams.cginc"
 #include "./Core/BigiMainTex.cginc"
+#include "./Core/BigiShaderParams.cginc"
 #include "./Lighting/LightUtilsDefines.cginc"
 #include "./Effects/LengthDefine.cginc"
 

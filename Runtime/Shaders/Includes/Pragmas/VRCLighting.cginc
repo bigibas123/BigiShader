@@ -13,6 +13,7 @@
 
 #pragma fragmentoption ARB_precision_hint_fastest
 #pragma multi_compile_instancing
+#include <UnityInstancing.cginc>
 #pragma multi_compile_fog
 
 #pragma skip_variants LIGHTMAP_ON DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRLIGHTMAP_COMBINED _MIXED_LIGHTING_SUBTRACTIVE

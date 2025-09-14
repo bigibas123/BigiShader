@@ -68,6 +68,9 @@ namespace bigi_texture
 	#if defined(GET_TEX_COLOR_MAINTEX)
 	float4 GetTexColor(const in float2 uv)
 	{
+		#ifndef BIGI_TEXTURE_UNIFORMS_DEFINED
+		float4 MAINTEX_NAME##_ST = float4(0,0,0,0);
+		#endif
 		float4 color = GET_TEX_COLOR_MAINTEX(uv);
 		#if defined(DO_ALPHA_PLS) && defined(TRANSPARENT_FORWARD_BASE)
 		color.a  *= _Alpha_Multiplier;

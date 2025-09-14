@@ -1,11 +1,12 @@
 ﻿#ifndef H_BIGI_VRC_LIGHT_VOLUMES_INCL
 #define H_BIGI_VRC_LIGHT_VOLUMES_INCL
 // Query VRC Lightvolumes (by RED_SIM) for light volumes
-
+#ifdef UNITY_PASS_FORWARDBASE
 #include <Packages/red.sim.lightvolumes/Shaders/LightVolumes.cginc>
 
 #include "../../Core/BigiShaderStructs.cginc"
 #include "../../Core/BigiShaderParams.cginc"
+#endif
 
 namespace b_light
 {
