@@ -37,11 +37,11 @@ namespace b_protv_util
 	{
 		#if defined(BIGI_VERTEX_STAGE) || defined(BIGI_FRAGMENT_STAGE)
 		return UNITY_SAMPLE_TEX2D(_Udon_VideoTex, TRANSFORM_TEX(uv, _Udon_VideoTex));
-		#elif defined(BIGI_GEOMETRY_STAGE)
+		#elif defined(BIGI_HULL_STAGE) || defined(BIGI_DOMAIN_STAGE) || defined(BIGI_GEOMETRY_STAGE) || defined(BIGI_RAYTRACING_STAGE)
 		return UNITY_SAMPLE_TEX2D_LOD(_Udon_VideoTex, TRANSFORM_TEX(uv, _Udon_VideoTex),0.0);
 		#else
-		#error "Not supported shader stage"
-		return float4(0,0,0,1);
+		#warning "Not supported shader stage"
+		return UNITY_SAMPLE_TEX2D_LOD(_Udon_VideoTex, TRANSFORM_TEX(uv, _Udon_VideoTex),0.0);
 		#endif
 	}
 }
