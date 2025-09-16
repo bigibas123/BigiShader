@@ -34,13 +34,20 @@
 			ZTest On
 			Blend One OneMinusSrcAlpha
 			CGPROGRAM
+			#pragma target 5.0
+			#pragma multi_compile_instancing
+			#pragma multi_compile_fog
 			#pragma vertex simple_vert
 			#pragma geometry b_particalizer_geomBase
 			#pragma fragment simple_frag
+			//#include_with_pragmas "../Includes/Pragmas/ForwardBase.cginc"
+			//#include_with_pragmas "../Includes/Pragmas/CustomVariants.cginc"
+			#include_with_pragmas "../Includes/Pragmas/StageDefines.cginc"
+			
+			#include <UnityInstancing.cginc>
 			#include <Packages/lygia/generative/cnoise.hlsl>
 
-			#include_with_pragmas "../Includes/Pragmas/ForwardBase.cginc"
-			#include_with_pragmas "../Includes/Pragmas/CustomVariants.cginc"
+			
 			#include "../Includes/External/ProTV/BigiProTV.cginc"
 			#include "../Includes/ColorUtil.cginc"
 			CBUFFER_START(UnityPerMaterial)

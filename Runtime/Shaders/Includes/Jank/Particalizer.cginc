@@ -52,19 +52,40 @@ void b_particalizer_geomBase(triangle B_P_V2G input[3], uint pid : SV_PrimitiveI
 	// UNITY_FASTOPT adds about the same as UNITY_LOOP
 	#define FORSHORT(axis) for(float i##axis = 0; i##axis < POINT_COUNTS_PER_INSTANCE.axis; ++i##axis)
 
+	#if POINT_COUNT_X > 1
 	FORSHORT(x)
 	{
 		float x = ix + (POINT_COUNTS_PER_INSTANCE.x * instanceIds.x);
+		#else
+	{
+		float x = 0.0;
+		#endif
+
+		#if POINT_COUNT_Y > 1
 		FORSHORT(y)
 		{
 			float y = iy + (POINT_COUNTS_PER_INSTANCE.y * instanceIds.y);
+			#else
+		{
+			float y = 0.0;
+			#endif
+			#if POINT_COUNT_Z > 1
 			FORSHORT(z)
 			{
 				float z = iz + (POINT_COUNTS_PER_INSTANCE.z * instanceIds.z);
+			#else
+			{
+				float z = 0.0;
+				#endif
 
+				#if POINT_COUNT_W > 1
 				FORSHORT(w)
 				{
 					float w = iw + (POINT_COUNTS_PER_INSTANCE.w * instanceIds.w);
+				#else
+				{
+					float w = 0.0;
+					#endif
 
 					B_P_V2G curVal;
 					UNITY_INITIALIZE_OUTPUT(B_P_V2G, curVal);
