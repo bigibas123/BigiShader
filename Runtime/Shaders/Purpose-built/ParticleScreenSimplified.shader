@@ -85,17 +85,6 @@
 			}
 
 			#define B_P_V2G v2f
-			/*
-			 16×5 : 9×5 = 80:45
-			 16×6 : 9×6 = 96:54
-			 16×7 : 9×7 = 112:63
-			 16×8 : 9×8 = 128:72
-			 */
-			// Values have to be cleanly divisible into instance count, otherwise it doesn't work
-			#define POINT_COUNT_X 80
-			#define POINT_COUNT_Y 45
-			#define INSTANCE_COUNT_X 10
-			#define INSTANCE_COUNT_Y 3
 			#include "../Includes/Jank/ParticalizerDefines.cginc"
 
 			namespace b_particalizer

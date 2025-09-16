@@ -33,6 +33,14 @@ namespace b_particalizer
 #error "Particalizer requires B_P_V2G Define
 #endif
 
+/*
+ 16×5 : 9×5 = 80:45
+ 16×6 : 9×6 = 96:54
+ 16×7 : 9×7 = 112:63
+ 16×8 : 9×8 = 128:72
+ */
+// Values have to be cleanly divisible into instance count, otherwise it doesn't work
+
 #ifndef POINT_COUNT_X
 #define POINT_COUNT_X 64
 #endif
