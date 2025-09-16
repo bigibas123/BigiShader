@@ -44,7 +44,7 @@
 			#include "../Includes/External/ProTV/BigiProTV.cginc"
 			#include "../Includes/ColorUtil.cginc"
 			CBUFFER_START(UnityPerMaterial)
-			uniform float _WavinessFactor;
+				uniform float _WavinessFactor;
 			CBUFFER_END
 
 			struct appdata
@@ -58,6 +58,7 @@
 			{
 				UNITY_POSITION(pos); //float4 pos : SV_POSITION;
 				float2 uv : TEXCOORD0;
+				UNITY_FOG_COORDS(1)
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
@@ -76,6 +77,10 @@
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 				o.pos = v.vertex;
 				o.uv = v.texcoord;
+				#if defined(FOG_LINEAR) || defined(FOG_EXP) || defined(FOG_EXP2)
+				o.fogCoord = 0.0;
+				#endif
+				
 				return o;
 			}
 
@@ -102,7 +107,7 @@
 				}
 
 				void calc_v2g(inout B_P_V2G output, const in min_step_obj min_step, const in float4 coords,
-							const in float3 world_scale)
+								const in float3 world_scale)
 				{
 					B_P_V_CALC(pos, min_step, output, xyzw, coords);
 					B_P_V_CALC(uv, min_step, output, xy, coords);
@@ -112,9 +117,15 @@
 					}
 					else
 					{
-						output.pos.z += cnoise((output.uv * 4.0) + float2(_Time.y/8.0,_Time.y/4.0)) * _WavinessFactor;
+						float2 offsetUv = output.uv.xy * 4.0;
+						float2 time = float2(_Time.y / 8.0, _Time.y / 4.0);
+						float n1 = cnoise(offsetUv.xy + time.xy);
+						output.pos.z += n1 * _WavinessFactor;
 					}
 					output.pos = UnityObjectToClipPos(output.pos);
+					#if defined(FOG_LINEAR) || defined(FOG_EXP) || defined(FOG_EXP2)
+						UNITY_TRANSFER_FOG(output, output.pos);
+					#endif
 				}
 			}
 
@@ -131,6 +142,7 @@
 				{
 					o.color = float4(0.25, 0.25, 0.25, 0.25);
 				}
+				UNITY_APPLY_FOG(i.fogCoord, o.color);
 				return o;
 			}
 			ENDCG
