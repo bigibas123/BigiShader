@@ -13,6 +13,17 @@ namespace b_protv_util
     {
         return (_Udon_VideoTex_TexelSize.z > 16);
     }
+	float4 GetProTV(const in float2 uv )
+    {
+    	#if defined(BIGI_GEOMETRY_STAGE)
+    	return tex2Dlod(_Udon_VideoTex,float4(TRANSFORM_TEX(uv, _Udon_VideoTex),0.0,0.0));
+    	#elif defined(BIGI_VERTEX_STAGE) || defined(BIGI_FRAGMENT_STAGE)
+    	return tex2D(_Udon_VideoTex,float2(TRANSFORM_TEX(uv, _Udon_VideoTex)));
+    	#else
+    	#error "Not supported shader stage"
+    	return tex2Dlod(_Udon_VideoTex,float4(TRANSFORM_TEX(uv, _Udon_VideoTex),0.0,0.0));
+    	#endif
+    }
 }
 #else
 UNITY_DECLARE_TEX2D(_Udon_VideoTex);
@@ -26,25 +37,21 @@ namespace b_protv_util
 		_Udon_VideoTex.GetDimensions(videoWidth, videoHeight);
 		return (videoWidth > 16);
 	}
+	float4 GetProTV(const in float2 uv )
+	{
+		#if defined(BIGI_GEOMETRY_STAGE)
+		return UNITY_SAMPLE_TEX2D_LOD(_Udon_VideoTex, TRANSFORM_TEX(uv, _Udon_VideoTex),0.0);
+		#elif defined(BIGI_VERTEX_STAGE) || defined(BIGI_FRAGMENT_STAGE)
+		return UNITY_SAMPLE_TEX2D(_Udon_VideoTex, TRANSFORM_TEX(uv, _Udon_VideoTex));
+		#else
+		#error "Not supported shader stage"
+		return UNITY_SAMPLE_TEX2D_LOD(_Udon_VideoTex, TRANSFORM_TEX(uv, _Udon_VideoTex),0.0);
+		#endif
+	}
 	
 }
 #endif
 
-
-namespace b_protv_util
-{
-	float4 GetProTV(const in float2 uv )
-	{
-		#if defined(BIGI_VERTEX_STAGE) || defined(BIGI_FRAGMENT_STAGE)
-		return UNITY_SAMPLE_TEX2D(_Udon_VideoTex, TRANSFORM_TEX(uv, _Udon_VideoTex));
-		#elif defined(BIGI_HULL_STAGE) || defined(BIGI_DOMAIN_STAGE) || defined(BIGI_GEOMETRY_STAGE) || defined(BIGI_RAYTRACING_STAGE)
-		return UNITY_SAMPLE_TEX2D_LOD(_Udon_VideoTex, TRANSFORM_TEX(uv, _Udon_VideoTex),0.0);
-		#else
-		#warning "Not supported shader stage"
-		return UNITY_SAMPLE_TEX2D_LOD(_Udon_VideoTex, TRANSFORM_TEX(uv, _Udon_VideoTex),0.0);
-		#endif
-	}
-}
 
 
 #include "../../Core/BigiShaderParams.cginc"
