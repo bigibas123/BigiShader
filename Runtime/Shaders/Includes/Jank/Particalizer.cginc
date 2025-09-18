@@ -14,7 +14,7 @@
 [instance(INSTANCE_COUNT_TOTAL)]
 [maxvertexcount(POINT_COUNT_PER_INSTANCE_TOTAL)]
 void b_particalizer_geomBase(triangle B_P_V2G input[3], uint pid : SV_PrimitiveID,
-                             inout PointStream<B_P_V2G> os,
+                             inout B_P_STREAMTYPE<B_P_V2G> os,
                              uint instanceID : SV_GSInstanceID)
 {
 	UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input[0]);
@@ -51,6 +51,10 @@ void b_particalizer_geomBase(triangle B_P_V2G input[3], uint pid : SV_PrimitiveI
 	// UNITY_LOOP adds a couple of instructions +~10 ish. Not too bad
 	// UNITY_FASTOPT adds about the same as UNITY_LOOP
 	#define FORSHORT(axis) for(float i##axis = 0; i##axis < POINT_COUNTS_PER_INSTANCE.axis; ++i##axis)
+
+	#if B_P_PRIMITIVE_RESTART_COUNT != -1
+	uint primitiveCount = 0;
+	#endif
 
 	#if POINT_COUNT_X > 1
 	FORSHORT(x)
@@ -93,7 +97,12 @@ void b_particalizer_geomBase(triangle B_P_V2G input[3], uint pid : SV_PrimitiveI
 					UNITY_TRANSFER_VERTEX_OUTPUT_STEREO(input[0], curVal);
 					b_particalizer::calc_v2g(curVal, min_step, float4(x, y, z, w), scale);
 					os.Append(curVal);
-					os.RestartStrip();
+					#if B_P_PRIMITIVE_RESTART_COUNT != -1
+					if ((++primitiveCount) % B_P_PRIMITIVE_RESTART_COUNT == 0)
+					{
+						os.RestartStrip();
+					}
+					#endif
 				}
 			}
 		}

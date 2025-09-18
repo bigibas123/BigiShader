@@ -41,6 +41,27 @@ namespace b_particalizer
  */
 // Values have to be cleanly divisible into instance count, otherwise it doesn't work
 
+#ifndef B_P_STREAMTYPE
+#if defined(B_P_USE_TRIANGLESTREAM)
+#define B_P_STREAMTYPE TriangleStream
+#elif defined(B_P_USE_LINESTREAM)
+#define B_P_STREAMTYPE LineStream
+#else
+#define B_P_STREAMTYPE PointStream
+#endif
+#endif
+
+#ifndef B_P_PRIMITIVE_RESTART_COUNT
+#if defined(B_P_USE_TRIANGLESTREAM)
+#define B_P_PRIMITIVE_RESTART_COUNT 3
+#elif defined(B_P_USE_LINESTREAM)
+#define B_P_PRIMITIVE_RESTART_COUNT 2
+#else
+// Special value to indicate that restart is not required
+#define B_P_PRIMITIVE_RESTART_COUNT -1
+#endif
+#endif
+
 #ifndef POINT_COUNT_X
 #define POINT_COUNT_X 64
 #endif
