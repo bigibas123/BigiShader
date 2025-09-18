@@ -12,7 +12,7 @@ namespace b_particalizer
 		B_P_MS_CALC(float4, vertex, input, output, xyzw, point_counts);
 		B_P_MS_CALC(float2, uv, input, output, xy, point_counts);
 		#if defined(FOG_LINEAR) || defined(FOG_EXP) || defined(FOG_EXP2)
-			B_P_MS_CALC(float1, input, output, fogCoord, z, point_counts);
+			B_P_MS_CALC(float1, fogCoord, input, output, z, point_counts);
 		#endif
 	}
 

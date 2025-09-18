@@ -23,8 +23,8 @@ namespace b_particalizer
 		B_P_V_CALC(pos, min_step, output, xyzw, coords);
 		B_P_V_CALC(uv, min_step, output, xyzw, coords);
 		#ifdef EDITOR_VISUALIZATION
-			B_P_V_CALC(vizUV, min_step,output, xy, point_counts);
-			B_P_V_CALC(lightCoord, min_step,output, xyzw, point_counts);
+			B_P_V_CALC(vizUV, min_step,output, xy, coords);
+			B_P_V_CALC(lightCoord, min_step,output, xyzw, coords);
 		#endif
 		output.pos += GetOffset(output);
 		//UnityMetaVertexPosition(v.vertex, v.uv1.xy, v.uv2.xy, unity_LightmapST, unity_DynamicLightmapST);
