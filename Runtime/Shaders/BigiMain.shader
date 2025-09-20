@@ -22,7 +22,7 @@ Shader "Bigi/Main"
 
         [Header(Extra textures)]
         [Space]
-        _Mask ("Mask", 2D) = "black" {}
+        _Mask ("Mask (r: Emmissions, g: TV/Spacey, b: AudioLink)", 2D) = "black" {}
         _EmissionStrength ("Emission strength", Range(0.0,2.0)) = 1.0
         [Space]
         _Spacey ("Spacey Texture", 2D) = "black" {}
