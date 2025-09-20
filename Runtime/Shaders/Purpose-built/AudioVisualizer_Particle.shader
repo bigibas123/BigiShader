@@ -34,6 +34,7 @@ Shader "Bigi/AudioVisualizer(Particle)" {
 			#pragma fragment frag
 			#include_with_pragmas "../Includes/Pragmas/ForwardBase.cginc"
 			#include <UnityCG.cginc>
+			#include <UnityInstancing.cginc>
 			#include <Packages/com.llealloo.audiolink/Runtime/Shaders/AudioLink.cginc>
 
 			#define BIGI_DEFAULT_APPDATA_DEFINED

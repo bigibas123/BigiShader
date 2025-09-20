@@ -2,6 +2,8 @@
 #define PART_SCR_SHADOWCASTER_INCLUDED
 
 #define B_P_V2G v2f
+#define B_P_USE_LINESTREAM
+#define B_P_PRIMITIVE_RESTART_COUNT 9
 #include "../Includes/Jank/ParticalizerDefines.cginc"
 
 

@@ -2,6 +2,8 @@
 #define PART_SCR_OVERLAY_INCLUDED
 
 #define B_P_V2G fragdata
+#define B_P_USE_LINESTREAM
+#define B_P_PRIMITIVE_RESTART_COUNT 9
 #include "../ParticalizerDefines.cginc"
 #include "./TexSample.cginc"
 
