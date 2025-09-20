@@ -72,7 +72,7 @@ namespace bigi_texture
 		float4 MAINTEX_NAME##_ST = float4(0,0,0,0);
 		#endif
 		float4 color = GET_TEX_COLOR_MAINTEX(uv);
-		#if defined(DO_ALPHA_PLS) && defined(TRANSPARENT_FORWARD_BASE)
+		#if defined(DO_ALPHA_PLS)
 		color.a  *= _Alpha_Multiplier;
 		#endif
 		#ifdef DECAL_1_ENABLED
@@ -106,6 +106,9 @@ namespace bigi_texture
 			const float4 decalColor = b_protv_util::getTexColor(CalcDecalUv(BIGI_PROTV_POSITION_VAR, uv));
 			color = DoMix(color, decalColor, max(BIGI_PROTV_OPACITY_VAR, BIGI_PROTV_TEST_VAR), 0.0);
 		}
+		#endif
+		#if defined(DO_ALPHA_PLS)
+		color.a = clamp(color.a, 0.0, 1.0);
 		#endif
 
 		return color;

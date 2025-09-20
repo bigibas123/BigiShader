@@ -5,8 +5,8 @@ Shader "Bigi/Main"
         [MainTexture] _MainTex ("Texture", 2D) = "black" {}
         [Toggle(DO_ALPHA_PLS)] _UsesAlpha("Is transparent (NOT ANIMATABLE)", Float) = 1
         [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Culling", Float) = 2
-        _Alpha_Threshold ("Alpha threshold",Range(-0.01,1.0)) = 0.99
-        _Alpha_Multiplier ("Alpha Multiplier", Range(0.0,2.0)) = 1.0
+        _Alpha_Threshold ("Alpha threshold",Range(-0.01,1.0)) = 0.99999
+        _Alpha_Multiplier ("Alpha Multiplier", Range(0.0,10.0)) = 1.0
 
         [Header(ZWriteZTest Settings)]
         [Header(Opaque Forward Base)]
@@ -246,14 +246,21 @@ Shader "Bigi/Main"
 
             fragOutput frag(v2f i)
             {
-                const fixed4 orig_color = GET_TEX_COLOR(GETUV);
                 #ifdef DO_ALPHA_PLS
-				if(orig_color.a > _Alpha_Threshold)
+                const fixed4 orig_color = GET_TEX_COLOR(GETUV);
+				if(orig_color.a >= _Alpha_Threshold)
 				{
 					discard;
 				}
-                #endif
                 return b_frag::bigi_frag_fwdbase(i, orig_color);
+                #else
+                fragOutput o;
+		        UNITY_INITIALIZE_OUTPUT(fragOutput, o);
+		        UNITY_SETUP_INSTANCE_ID(i);
+		        UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
+                o.color = float4(0.0, 0.0, 0.0, 0.0);
+                return o;
+                #endif
             }
             ENDCG
         }

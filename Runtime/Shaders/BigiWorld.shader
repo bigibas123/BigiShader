@@ -6,7 +6,7 @@ Shader "Bigi/World (WIP)"
         [Toggle(DO_ALPHA_PLS)] _UsesAlpha("Is transparent (NOT ANIMATABLE)", Float) = 1
         [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Culling", Float) = 2
         _Alpha_Threshold ("Alpha threshold",Range(-0.01,1.0)) = 0.99
-        _Alpha_Multiplier ("Alpha Multiplier", Range(0.0,2.0)) = 1.0
+        _Alpha_Multiplier ("Alpha Multiplier", Range(0.0,10.0)) = 1.0
 
         [Header(ZWriteZTest Settings)]
         [Header(Opaque Forward Base)]
