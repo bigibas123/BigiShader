@@ -60,7 +60,6 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 			if (mats.All(m => !UsesAlpha.GetBool(m)))
 			{
 				materialProperties.RemoveAll(p => p.name == "_" + nameof(Alpha_Threshold));
-				materialProperties.RemoveAll(p => p.name == "_" + nameof(Alpha_Multiplier));
 			}
 
 			if (mats.All(m => !Decal1Enabled.GetBool(m)) && !m_ShowHiddenProps)
@@ -204,7 +203,11 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 
 			if (t is not null)
 			{
-				var usingAlpha = GraphicsFormatUtility.HasAlphaChannel(t.graphicsFormat);
+				var usingAlpha = GraphicsFormatUtility.HasAlphaChannel(t.graphicsFormat) ||
+				                 (
+					                 Alpha_Multiplier.GetFloat(m) < 1-float.Epsilon 
+				                  || Alpha_Multiplier.GetFloat(m) > 1+float.Epsilon
+				                  );
 				UsesAlpha.Set(m, usingAlpha);
 				m.shader.keywordSpace.FindKeyword("DO_ALPHA_PLS").Set(m, usingAlpha);
 
