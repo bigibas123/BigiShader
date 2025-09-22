@@ -24,14 +24,14 @@
 			Name "OpaqueForwardBase"
 			Tags
 			{
-				"Queue" = "Geometry"
-				"RenderType" = "Geometry"
+				"Queue" = "Transparent"
+				"RenderType" = "Transparent"
 				"LightMode" = "ForwardBase"
 				"LTCGI"="ALWAYS"
 			}
 			Cull Off
 			ZWrite On
-			ZTest On
+			ZTest Less
 			Blend One OneMinusSrcAlpha
 			HLSLPROGRAM
 			#pragma target 5.0
