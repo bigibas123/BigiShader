@@ -43,7 +43,9 @@
 			//#include_with_pragmas "../Includes/Pragmas/ForwardBase.cginc"
 			//#include_with_pragmas "../Includes/Pragmas/CustomVariants.cginc"
 			#include_with_pragmas "../Includes/Pragmas/StageDefines.cginc"
-			
+
+			#include <UnityShaderVariables.cginc>
+			#include <UnityShaderUtilities.cginc>
 			#include <UnityInstancing.cginc>
 			#include <Packages/lygia/generative/cnoise.hlsl>
 
