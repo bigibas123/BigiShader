@@ -149,7 +149,7 @@ Shader "Bigi/World (WIP)"
                 "LTCGI"="ALWAYS"
             }
             Cull Off
-            CGPROGRAM
+            HLSLPROGRAM
             #include_with_pragmas "./Includes/Pragmas/Meta.cginc"
             #include"UnityStandardMeta.cginc"
 
@@ -191,7 +191,7 @@ Shader "Bigi/World (WIP)"
 
             #pragma vertex vert_meta
             #pragma fragment frag_meta2
-            ENDCG
+            ENDHLSL
         }
     }
 }

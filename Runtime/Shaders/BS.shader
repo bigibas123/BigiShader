@@ -30,7 +30,7 @@ Shader "Bigi/BS"
             ZTest LEqual
             Blend One OneMinusSrcAlpha
 
-            CGPROGRAM
+            HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
 
@@ -119,7 +119,7 @@ Shader "Bigi/BS"
                 o.color = end;
                 return o;
             }
-            ENDCG
+            ENDHLSL
         }
 
     }

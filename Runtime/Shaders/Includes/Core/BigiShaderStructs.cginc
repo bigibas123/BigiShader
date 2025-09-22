@@ -49,7 +49,6 @@ struct appdata
 #define BIGI_DEFAULT_V2F_DEFINED
 #include <UnityCG.cginc>
 #include <AutoLight.cginc>
-#include <UnityInstancing.cginc>
 
 //intermediate
 struct v2f
@@ -71,8 +70,16 @@ struct v2f
 	#endif
 	float4 distance : POSITION1; // barycentric coordinates (xyz) and distance from arbitrary point (w)
 
+	#ifdef UNITY_VERTEX_INPUT_INSTANCE_ID
 	UNITY_VERTEX_INPUT_INSTANCE_ID
+	#else
+	#warning "Instancing not enabled"
+	#endif
+	#ifdef 	UNITY_VERTEX_OUTPUT_STEREO
 	UNITY_VERTEX_OUTPUT_STEREO
+	#else
+	#warning "Instancing not enabled"
+	#endif
 };
 #endif
 

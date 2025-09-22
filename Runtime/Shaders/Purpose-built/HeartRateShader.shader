@@ -12,7 +12,7 @@ Shader "Bigi/HeartRate" {
 			"RenderType" = "Transparent" "Queue" = "Transparent" "IgnoreProjector" = "True" "LightMode" = "ForwardBase" "VRCFallback"="Hidden" "LTCGI"="ALWAYS"
 		}
 
-		CGINCLUDE
+		HLSLINCLUDE
 		#pragma shader_feature_local_vertex FLIP_XY
 		#pragma shader_feature_local_vertex INVERT_Y
 		#pragma shader_feature_local_vertex INVERT_X
@@ -81,14 +81,14 @@ Shader "Bigi/HeartRate" {
 			UNITY_APPLY_FOG(i.fogCoord, o.color);
 			return o;
 		}
-		ENDCG
+		ENDHLSL
 
 		Pass {
 			ColorMask 0
 			Cull Off
 			ZWrite On
 			ZTest Less
-			CGPROGRAM
+			HLSLPROGRAM
 			#include_with_pragmas "../Includes/Pragmas/VRCLighting.cginc"
 			#pragma vertex vertd alpha
 			#pragma fragment fragd alpha
@@ -107,7 +107,7 @@ Shader "Bigi/HeartRate" {
 				o.color = orig_color;
 				return o;
 			}
-			ENDCG
+			ENDHLSL
 		}
 
 		Pass {
@@ -124,11 +124,11 @@ Shader "Bigi/HeartRate" {
 			ZWrite Off
 			ZTest LEqual
 			Blend SrcAlpha OneMinusSrcAlpha
-			CGPROGRAM
+			HLSLPROGRAM
 			#include_with_pragmas "../Includes/Pragmas/ForwardBase.cginc"
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
-			ENDCG
+			ENDHLSL
 		}
 
 		Pass {
@@ -143,11 +143,11 @@ Shader "Bigi/HeartRate" {
 			ZWrite Off
 			ZTest LEqual
 			Blend One One
-			CGPROGRAM
+			HLSLPROGRAM
 			#include_with_pragmas "../Includes/Pragmas/ForwardAdd.cginc"
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
-			ENDCG
+			ENDHLSL
 		}
 
 		Pass {
@@ -164,11 +164,11 @@ Shader "Bigi/HeartRate" {
 			ZWrite Off
 			ZTest LEqual
 			Blend SrcAlpha OneMinusSrcAlpha
-			CGPROGRAM
+			HLSLPROGRAM
 			#include_with_pragmas "../Includes/Pragmas/ForwardBase.cginc"
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
-			ENDCG
+			ENDHLSL
 		}
 
 
@@ -184,11 +184,11 @@ Shader "Bigi/HeartRate" {
 			ZWrite Off
 			ZTest LEqual
 			Blend One One
-			CGPROGRAM
+			HLSLPROGRAM
 			#include_with_pragmas "../Includes/Pragmas/ForwardAdd.cginc"
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
-			ENDCG
+			ENDHLSL
 		}
 
 	}

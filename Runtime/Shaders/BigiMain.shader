@@ -134,9 +134,9 @@ Shader "Bigi/Main"
             "VRCFallback" = "ToonCutout" "LTCGI"="ALWAYS"
         }
 
-        CGINCLUDE
+        HLSLINCLUDE
         #define MIRROR_THING
-        ENDCG
+        ENDHLSL
 
         Pass
         {
@@ -159,7 +159,7 @@ Shader "Bigi/Main"
                 WriteMask [_StencilWMask]
                 Pass Replace
             }
-            CGPROGRAM
+            HLSLPROGRAM
             #pragma vertex bigi_toon_vert
             #pragma fragment frag
             #pragma geometry bigi_geom
@@ -182,7 +182,7 @@ Shader "Bigi/Main"
                 #endif
                 return b_frag::bigi_frag_fwdbase(i, orig_color);
             }
-            ENDCG
+            ENDHLSL
         }
 
         Pass
@@ -206,7 +206,7 @@ Shader "Bigi/Main"
                 WriteMask [_StencilWMask]
                 Pass Replace
             }
-            CGPROGRAM
+            HLSLPROGRAM
             #define TRANSPARENT_FORWARD_BASE
             #pragma vertex vert alpha
             #pragma fragment frag alpha
@@ -262,7 +262,7 @@ Shader "Bigi/Main"
                 return o;
                 #endif
             }
-            ENDCG
+            ENDHLSL
         }
 
         Pass
@@ -286,7 +286,7 @@ Shader "Bigi/Main"
                 Pass Keep
                 Fail Keep
             }
-            CGPROGRAM
+            HLSLPROGRAM
             #pragma vertex bigi_toon_vert
             #pragma geometry bigi_geom
             #pragma fragment frag
@@ -313,7 +313,7 @@ Shader "Bigi/Main"
                 UNITY_APPLY_FOG(i.fogCoord, o.color);
                 return o;
             }
-            ENDCG
+            ENDHLSL
         }
 
 
@@ -342,7 +342,7 @@ Shader "Bigi/Main"
                 Fail Keep
 
             }
-            CGPROGRAM
+            HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
 
@@ -399,7 +399,7 @@ Shader "Bigi/Main"
                 }
                 return o;
             }
-            ENDCG
+            ENDHLSL
 
         }
 
@@ -414,7 +414,7 @@ Shader "Bigi/Main"
             Cull Off
             ZWrite On
             ZTest [_ZTestSP]
-            CGPROGRAM
+            HLSLPROGRAM
             #pragma vertex vert alpha
             #pragma fragment frag alpha
             #include_with_pragmas "./Includes/Pragmas/ShadowCaster.cginc"
@@ -508,7 +508,7 @@ Shader "Bigi/Main"
 
                 SHADOW_CASTER_FRAGMENT(i)
             }
-            ENDCG
+            ENDHLSL
         }
     }
 }

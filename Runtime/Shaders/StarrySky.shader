@@ -13,7 +13,7 @@ SubShader {
     Tags { "Queue"="Background" "RenderType"="Background" "PreviewType"="Skybox" }
     Cull Off ZWrite Off
 
-    CGINCLUDE
+    HLSLINCLUDE
     #include "UnityCG.cginc"
     CBUFFER_START(UnityPerMaterial)
         float _Rotation;
@@ -60,61 +60,61 @@ SubShader {
         half3 c = DecodeHDR (tex, smpDecode);
         return half4(c, 1);
     }
-    ENDCG
+    ENDHLSL
 
     Pass {
-        CGPROGRAM
+        HLSLPROGRAM
         #pragma vertex vert
         #pragma fragment frag
         #pragma target 2.0
         sampler2D _FrontTex;
         half4 frag (v2f i) : SV_Target { return skybox_frag(i,_FrontTex, _FrontTex_HDR); }
-        ENDCG
+        ENDHLSL
     }
     Pass{
-        CGPROGRAM
+        HLSLPROGRAM
         #pragma vertex vert
         #pragma fragment frag
         #pragma target 2.0
         sampler2D _BackTex;
         half4 frag (v2f i) : SV_Target { return skybox_frag(i,_BackTex, _BackTex_HDR); }
-        ENDCG
+        ENDHLSL
     }
     Pass{
-        CGPROGRAM
+        HLSLPROGRAM
         #pragma vertex vert
         #pragma fragment frag
         #pragma target 2.0
         sampler2D _LeftTex;
         half4 frag (v2f i) : SV_Target { return skybox_frag(i,_LeftTex, _LeftTex_HDR); }
-        ENDCG
+        ENDHLSL
     }
     Pass{
-        CGPROGRAM
+        HLSLPROGRAM
         #pragma vertex vert
         #pragma fragment frag
         #pragma target 2.0
         sampler2D _RightTex;
         half4 frag (v2f i) : SV_Target { return skybox_frag(i,_RightTex, _RightTex_HDR); }
-        ENDCG
+        ENDHLSL
     }
     Pass{
-        CGPROGRAM
+        HLSLPROGRAM
         #pragma vertex vert
         #pragma fragment frag
         #pragma target 2.0
         sampler2D _UpTex;
         half4 frag (v2f i) : SV_Target { return skybox_frag(i,_UpTex, _UpTex_HDR); }
-        ENDCG
+        ENDHLSL
     }
     Pass{
-        CGPROGRAM
+        HLSLPROGRAM
         #pragma vertex vert
         #pragma fragment frag
         #pragma target 2.0
         sampler2D _DownTex;
         half4 frag (v2f i) : SV_Target { return skybox_frag(i,_DownTex, _DownTex_HDR); }
-        ENDCG
+        ENDHLSL
     }
 }
 }

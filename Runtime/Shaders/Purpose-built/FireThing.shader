@@ -22,7 +22,7 @@ Shader "Bigi/FireThing" {
 			ZWrite On
 			ZTest On
 			Blend One OneMinusSrcAlpha
-			CGPROGRAM
+			HLSLPROGRAM
 			#pragma target 5.0
 			#pragma geometry geom
 			#pragma vertex vert
@@ -264,7 +264,7 @@ Shader "Bigi/FireThing" {
 					return float4(fireColors[clamp(iSelection, 0, fireColorCount - 1)], 1.0);
 				}
 			}
-			ENDCG
+			ENDHLSL
 		}
 	}
 }

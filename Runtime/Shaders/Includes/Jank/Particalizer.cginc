@@ -7,9 +7,10 @@
 #define glsl_mod(x,y) (((x)-(y)*floor((x)/(y))))
 #endif
 
-
-#include <UnityInstancing.cginc>
+#include <UnityShaderVariables.cginc>
 #include <UnityShaderUtilities.cginc>
+#include <UnityInstancing.cginc>
+
 
 [instance(INSTANCE_COUNT_TOTAL)]
 [maxvertexcount(POINT_COUNT_PER_INSTANCE_TOTAL)]

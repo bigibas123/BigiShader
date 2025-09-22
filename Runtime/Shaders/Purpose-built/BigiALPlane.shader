@@ -18,7 +18,7 @@ Shader "Bigi/ALTest" {
 			ZWrite On
 			ZTest LEqual
 			Blend One OneMinusSrcAlpha
-			CGPROGRAM
+			HLSLPROGRAM
 			#pragma vertex bigi_toon_vert
 			#pragma fragment frag
 			#define NO_MAINTEX
@@ -116,7 +116,7 @@ Shader "Bigi/ALTest" {
 				UNITY_APPLY_FOG(i.fogCoord, o.color);
 				return o;
 			}
-			ENDCG
+			ENDHLSL
 		}
 
 
@@ -134,7 +134,7 @@ Shader "Bigi/ALTest" {
 				ReadMask 1
 				Comp Equal
 			}
-			CGPROGRAM
+			HLSLPROGRAM
 			#pragma target 3.0
 			#pragma vertex bigi_toon_vert
 			#pragma fragment frag
@@ -159,7 +159,7 @@ Shader "Bigi/ALTest" {
 				UNITY_APPLY_FOG(i.fogCoord, o.color);
 				return o;
 			}
-			ENDCG
+			ENDHLSL
 		}
 
 		//UsePass "Legacy Shaders/VertexLit/SHADOWCASTER"
@@ -176,7 +176,7 @@ Shader "Bigi/ALTest" {
 				Comp Always
 				Pass IncrSat
 			}
-			CGPROGRAM
+			HLSLPROGRAM
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
 			#include_with_pragmas "../Includes/Pragmas/ShadowCaster.cginc"
@@ -208,7 +208,7 @@ Shader "Bigi/ALTest" {
 				clip(-1 * _Invisibility);
 				UNITY_SETUP_INSTANCE_ID(i) UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i) SHADOW_CASTER_FRAGMENT(i)
 			}
-			ENDCG
+			ENDHLSL
 		}
 	}
 }

@@ -12,7 +12,7 @@
         ZWrite Off
         Blend Off
 
-        CGINCLUDE
+        HLSLINCLUDE
         #include "UnityCG.cginc"
 
 
@@ -41,57 +41,57 @@
         {
             return half4(0, 0, 0, 0);
         }
-        ENDCG
+        ENDHLSL
 
         Pass
         {
-            CGPROGRAM
+            HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
             #pragma target 2.0
             half4 frag(v2f i) : SV_Target { return skybox_frag(i); }
-            ENDCG
+            ENDHLSL
         }
         /*
             Pass{
-                CGPROGRAM
+                HLSLPROGRAM
                 #pragma vertex vert
                 #pragma fragment frag
                 #pragma target 2.0
                 half4 frag (v2f i) : SV_Target { return skybox_frag(i); }
-                ENDCG
+                ENDHLSL
             }
             Pass{
-                CGPROGRAM
+                HLSLPROGRAM
                 #pragma vertex vert
                 #pragma fragment frag
                 #pragma target 2.0
                 half4 frag (v2f i) : SV_Target { return skybox_frag(i); }
-                ENDCG
+                ENDHLSL
             }
             Pass{
-                CGPROGRAM
+                HLSLPROGRAM
                 #pragma vertex vert
                 #pragma fragment frag
                 #pragma target 2.0
                 half4 frag (v2f i) : SV_Target { return skybox_frag(i); }
-                ENDCG
+                ENDHLSL
             }
             Pass{
-                CGPROGRAM
+                HLSLPROGRAM
                 #pragma vertex vert
                 #pragma fragment frag
                 #pragma target 2.0
                 half4 frag (v2f i) : SV_Target { return skybox_frag(i); }
-                ENDCG
+                ENDHLSL
             }
             Pass{
-                CGPROGRAM
+                HLSLPROGRAM
                 #pragma vertex vert
                 #pragma fragment frag
                 #pragma target 2.0
                 half4 frag (v2f i) : SV_Target { return skybox_frag(i); }
-                ENDCG
+                ENDHLSL
             }
         */
     }

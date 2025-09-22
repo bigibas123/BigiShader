@@ -15,7 +15,7 @@
 		SubShader {
 			Pass {
 				//ZTest Always
-				CGPROGRAM
+				HLSLPROGRAM
 				#pragma vertex vert
 				#pragma fragment frag
 				#pragma target 2.0
@@ -73,7 +73,7 @@
 					UNITY_APPLY_FOG_COLOR(i.fogCoord, col, fixed4(0,0,0,0));
 					return half4(col.rgb * _Brightness, col.a);
 				}
-				ENDCG
+				ENDHLSL
 			}
 		}
 	}

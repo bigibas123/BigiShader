@@ -16,12 +16,12 @@ Shader "Bigi/LogoPlane(2DArray)"
 			"RenderType" = "Transparent" "Queue" = "Transparent" "IgnoreProjector" = "True" "LightMode" = "ForwardBase" "VRCFallback"="Hidden" "LTCGI"="ALWAYS" "PreviewType" = "Plane"
 		}
 
-		CGINCLUDE
+		HLSLINCLUDE
 		#define MULTI_TEXTURE
 		#define OTHER_TEXTURE_ID_REF _Logo_FlipBookID
 		#define BIGI_UNIFORMS_TEXARRAY_REF uniform int _Logo_FlipBookID;
 		#define OTHER_BIGI_TEXTURES
-		ENDCG
+		ENDHLSL
 
 		Pass
 		{
@@ -30,7 +30,7 @@ Shader "Bigi/LogoPlane(2DArray)"
 			Cull Off
 			ZWrite On
 			ZTest Less
-			CGPROGRAM
+			HLSLPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/StageDefines.cginc"
 			#include "./Includes/LogoPlane.cginc"
 			#pragma vertex vertd alpha
@@ -50,7 +50,7 @@ Shader "Bigi/LogoPlane(2DArray)"
 				o.color = orig_color;
 				return o;
 			}
-			ENDCG
+			ENDHLSL
 		}
 
 		Pass
@@ -69,12 +69,12 @@ Shader "Bigi/LogoPlane(2DArray)"
 			ZWrite Off
 			ZTest LEqual
 			Blend SrcAlpha OneMinusSrcAlpha
-			CGPROGRAM
+			HLSLPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
 			#include "./Includes/LogoPlane.cginc"
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
-			ENDCG
+			ENDHLSL
 		}
 
 		Pass
@@ -91,12 +91,12 @@ Shader "Bigi/LogoPlane(2DArray)"
 			ZWrite Off
 			ZTest LEqual
 			Blend One One
-			CGPROGRAM
+			HLSLPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
 			#include "./Includes/LogoPlane.cginc"
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
-			ENDCG
+			ENDHLSL
 		}
 
 		Pass
@@ -115,13 +115,13 @@ Shader "Bigi/LogoPlane(2DArray)"
 			ZWrite Off
 			ZTest LEqual
 			Blend SrcAlpha OneMinusSrcAlpha
-			CGPROGRAM
+			HLSLPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
 			#include "./Includes/LogoPlane.cginc"
 
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
-			ENDCG
+			ENDHLSL
 		}
 
 
@@ -139,13 +139,13 @@ Shader "Bigi/LogoPlane(2DArray)"
 			ZWrite Off
 			ZTest LEqual
 			Blend One One
-			CGPROGRAM
+			HLSLPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
 			#include "./Includes/LogoPlane.cginc"
 
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
-			ENDCG
+			ENDHLSL
 		}
 
 		Pass
@@ -156,7 +156,7 @@ Shader "Bigi/LogoPlane(2DArray)"
 				"LightMode"="Meta"
 			}
 			Cull Off
-			CGPROGRAM
+			HLSLPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/Meta.cginc"
 			#include <UnityCG.cginc>
 			#include <UnityMetaPass.cginc>
@@ -219,7 +219,7 @@ Shader "Bigi/LogoPlane(2DArray)"
 			#pragma shader_feature _EMISSION
 			#pragma shader_feature _METALLICGLOSSMAP
 			#pragma shader_feature ___ _DETAIL_MULX2
-			ENDCG
+			ENDHLSL
 		}
 
 	}

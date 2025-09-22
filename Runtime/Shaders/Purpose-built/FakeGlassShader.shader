@@ -21,7 +21,7 @@ Shader "Bigi/FakeGlass"
             {
                 "RenderType" = "Opaque" "Queue"="Overlay+1"
             }
-            CGPROGRAM
+            HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
             #include "UnityCG.cginc"
@@ -58,7 +58,7 @@ Shader "Bigi/FakeGlass"
                 bgcolor.a = 1.0;
                 return bgcolor;
             }
-            ENDCG
+            ENDHLSL
         }
 
     }

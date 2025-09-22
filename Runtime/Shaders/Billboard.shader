@@ -17,7 +17,7 @@
 		ZWrite Off
 		Blend SrcAlpha OneMinusSrcAlpha
 
-		CGINCLUDE
+		HLSLINCLUDE
 		#include <UnityCG.cginc>
 		#include <HLSLSupport.cginc>
 
@@ -82,7 +82,7 @@
 
 			return o;
 		}
-		ENDCG
+		ENDHLSL
 
 		Pass {
 			Name "Depth pass"
@@ -99,7 +99,7 @@
 			Cull Back
 			ZWrite On
 			ZTest Less
-			CGPROGRAM
+			HLSLPROGRAM
 			#pragma shader_feature_local_fragment ALPHA_MUL
 			#pragma shader_feature_local_vertex DO_HOVER
 			#pragma vertex vert
@@ -112,7 +112,7 @@
 				clip(orig_color.a - (1.0 - Epsilon));
 				return orig_color;
 			}
-			ENDCG
+			ENDHLSL
 		}
 
 		Pass {
@@ -127,7 +127,7 @@
 			ZWrite Off
 			ZTest LEqual
 			Blend SrcAlpha OneMinusSrcAlpha
-			CGPROGRAM
+			HLSLPROGRAM
 			#pragma shader_feature_local_fragment ALPHA_MUL
 			#pragma shader_feature_local_vertex DO_HOVER
 			#pragma vertex vert
@@ -151,7 +151,7 @@
 				result.a = orig_color.a;
 				return result;
 			}
-			ENDCG
+			ENDHLSL
 		}
 	}
 }

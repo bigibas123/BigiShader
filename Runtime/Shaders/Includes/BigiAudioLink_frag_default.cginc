@@ -1,7 +1,6 @@
 ﻿#ifndef BIGIAUDIOLINK_FRAG_DEFAULT_FRAG
 #define BIGIAUDIOLINK_FRAG_DEFAULT_FRAG
 
-#include <UnityInstancing.cginc>
 #include "./Core/BigiShaderStructs.cginc"
 #include "./Core/BigiShaderParams.cginc"
 #include "./Lighting/NormalDefines.cginc"

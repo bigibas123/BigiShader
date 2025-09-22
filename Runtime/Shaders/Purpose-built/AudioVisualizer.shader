@@ -27,7 +27,7 @@ Shader "Bigi/AudioVisualizer" {
 			ZWrite On
 			ZTest On
 			Blend One OneMinusSrcAlpha
-			CGPROGRAM
+			HLSLPROGRAM
 			#pragma target 5.0
 			#pragma geometry geom
 			#pragma vertex vert
@@ -181,7 +181,7 @@ Shader "Bigi/AudioVisualizer" {
 				float3 a = HSVToRGB(clamp(i.audioValue / 2.5, 0.0, 1.0), 1.0, 1.0);
 				return float4(a, 1.0);
 			}
-			ENDCG
+			ENDHLSL
 		}
 	}
 }

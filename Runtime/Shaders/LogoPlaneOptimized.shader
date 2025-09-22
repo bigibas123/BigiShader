@@ -22,7 +22,7 @@ Shader "Bigi/LogoPlane(Texture)"
 			Cull Off
 			ZWrite On
 			ZTest Less
-			CGPROGRAM
+			HLSLPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/StageDefines.cginc"
 			#include "./Includes/LogoPlane.cginc"
 			#pragma vertex vertd alpha
@@ -42,7 +42,7 @@ Shader "Bigi/LogoPlane(Texture)"
 				o.color = orig_color;
 				return o;
 			}
-			ENDCG
+			ENDHLSL
 		}
 
 		Pass
@@ -61,12 +61,12 @@ Shader "Bigi/LogoPlane(Texture)"
 			ZWrite Off
 			ZTest LEqual
 			Blend SrcAlpha OneMinusSrcAlpha
-			CGPROGRAM
+			HLSLPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
 			#include "./Includes/LogoPlane.cginc"
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
-			ENDCG
+			ENDHLSL
 		}
 
 		Pass
@@ -83,12 +83,12 @@ Shader "Bigi/LogoPlane(Texture)"
 			ZWrite Off
 			ZTest LEqual
 			Blend One One
-			CGPROGRAM
+			HLSLPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
 			#include "./Includes/LogoPlane.cginc"
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
-			ENDCG
+			ENDHLSL
 		}
 
 		Pass
@@ -107,13 +107,13 @@ Shader "Bigi/LogoPlane(Texture)"
 			ZWrite Off
 			ZTest LEqual
 			Blend SrcAlpha OneMinusSrcAlpha
-			CGPROGRAM
+			HLSLPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardBase.cginc"
 			#include "./Includes/LogoPlane.cginc"
 
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
-			ENDCG
+			ENDHLSL
 		}
 
 
@@ -131,13 +131,13 @@ Shader "Bigi/LogoPlane(Texture)"
 			ZWrite Off
 			ZTest LEqual
 			Blend One One
-			CGPROGRAM
+			HLSLPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/ForwardAdd.cginc"
 			#include "./Includes/LogoPlane.cginc"
 
 			#pragma vertex vert alpha
 			#pragma fragment frag alpha
-			ENDCG
+			ENDHLSL
 		}
 
 		Pass
@@ -148,7 +148,7 @@ Shader "Bigi/LogoPlane(Texture)"
 				"LightMode"="Meta"
 			}
 			Cull Off
-			CGPROGRAM
+			HLSLPROGRAM
 			#include_with_pragmas "./Includes/Pragmas/Meta.cginc"
 			#include <UnityCG.cginc>
 			#include <UnityMetaPass.cginc>
@@ -215,7 +215,7 @@ Shader "Bigi/LogoPlane(Texture)"
 			#pragma shader_feature _EMISSION
 			#pragma shader_feature _METALLICGLOSSMAP
 			#pragma shader_feature ___ _DETAIL_MULX2
-			ENDCG
+			ENDHLSL
 		}
 
 	}

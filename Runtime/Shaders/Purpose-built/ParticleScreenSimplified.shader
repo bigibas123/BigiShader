@@ -15,9 +15,9 @@
 			"VRCFallback" = "ToonCutout" "LTCGI"="ALWAYS"
 		}
 
-		CGINCLUDE
+		HLSLINCLUDE
 		#define MIRROR_THING
-		ENDCG
+		ENDHLSL
 
 		Pass
 		{
@@ -33,7 +33,7 @@
 			ZWrite On
 			ZTest On
 			Blend One OneMinusSrcAlpha
-			CGPROGRAM
+			HLSLPROGRAM
 			#pragma target 5.0
 			#pragma multi_compile_instancing
 			#pragma multi_compile_fog
@@ -145,7 +145,7 @@
 				UNITY_APPLY_FOG(i.fogCoord, o.color);
 				return o;
 			}
-			ENDCG
+			ENDHLSL
 		}
 
 	}
