@@ -22,7 +22,8 @@
 		#elif defined(BIGI_GEOMETRY_STAGE)
 		#define GET_TEX_COLOR_MAINTEX(uv) (UNITY_SAMPLE_TEX2D_LOD(MAINTEX_NAME, TRANSFORM_TEX(uv,MAINTEX_NAME), 0.0))
 		#else
-		#error "Not supported shader stage"
+		#warning "Not supported shader stage"
+		#define GET_TEX_COLOR_MAINTEX(uv) (UNITY_SAMPLE_TEX2D_LOD(MAINTEX_NAME, uv, 0.0))
 		#endif
 		#endif
 
@@ -37,7 +38,8 @@
 			#elif defined(BIGI_GEOMETRY_STAGE)
 			#define GET_TEX_COLOR_MAINTEX(uv) (tex2Dlod(MAINTEX_NAME,TRANSFORM_TEX(uv,MAINTEX_NAME),0.0))
 			#else
-			#error "Not supported shader stage"
+			#warning "Not supported shader stage"
+			#define GET_TEX_COLOR_MAINTEX(uv) (tex2Dlod(MAINTEX_NAME,uv,0.0))
 			#endif
 		#endif
 	#endif
