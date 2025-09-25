@@ -35,15 +35,13 @@ fragOutput frag(v2f i)
 	}
 
 	BIGI_GETLIGHT_DEFAULT(lighting);
-	fixed4 normal_color = orig_color * lighting;
+	const fixed4 normal_color = orig_color * lighting;
 
 	_AL_Theme_Weight = _AL_Weight;
 	float4 distance = float4(1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0, 0.0);
 	GET_SOUND_COLOR(sound);
 
 	o.color = lerp(normal_color,fixed4(sound.rgb * (_Alpha_Non_Premul ? orig_color.a : 1.0), normal_color.a), sound.a);
-	o.color.a = orig_color.a;
-	//o.color = orig_color;
 	UNITY_APPLY_FOG(i.fogCoord, o.color);
 	return o;
 }
