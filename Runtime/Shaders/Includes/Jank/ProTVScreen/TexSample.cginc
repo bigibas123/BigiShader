@@ -99,7 +99,14 @@ namespace b_particalizer
 
 		// optionally clip pixels outside the image
 		#if _CLIP_BORDERS
+		#ifdef BIGI_FRAGMENT_STAGE
 		clip((1 - ceil(visible)) * -1);
+		#else
+		if (((1 - ceil(visible)) * -1) < 0.0)
+		{
+			uv = asfloat(-1);
+		}
+		#endif
 		#endif
 
 		return uv;
