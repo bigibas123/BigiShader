@@ -4,6 +4,7 @@
 	Properties
 	{
 		_WavinessFactor("Waviness factor",Range(-2.0,2.0)) = 0.5
+		[Toggle(UV_FLIP_X)] _FlipUVStep("Flip UV for X axis (Not animatable)",Range(0.0,1.0)) = 0.0
 	}
 
 	SubShader
@@ -43,6 +44,8 @@
 			//#include_with_pragmas "../Includes/Pragmas/ForwardBase.cginc"
 			//#include_with_pragmas "../Includes/Pragmas/CustomVariants.cginc"
 			#include_with_pragmas "../Includes/Pragmas/StageDefines.cginc"
+
+			#pragma shader_feature_local_geometry UV_FLIP_X
 
 			#include <UnityShaderVariables.cginc>
 			#include <UnityShaderUtilities.cginc>
@@ -106,6 +109,9 @@
 				{
 					B_P_MS_CALC(float4, pos, input, output, xyzw, point_counts);
 					B_P_MS_CALC(float2, uv, input, output, xy, point_counts);
+					#ifdef UV_FLIP_X
+					output.step.uv.x *= -1.0;
+					#endif
 				}
 
 				void calc_v2g(inout B_P_V2G output, const in min_step_obj min_step, const in float4 coords,
