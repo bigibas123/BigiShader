@@ -48,7 +48,7 @@ Shader "Bigi/AudioVisualizer(Particle)" {
 			{
 				UNITY_POSITION(vertex);
 				float audioValue : BLENDWEIGHT;
-				float pointSize: PSIZE0;
+				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
@@ -56,7 +56,7 @@ Shader "Bigi/AudioVisualizer(Particle)" {
 			{
 				UNITY_POSITION(vertex);
 				float audioValue : BLENDWEIGHT;
-				float pointSize: PSIZE0;
+				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
@@ -85,7 +85,6 @@ Shader "Bigi/AudioVisualizer(Particle)" {
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 				o.vertex = v.vertex;
 				o.audioValue = 0.0;
-				o.pointSize = 1024.0;
 				return o;
 			}
 
@@ -115,7 +114,6 @@ Shader "Bigi/AudioVisualizer(Particle)" {
 				UNITY_TRANSFER_VERTEX_OUTPUT_STEREO(a, res);
 				res.vertex = UnityObjectToClipPos(a.vertex);
 				res.audioValue = a.audioValue;
-				res.pointSize = a.pointSize;
 				return res;
 			}
 
