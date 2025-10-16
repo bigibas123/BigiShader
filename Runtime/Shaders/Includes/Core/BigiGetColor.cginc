@@ -40,7 +40,7 @@
 		UNITY_DECLARE_TEX2D_NOSAMPLER(_BumpMap);
 		float4 _BumpMap_ST;
 		#include "./BigiMainTex.cginc"
-		#define GET_NORMAL(uv) (SAMPLE_TEX2D(_BumpMap, TRANSFORM_TEX(uv,_BumpMap)) * NORMAL_SCALE_VAR)
+		#define GET_NORMAL(uv) (SAMPLE_TEX2D(_BumpMap, TRANSFORM_TEX(uv,_BumpMap)))
 	#endif
 #endif
 
@@ -55,7 +55,7 @@
 		#include <UnityCG.cginc>
 		UNITY_DECLARE_TEX2D_NOSAMPLER(_Bump2ndMap);
 		float4 _Bump2ndMap_ST;
-		#define GET_2NDNORMAL(uv) (SAMPLE_TEX2D(_Bump2ndMap, TRANSFORM_TEX(uv,_Bump2ndMap)) * NORMAL_2ND_SCALE_VAR)
+		#define GET_2NDNORMAL(uv) (SAMPLE_TEX2D(_Bump2ndMap, TRANSFORM_TEX(uv,_Bump2ndMap)))
 	#endif
 #endif
 
