@@ -153,6 +153,7 @@ Shader "Bigi/World (WIP)"
             #include_with_pragmas "./Includes/Pragmas/Meta.cginc"
             #include"UnityStandardMeta.cginc"
 
+            #include "./Includes/Core/BigiMainTex.cginc"
             #include "./Includes/Core/BigiShaderParams.cginc"
             #include "./Includes/Core/BigiGetColor.cginc"
             #include "./Includes/Effects/BigiEffects.cginc"
