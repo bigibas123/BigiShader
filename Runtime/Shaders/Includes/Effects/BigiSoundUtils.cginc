@@ -92,6 +92,10 @@ namespace b_sound
 				const float soundIntensity = clamp(lerp(1.0, bassIntensity, conf.AL_TC_BassReactive), 0.0, 1.0);
 				switch (conf.AL_Mode)
 				{
+				case AudioLinkMode::ALM_Off:
+					{
+						break;
+					}
 				case AudioLinkMode::ALM_Flat:
 					{
 						doMixProperly(mix, finalColor.rgb, soundIntensity * conf.AL_Theme_Weight);

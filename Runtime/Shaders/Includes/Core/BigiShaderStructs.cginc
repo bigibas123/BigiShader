@@ -90,9 +90,10 @@ namespace b_sound
 {
 	namespace AudioLinkMode
 	{
-		const static AudioLinkMode_e ALM_Flat = 0;
-		const static AudioLinkMode_e ALM_CenterOut = 1;
-		const static AudioLinkMode_e ALM_WireFrame = 2;
+		const static AudioLinkMode_e ALM_Off = 0;
+		const static AudioLinkMode_e ALM_Flat = 1;
+		const static AudioLinkMode_e ALM_CenterOut = 2;
+		const static AudioLinkMode_e ALM_WireFrame = 3;
 	}
 }
 #endif

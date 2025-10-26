@@ -88,7 +88,7 @@ Shader "Bigi/Main"
 
         [Header(Audiolink)]
         [Space]
-        [Enum(Flat,0,CenterOut,1,WireFrame,2)] _AL_Mode ("Audiolink mode", Range(0,2)) = 0
+        [Enum(Off,0,Flat,1,CenterOut,2,WireFrame,3)] _AL_Mode ("Audiolink mode", Range(0,2)) = 0
         [ToggleUI] _AL_BandMapDistance ("Spread bands over distance instead of using Bass", Range(0,1)) = 0
         [ToggleUI] _AL_BlockWireFrame ("Block wireframe mode, fallback to CenterOut", Range(0,1)) = 0
         [Space]
