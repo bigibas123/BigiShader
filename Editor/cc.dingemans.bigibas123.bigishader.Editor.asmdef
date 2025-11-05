@@ -1,8 +1,7 @@
 {
   "name": "cc.dingemans.bigibas123.bigishader.Editor",
   "rootNamespace": "cc.dingemans.bigibas123.bigishader.Editor",
-  "references": [
-  ],
+  "references": ["net.rs64.tex-trans-tool.runtime"],
   "includePlatforms": [
     "Editor"
   ],
@@ -13,6 +12,11 @@
   "autoReferenced": true,
   "defineConstraints": [],
   "versionDefines": [
+    {
+      "name": "net.rs64.tex-trans-tool",
+      "expression": "0.10.0-beta.5",
+      "define": "BIGI_TEX_TRANS_TOOL_PRESENT"
+    }
   ],
   "noEngineReferences": false
 }

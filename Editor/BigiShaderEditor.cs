@@ -303,9 +303,13 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 
 	public static class BigiPropertyExtensions
 	{
+		public static string GetPropertyName(this BigiProperty property)
+		{
+			return $"_{property.ToString()}";
+		}
 		public static int GetPropertyId(this BigiProperty prop)
 		{
-			return Shader.PropertyToID($"_{prop.ToString()}");
+			return Shader.PropertyToID(prop.GetPropertyName());
 		}
 
 		public static void Set(this BigiProperty prop, Material material, float value)
