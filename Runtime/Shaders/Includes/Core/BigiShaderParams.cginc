@@ -75,6 +75,26 @@ uniform float _DoMirrorThing;
 #define MIRROR_THING_VAR (0.0)
 #endif
 
+#ifndef BIGI_UDIM_DISCARD_DECLARED
+#define BIGI_UDIM_DISCARD_DECLARED
+uniform float _UDIMDiscardRow3_3;
+uniform float _UDIMDiscardRow3_2;
+uniform float _UDIMDiscardRow3_1;
+uniform float _UDIMDiscardRow3_0;
+uniform float _UDIMDiscardRow2_3;
+uniform float _UDIMDiscardRow2_2;
+uniform float _UDIMDiscardRow2_1;
+uniform float _UDIMDiscardRow2_0;
+uniform float _UDIMDiscardRow1_3;
+uniform float _UDIMDiscardRow1_2;
+uniform float _UDIMDiscardRow1_1;
+uniform float _UDIMDiscardRow1_0;
+uniform float _UDIMDiscardRow0_3;
+uniform float _UDIMDiscardRow0_2;
+uniform float _UDIMDiscardRow0_1;
+uniform float _UDIMDiscardRow0_0;
+#endif
+
 #ifdef UNITY_PASS_FORWARDBASE
 uniform float _LTCGIStrength;
 uniform float _VRCLVStrength;

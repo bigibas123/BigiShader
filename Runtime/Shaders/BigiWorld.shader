@@ -112,6 +112,24 @@ Shader "Bigi/World (WIP)"
         [ToggleUI] _SquareTVTest ("Enable temporarily to display tv location", Range(0.0,1.0)) = 0.0
         _TV_Square_Position ("TV Position & Size", Vector) = (0.0,0.0,1.0,1.0)
 
+        [Header(UV Tile Discard)]
+        [ToggleUI]_UDIMDiscardRow3_3 ("Discard (3,3)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow3_2 ("Discard (3,2)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow3_1 ("Discard (3,1)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow3_0 ("Discard (3,0)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow2_3 ("Discard (2,3)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow2_2 ("Discard (2,2)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow2_1 ("Discard (2,1)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow2_0 ("Discard (2,0)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow1_3 ("Discard (1,3)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow1_2 ("Discard (1,2)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow1_1 ("Discard (1,1)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow1_0 ("Discard (1,0)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow0_3 ("Discard (0,3)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow0_2 ("Discard (0,2)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow0_1 ("Discard (0,1)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow0_0 ("Discard (0,0)", Int) = 0
+
         [Header(Multi Texture)]
         [Space]
         _MainTexArray ("Other textures", 2DArray) = "" {}
@@ -139,7 +157,7 @@ Shader "Bigi/World (WIP)"
         UsePass "Bigi/Main/FORWARDADD"
         UsePass "Bigi/Main/OUTLINE"
         UsePass "Bigi/Main/SHADOWPASS"
-        
+
         Pass
         {
             Name "MetaPass"
@@ -157,7 +175,8 @@ Shader "Bigi/World (WIP)"
             #include "./Includes/Core/BigiShaderParams.cginc"
             #include "./Includes/Core/BigiGetColor.cginc"
             #include "./Includes/Effects/BigiEffects.cginc"
-            
+            #include "./Includes/TileDiscardStuff.cginc"
+
             float4 frag_meta2(v2f_meta i): SV_Target
             {
                 FragmentCommonData data = UNITY_SETUP_BRDF_INPUT(i.uv);
@@ -170,6 +189,10 @@ Shader "Bigi/World (WIP)"
                  */
                 UnityMetaInput o;
                 UNITY_INITIALIZE_OUTPUT(UnityMetaInput, o);
+                if (b_tile_discard::ShouldDiscard(GETUV))
+                {
+                    discard;
+                }
                 float4 orig_color = GET_TEX_COLOR(GETUV);
                 o.Albedo = orig_color.rgb;
 

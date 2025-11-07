@@ -59,7 +59,7 @@ Shader "Bigi/Main"
 
         [Header(Specular and Smooth)]
         [Space]
-         _SpecSmoothMap ("Specular (rgb) and Smoothness (a) map (Deprecated)", 2D) = "black" {}
+        _SpecSmoothMap ("Specular (rgb) and Smoothness (a) map (Deprecated)", 2D) = "black" {}
         _SpecGlossMap ("Specular (rgb) and Glossiness/Smoothness (a) map", 2D) = "black" {}
 
         [Header(Ambient Occlusion)]
@@ -111,6 +111,24 @@ Shader "Bigi/Main"
         _TV_Square_Opacity ("TV opacity", Range(0.0,1.0)) = 1.0
         [ToggleUI] _SquareTVTest ("Enable temporarily to display tv location", Range(0.0,1.0)) = 0.0
         _TV_Square_Position ("TV Position & Size", Vector) = (0.0,0.0,1.0,1.0)
+
+        [Header(UV Tile Discard)]
+        [ToggleUI]_UDIMDiscardRow3_3 ("Discard (3,3)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow3_2 ("Discard (3,2)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow3_1 ("Discard (3,1)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow3_0 ("Discard (3,0)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow2_3 ("Discard (2,3)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow2_2 ("Discard (2,2)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow2_1 ("Discard (2,1)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow2_0 ("Discard (2,0)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow1_3 ("Discard (1,3)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow1_2 ("Discard (1,2)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow1_1 ("Discard (1,1)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow1_0 ("Discard (1,0)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow0_3 ("Discard (0,3)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow0_2 ("Discard (0,2)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow0_1 ("Discard (0,1)", Int) = 0
+        [ToggleUI]_UDIMDiscardRow0_0 ("Discard (0,0)", Int) = 0
 
         [Header(Multi Texture)]
         [Space]
@@ -255,9 +273,9 @@ Shader "Bigi/Main"
                 return b_frag::bigi_frag_fwdbase(i, orig_color);
                 #else
                 fragOutput o;
-		        UNITY_INITIALIZE_OUTPUT(fragOutput, o);
-		        UNITY_SETUP_INSTANCE_ID(i);
-		        UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
+                UNITY_INITIALIZE_OUTPUT(fragOutput, o);
+                UNITY_SETUP_INSTANCE_ID(i);
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
                 o.color = float4(0.0, 0.0, 0.0, 0.0);
                 return o;
                 #endif
@@ -345,6 +363,7 @@ Shader "Bigi/Main"
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
+            #pragma geometry bigi_geom
 
             #include_with_pragmas "./Includes/Pragmas/VRCLighting.cginc"
             #include_with_pragmas "./Includes/Pragmas/CustomVariants.cginc"
@@ -355,6 +374,7 @@ Shader "Bigi/Main"
             #include "./Includes/Effects/SoundUtilsDefines.cginc"
             #include "./Includes/Effects/LengthDefine.cginc"
             #include "./Includes/ToonVert.cginc"
+            #include "./Includes/GeomProcessor.cginc"
 
 
             v2f vert(appdata v)
@@ -365,8 +385,8 @@ Shader "Bigi/Main"
                 {
                     float4 distance = float4(1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0,GET_DISTANCE(v.vertex));
                     float3 offset = (normalize(v.normal.xyz) * 2.0)
-                    * (_OutlineWidth * 0.01)
-                    * b_sound::GetWaves(distance.w);
+                        * (_OutlineWidth * 0.01)
+                        * b_sound::GetWaves(distance.w);
 
                     offset = lerp(0.0, offset, smoothstep(0.0, Epsilon, _OutlineWidth));
                     v.vertex = v.vertex + float4(offset, 0.0);
@@ -374,7 +394,7 @@ Shader "Bigi/Main"
 
                     GET_SOUND_SETTINGS(bsoundSet);
                     bsoundSet.AL_Mode = b_sound::AudioLinkMode::ALM_Flat;
-                    GET_SOUND_COLOR_CALL(bsoundSet, scol);
+                        GET_SOUND_COLOR_CALL(bsoundSet, scol);
                     o.staticTexturePos = scol;
                 }
                 return o;
@@ -418,6 +438,7 @@ Shader "Bigi/Main"
             HLSLPROGRAM
             #pragma vertex vert alpha
             #pragma fragment frag alpha
+            //#pragma geometry bigi_geom  alpha
             #include_with_pragmas "./Includes/Pragmas/ShadowCaster.cginc"
             #include_with_pragmas "./Includes/Pragmas/CustomVariants.cginc"
 
@@ -427,6 +448,8 @@ Shader "Bigi/Main"
 
             #include "./Includes/Core/BigiShaderStructs.cginc"
             #include "./Includes/Core/BigiShaderParams.cginc"
+            //#include "./Includes/GeomProcessor.cginc"
+            #include "./Includes/TileDiscardStuff.cginc"
             #include <UnityCG.cginc>
 
             struct v2f
@@ -446,33 +469,43 @@ Shader "Bigi/Main"
             v2f vert(appdata v)
             {
                 v2f o;
-                UNITY_INITIALIZE_OUTPUT(v2f, o);
-                UNITY_SETUP_INSTANCE_ID(v);
-                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-                UNITY_TRANSFER_INSTANCE_ID(v, o);
-                TRANSFER_SHADOW_CASTER_NORMALOFFSET(o)
+                if (b_tile_discard::ShouldDiscard(v.uv0))
+                {
+                    o.pos = asfloat(-1);
+                    #if defined(UNITY_STANDARD_USE_SHADOW_UVS)
+					o.tex = v.uv0;
+                    #endif
+                }
+                else
+                {
+                        UNITY_INITIALIZE_OUTPUT(v2f, o);
+                    UNITY_SETUP_INSTANCE_ID(v);
+                    UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+                    UNITY_TRANSFER_INSTANCE_ID(v, o);
+                    TRANSFER_SHADOW_CASTER_NORMALOFFSET(o)
 
-                #if defined(UNITY_STANDARD_USE_SHADOW_UVS)
+                    #if defined(UNITY_STANDARD_USE_SHADOW_UVS)
                     o.tex = TRANSFORM_TEX(v.uv0, MAINTEX_NAME);
 
-                #ifdef _PARALLAXMAP
+                    #ifdef _PARALLAXMAP
                         TANGENT_SPACE_ROTATION;
                         o.viewDirForParallax = mul (rotation, ObjSpaceViewDir(v.vertex));
-                #endif
-                #endif
-                #ifdef ROUNDING_VAR_NAME
-                if (_Rounding > Epsilon)
-                {
-                    float4 snapToPixel = o.pos;
-                    float gridSize = 1.0 / (_Rounding + Epsilon);
-                    float4 vt = snapToPixel;
-                    vt.xyz = snapToPixel.xyz / snapToPixel.w;
-                    vt.xy = floor(gridSize * vt.xy) / gridSize;
-                    vt.xyz *= snapToPixel.w;
-                    o.pos = vt;
+                    #endif
+                    #endif
+                    #ifdef ROUNDING_VAR_NAME
+                    if (_Rounding > Epsilon)
+                    {
+                        float4 snapToPixel = o.pos;
+                        float gridSize = 1.0 / (_Rounding + Epsilon);
+                        float4 vt = snapToPixel;
+                        vt.xyz = snapToPixel.xyz / snapToPixel.w;
+                        vt.xy = floor(gridSize * vt.xy) / gridSize;
+                        vt.xyz *= snapToPixel.w;
+                        o.pos = vt;
+                    }
+                    #endif
+                    //o.uv = v.texcoord;
                 }
-                #endif
-                //o.uv = v.texcoord;
                 return o;
             }
 

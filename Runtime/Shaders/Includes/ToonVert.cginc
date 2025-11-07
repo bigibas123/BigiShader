@@ -46,15 +46,17 @@ v2f do_v2fCalc(in v2f o, const in appdata v)
 		o.tangent.xyz = UnityObjectToWorldDir(v.tangent);
 		o.tangent.w = v.tangent.w;
 		o.worldPos = mul(unity_ObjectToWorld, v.vertex);
-	#ifdef ROUNDING_VAR_NAME
+		#ifdef ROUNDING_VAR_NAME
 	}
 	#endif
-	o.uv.xy = (v.uv0);// * o.pos.w;
-	o.uv.zw = float2(0,0);
+	o.uv.xy = (v.uv0); // * o.pos.w;
+	o.uv.zw = float2(0, 0);
 	o.normal = UnityObjectToWorldNormal(v.normal);
 	o.distance.w = GET_DISTANCE(v.vertex);
 	return o;
 }
+
+#include "./TileDiscardStuff.cginc"
 
 v2f bigi_toon_vert(appdata v)
 {
@@ -64,28 +66,36 @@ v2f bigi_toon_vert(appdata v)
 	UNITY_TRANSFER_INSTANCE_ID(v, o);
 	UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-	o = do_v2fCalc(o, v);
+	if (b_tile_discard::ShouldDiscard(v.uv0))
+	{
+		o.pos.xyzw = asfloat(-1);
+		o.uv = v.uv0;
+	}
+	else
+	{
+		o = do_v2fCalc(o, v);
 
-	o.uv.zw = v.uv0.zw;
-	const float tangentSign = v.tangent.w * unity_WorldTransformParams.w;
-	o.bitangent = cross(o.normal, o.tangent) * tangentSign;
+		o.uv.zw = v.uv0.zw;
+		const float tangentSign = v.tangent.w * unity_WorldTransformParams.w;
+		o.bitangent = cross(o.normal, o.tangent) * tangentSign;
 
 
-	#if defined(DIRECTIONAL) || defined(POINT) || defined(SPOT) || defined(DIRECTIONAL) || defined(POINT_COOKIE) || defined(DIRECTIONAL_COOKIE)
-	o._ShadowCoord = 0;
-	#endif
+		#if defined(DIRECTIONAL) || defined(POINT) || defined(SPOT) || defined(DIRECTIONAL) || defined(POINT_COOKIE) || defined(DIRECTIONAL_COOKIE)
+		o._ShadowCoord = 0;
+		#endif
 
 
-	UNITY_TRANSFER_SHADOW(o, v.uv1)
-	UNITY_TRANSFER_LIGHTING(o, v.uv1)
-	UNITY_TRANSFER_FOG(o, o.pos);
-	o.staticTexturePos = ComputeScreenPos(o.pos);
-	//TODO make this object space relative or something?
-	// Update: Orels has a shader that I can checkout: https://shaders.orels.sh/docs/ui/layered-parallax
+		UNITY_TRANSFER_SHADOW(o, v.uv1)
+		UNITY_TRANSFER_LIGHTING(o, v.uv1)
+		UNITY_TRANSFER_FOG(o, o.pos);
+		o.staticTexturePos = ComputeScreenPos(o.pos);
+		//TODO make this object space relative or something?
+		// Update: Orels has a shader that I can checkout: https://shaders.orels.sh/docs/ui/layered-parallax
 
-	o.lightmapUV.xy = v.uv1.xy; // * unity_LightmapST.xy + unity_LightmapST.zw;
-	o.lightmapUV.zw = v.uv2.xy; // * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
-	BIGI_GETLIGHT_VERTEX(o);
+		o.lightmapUV.xy = v.uv1.xy; // * unity_LightmapST.xy + unity_LightmapST.zw;
+		o.lightmapUV.zw = v.uv2.xy; // * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
+		BIGI_GETLIGHT_VERTEX(o);
+	}
 
 	return o;
 }
