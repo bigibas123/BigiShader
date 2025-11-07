@@ -6,13 +6,14 @@ uniform float _VRChatCameraMode;
 uniform uint _VRChatCameraMask;
 uniform float _VRChatMirrorMode;
 uniform float3 _VRChatMirrorCameraPos;
+uniform float _VRChatFaceMirrorMode;
 
 bool IsVR()
 {
 	#ifdef UNITY_SINGLE_PASS_STEREO
 	return true;
 	#else
-	return _VRChatMirrorMode == 1;
+	return (_VRChatMirrorMode == 1) || (_VRChatFaceMirrorMode == 1);
 	#endif
 }
 
@@ -43,17 +44,22 @@ bool IsPanorama()
 
 bool IsInMirror()
 {
-	return _VRChatMirrorMode != 0;
+	return (_VRChatMirrorMode != 0) || (_VRChatFaceMirrorMode != 0);
 }
 
 bool IsInVRMirror()
 {
-	return _VRChatMirrorMode == 1;
+	return (_VRChatMirrorMode == 1);
 }
 
 bool IsInDesktopMirror()
 {
-	return _VRChatMirrorMode == 2;
+	return (_VRChatMirrorMode == 2);
+}
+
+bool IsInFaceMirror()
+{
+	return (_VRChatFaceMirrorMode == 1);
 }
 
 bool IsRightEye()
