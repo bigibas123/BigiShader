@@ -68,7 +68,7 @@ Shader "Bigi/FakeGlass"
             {
                 "RenderType" = "Opaque" "Queue"="Overlay+1001"
             }
-            ZWrite On
+            ZWrite Off
             ZTest LEqual
             HLSLPROGRAM
             #pragma vertex vert
