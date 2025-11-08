@@ -3,8 +3,10 @@
   "displayName": "Bigibas123's shaders",
   "version": "3.2.0",
   "license": "MIT-0",
+  "licensesUrl": "https://opensource.org/license/mit-0",
   "author": {
-	"name": "bigibas123"
+    "name": "bigibas123",
+    "url": "https://github.com/bigibas123/"
   },
   "unity": "2022.3",
   "description": "Collection of shaders by bigibas123",
