@@ -33,7 +33,7 @@ fragOutput frag(v2f i)
 	{
 		orig_color.rgb = (orig_color.rgb * orig_color.a);
 	}
-
+	_OcclusionStrength = 0.0;
 	BIGI_GETLIGHT_DEFAULT(lighting);
 	const fixed4 normal_color = orig_color * lighting;
 

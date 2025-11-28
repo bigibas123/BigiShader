@@ -14,6 +14,10 @@ Shader "Bigi/LogoPlane(Texture)"
 		{
 			"RenderType" = "Transparent" "Queue" = "Transparent" "IgnoreProjector" = "True" "LightMode" = "ForwardBase" "VRCFallback"="Hidden" "LTCGI"="ALWAYS" "PreviewType" = "Plane"
 		}
+		
+		CGINCLUDE
+		#define GET_TEX_COLOR(uv) tex2D(_MainTex,TRANSFORM_TEX(uv,_MainTex))
+		ENDCG
 
 		Pass
 		{
