@@ -115,13 +115,7 @@
                     break;
                 }
             }
-            half2 currentPos = (((abs(i.uv.xy) * _Scale) % 1.0)) * 3.0;
-            const float eps = 0.1;
-            if ((currentPos.x < eps && currentPos.x > -eps) || (currentPos.y < eps && currentPos.y > -eps))
-            {
-                return float4(0.0, 0.0, 0.0, 1.0);
-            }
-
+            const half2 currentPos = (((abs(i.uv.xy) * _Scale) % 1.0)) * 3.0;
             int currentBlock = (floor(currentPos.x) + (floor(currentPos.y) * 3.0));
             if (currentBlock == bit)
             {
@@ -137,6 +131,30 @@
         #define FRAG(stencilVal) fixed4 frag(v2f i) : SV_Target {  return doFrag(i,stencilVal); }
         ENDHLSL
 
+        Pass
+        {
+            Stencil
+            {
+                Ref 0 ReadMask 0
+            }
+            HLSLPROGRAM
+            fixed4 frag(v2f i) : SV_Target
+            {
+                const half2 currentPos = (((abs(i.uv.xy) * _Scale) % 1.0)) * 3.0;
+                const float eps = 0.1;
+                if ((currentPos.x < eps && currentPos.x > -eps) || (currentPos.y < eps &&
+                    currentPos.y > -eps))
+                {
+                    return float4(0.0, 0.0, 0.0, 1.0);
+                }
+                else
+                {
+                    discard;
+                    return float4(0.0, 0.0, 0.0, 0.0);
+                }
+            }
+            ENDHLSL
+        }
 
         Pass
         {
