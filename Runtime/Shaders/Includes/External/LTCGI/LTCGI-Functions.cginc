@@ -53,8 +53,8 @@ void GetLTCGI(const in b_light::world_info wi, inout LTCGI_V2_CUSTOM_INPUT resul
 		1.0f - wi.smoothness, // roughness
 		wi.shadowmapUvs.xy // shadowmap coordinates (the normal Unity ones, they should be in sync with LTCGI maps)
 	);
-	result.specular += (acc.specular * _VRCLVStrength);
-	result.diffuse += ((acc.diffuse * wi.albedo) * _VRCLVStrength);
+	result.specular += (acc.specular * _LTCGIStrength);
+	result.diffuse += ((acc.diffuse * wi.albedo) * _LTCGIStrength);
 	#endif
 }
 

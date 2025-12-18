@@ -13,7 +13,7 @@ namespace b_light
 	void GetLightVolumesLighting(const in world_info wi, inout UnityIndirect result)
 	{
 		#ifdef UNITY_PASS_FORWARDBASE
-		if (_UdonLightVolumeEnabled && _UdonLightVolumeCount > 0)
+		if (_UdonLightVolumeEnabled && _UdonLightVolumeCount > 0 && _VRCLVStrength > Epsilon)
 		{
 			float3 L0 = float3(0, 0, 0);
 			float3 L1r = float3(0, 0, 0);

@@ -13,7 +13,7 @@
 
 #include "../External/VRCLV/VRCLightVolumes.cginc"
 #include "../External/LTCGI/LTCGI-Functions.cginc"
-#include "../External/VRSL/BigiVRSL.cginc"
+//#include "../External/VRSL/BigiVRSL.cginc"
 
 namespace b_light
 {
@@ -135,7 +135,7 @@ namespace b_light
     	
 		GetLightVolumesLighting(wi, unityIndirect);
     	GetLTCGI(wi, unityIndirect);
-    	GetVRSLGI(wi, unityIndirect);
+    	// GetVRSLGI(wi, unityIndirect);
 		
     	
         float4 unity_pbs_output = UNITY_BRDF_PBS(
