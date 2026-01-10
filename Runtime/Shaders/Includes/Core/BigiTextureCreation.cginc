@@ -10,17 +10,21 @@ namespace bigi_texture
 {
 	bool IsInsidePos(const in float4 dp, in float2 uv)
 	{
-		uv = uv % 1.0;
-		const float4 corners = float4(dp.x, dp.y, dp.x + dp.z, dp.y + dp.w);
-		return ((uv.x >= corners.x && uv.x <= corners.z) || (corners.z >= 1.0 && uv.x <= (corners.z % 1.0)))
-			&& ((uv.y >= corners.y && uv.y <= corners.w) || (corners.w >= 1.0 && uv.y <= (corners.w % 1.0)));
+		float4 realdp = float4(
+			dp.z >= 0.0 ? dp.x : (dp.x + dp.z),
+			dp.w >= 0.0 ? dp.y : (dp.y + dp.w),
+			dp.z >= 0.0 ? dp.z : abs(dp.z),
+			dp.w >= 0.0 ? dp.w : abs(dp.w)
+		);
+
+		uv = (uv.xy - realdp.xy);
+		uv = (uv - floor(uv));
+		return (uv.x > 0.0) && (uv.y > 0.0) && (uv.x < realdp.z) && (uv.y < realdp.w);
 	}
 
-	float2 CalcDecalUv(const in float4 dp, const in float2 uv)
+	float2 CalcDecalUv(const in float4 dp, in float2 uv)
 	{
-		float2 shifted = float2(uv.x - dp.x, uv.y - dp.y);
-		shifted = frac(shifted) / dp.zw;
-		return shifted;
+		return (uv - dp.xy) / dp.zw;
 	}
 
 	// TODO Maybe better color mixing/layering?
@@ -73,26 +77,26 @@ namespace bigi_texture
 		#endif
 		float4 color = GET_TEX_COLOR_MAINTEX(uv);
 		#if defined(DO_ALPHA_PLS)
-		color.a  *= _Alpha_Multiplier;
+		color.a *= _Alpha_Multiplier;
 		#endif
 		#ifdef DECAL_1_ENABLED
-		if ((_Decal1_Opacity > Epsilon) && (IsInsidePos(_Decal1_Position,uv)))
+		if ((_Decal1_Opacity > Epsilon) && (IsInsidePos(_Decal1_Position, uv)))
 		{
-			const float4 decalColor = b_decal::GetTexColorDecal1(CalcDecalUv(_Decal1_Position,uv));
+			const float4 decalColor = b_decal::GetTexColorDecal1(CalcDecalUv(_Decal1_Position, uv));
 			color = DoMix(color, decalColor, _Decal1_Opacity, _Decal1_BlendMode);
 		}
 		#endif
 		#ifdef DECAL_2_ENABLED
-		if ((_Decal2_Opacity > Epsilon) && (IsInsidePos(_Decal2_Position,uv)))
+		if ((_Decal2_Opacity > Epsilon) && (IsInsidePos(_Decal2_Position, uv)))
 		{
-			const float4 decalColor = b_decal::GetTexColorDecal2(CalcDecalUv(_Decal2_Position,uv));
+			const float4 decalColor = b_decal::GetTexColorDecal2(CalcDecalUv(_Decal2_Position, uv));
 			color = DoMix(color, decalColor, _Decal2_Opacity, _Decal2_BlendMode);
 		}
 		#endif
 		#ifdef DECAL_3_ENABLED
-		if ((_Decal3_Opacity > Epsilon) && (IsInsidePos(_Decal3_Position,uv)))
+		if ((_Decal3_Opacity > Epsilon) && (IsInsidePos(_Decal3_Position, uv)))
 		{
-			const float4 decalColor = b_decal::GetTexColorDecal3(CalcDecalUv(_Decal3_Position,uv));
+			const float4 decalColor = b_decal::GetTexColorDecal3(CalcDecalUv(_Decal3_Position, uv));
 			color = DoMix(color, decalColor, _Decal3_Opacity, _Decal3_BlendMode);
 		}
 		#endif
