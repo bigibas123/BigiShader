@@ -4,8 +4,6 @@
 #include "./BigiMainTex.cginc"
 #include "../External/ProTV/BigiProTV.cginc"
 
-#define NOT_ONE (1.0 + Epsilon)
-
 namespace bigi_texture
 {
 	bool IsInsidePos(const in float4 dp, in float2 uv)
@@ -17,9 +15,9 @@ namespace bigi_texture
 			dp.w >= 0.0 ? dp.w : abs(dp.w)
 		);
 
-		uv = (uv.xy - realdp.xy);
-		uv = (uv - floor(uv));
-		return (uv.x > 0.0) && (uv.y > 0.0) && (uv.x < realdp.z) && (uv.y < realdp.w);
+		uv = (uv.xy - realdp.xy); // Shift uv space so lowest corner of the box is at 0,0
+		uv = (uv - floor(uv)); // Make uv space loop around, this is a mod(uv, 1.0) where the result is always positive
+		return (uv.x >= 0.0) && (uv.y >= 0.0) && (uv.x <= realdp.z) && (uv.y <= realdp.w); // Make sure uv is inside of box
 	}
 
 	float2 CalcDecalUv(const in float4 dp, in float2 uv)
@@ -72,6 +70,7 @@ namespace bigi_texture
 	#if defined(GET_TEX_COLOR_MAINTEX)
 	float4 GetTexColor(const in float2 uv)
 	{
+		// TODO make this not branch for each decal (check assembly first though)
 		#ifndef BIGI_TEXTURE_UNIFORMS_DEFINED
 		float4 MAINTEX_NAME##_ST = float4(0,0,0,0);
 		#endif
@@ -108,7 +107,7 @@ namespace bigi_texture
 			IsInsidePos(BIGI_PROTV_POSITION_VAR, uv)))
 		{
 			const float4 decalColor = b_protv_util::getTexColor(CalcDecalUv(BIGI_PROTV_POSITION_VAR, uv));
-			color = DoMix(color, decalColor, max(BIGI_PROTV_OPACITY_VAR, BIGI_PROTV_TEST_VAR), 0.0);
+			color = DoMix(color, decalColor, max(BIGI_PROTV_OPACITY_VAR, BIGI_PROTV_TEST_VAR), 0);
 		}
 		#endif
 		#if defined(DO_ALPHA_PLS)
