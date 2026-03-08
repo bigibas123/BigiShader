@@ -1,4 +1,4 @@
-﻿#if BIGI_TEX_TRANS_TOOL_PRESENT
+﻿#if BIGI_TEX_TRANS_TOOL_PRESENT && UNITY_EDITOR
 using net.rs64.TexTransTool.TextureAtlas;
 using net.rs64.TexTransTool.ShaderSupport;
 using UnityEngine;
@@ -19,6 +19,7 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
             (BigiProperty.Mask.GetPropertyName(), nameof(BigiProperty.Mask)),
             (BigiProperty.OcclusionMap.GetPropertyName(), nameof(BigiProperty.OcclusionMap)),
             (BigiProperty.BumpMap.GetPropertyName(), nameof(BigiProperty.BumpMap)),
+            (BigiProperty.TV_Square_Position.GetPropertyName(), nameof(BigiProperty.TV_Square_Position)),
         };
         
         static BigiShaderTttInformation()

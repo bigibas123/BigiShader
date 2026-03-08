@@ -1,22 +1,30 @@
 {
-  "name": "cc.dingemans.bigibas123.bigishader.Editor",
-  "rootNamespace": "cc.dingemans.bigibas123.bigishader.Editor",
-  "references": ["net.rs64.tex-trans-tool.runtime"],
-  "includePlatforms": [
-    "Editor"
-  ],
-  "excludePlatforms": [],
-  "allowUnsafeCode": false,
-  "overrideReferences": false,
-  "precompiledReferences": [],
-  "autoReferenced": true,
-  "defineConstraints": [],
-  "versionDefines": [
-    {
-      "name": "net.rs64.tex-trans-tool",
-      "expression": "0.10.0-beta.5",
-      "define": "BIGI_TEX_TRANS_TOOL_PRESENT"
-    }
-  ],
-  "noEngineReferences": false
+    "name": "cc.dingemans.bigibas123.bigishader.Editor",
+    "rootNamespace": "cc.dingemans.bigibas123.bigishader.Editor",
+    "references": [
+        "net.rs64.tex-trans-tool.runtime",
+        "com.anatawa12.avatar-optimizer.api.editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "net.rs64.tex-trans-tool",
+            "expression": "0.10.0-beta.5",
+            "define": "BIGI_TEX_TRANS_TOOL_PRESENT"
+        },
+        {
+            "name": "com.anatawa12.avatar-optimizer",
+            "expression": "[1.6,2.0)",
+            "define": "AVATAR_OPTIMIZER"
+        }
+    ],
+    "noEngineReferences": false
 }

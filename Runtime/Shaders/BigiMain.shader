@@ -132,8 +132,8 @@ Shader "Bigi/Main"
 
         [Header(Multi Texture)]
         [Space]
-        _MainTexArray ("Other textures", 2DArray) = "" {}
-        [Toggle(MULTI_TEXTURE)] _MultiTexture("Use multi texture (NOT ANIMATABLE)", Float) = 0
+        _MainTexArray ("Other textures, Legacy (Do not use)", 2DArray) = "" {}
+        [Toggle(MULTI_TEXTURE)] _MultiTexture("Use multi texture, Legacy do not use (NOT ANIMATABLE)", Float) = 0
         _OtherTextureId ("Other texture Id", Int) = 0
 
         [Header(Stencil (Not animatable))]
