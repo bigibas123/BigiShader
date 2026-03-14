@@ -103,6 +103,7 @@ Shader "Bigi/Main"
         _OutlineWidth ("Outline Width", Range(0.0,1.0)) = 0.0
         _Rounding ("Rounding Factor", Range(0.0,0.05)) = 0.0
         [ToggleUI] _DoMirrorThing ("Voronoi in mirror", Range(0.0,1.0)) = 1.0
+        _GlobalOutputMax ("Max output value", Range(-1.0,4.0)) = 1.0
 
 
         [Header(TV Square)]

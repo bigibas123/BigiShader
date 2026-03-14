@@ -44,6 +44,7 @@ namespace b_light
 		IFZEROAPPLY(_Voronoi, 0.0);
 		IFZEROAPPLY(_LightSmoothness, 1.0);
 		IFZEROAPPLY(_LightSteps, 128);
+		IFZEROAPPLY(_GlobalOutputMax, 10.0);
 		#if defined(UNITY_PASS_FORWARDBASE)
 		IFZEROAPPLY(_LTCGIStrength, 1.0);
 		IFZEROAPPLY(_VRCLVStrength, 1.0);

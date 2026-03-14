@@ -74,6 +74,7 @@ uniform float _DoMirrorThing;
 #else
 #define MIRROR_THING_VAR (0.0)
 #endif
+uniform float _GlobalOutputMax;
 
 #ifndef BIGI_UDIM_DISCARD_DECLARED
 #define BIGI_UDIM_DISCARD_DECLARED

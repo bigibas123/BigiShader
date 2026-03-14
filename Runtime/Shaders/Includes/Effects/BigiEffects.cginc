@@ -123,6 +123,11 @@ namespace b_effects
 		//         
 		//     }
 		// }
+
+		// Global Max
+		{
+			mix.totalColor = min(mix.totalColor, fixed3(_GlobalOutputMax, _GlobalOutputMax, _GlobalOutputMax));
+		}
 		return half4(mix.totalColor, orig_color.a);
 	}
 }
