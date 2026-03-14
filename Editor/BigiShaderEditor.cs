@@ -509,6 +509,7 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 		OutlineWidth,
 		Rounding,
 		DoMirrorThing,
+		GlobalOutputMax,
 		EnableProTVSquare,
 		TV_Square_Opacity,
 		SquareTVTest,
