@@ -2,6 +2,7 @@
 #define BIGI_TILE_DISCARD_STUFF
 
 #ifndef BIGI_UDIM_DISCARD_DECLARED
+#ifndef BIGI_DISABLE_TILE_DISCARD_COMPLETELY
 #define BIGI_UDIM_DISCARD_DECLARED
 uniform float _UDIMDiscardRow3_3;
 uniform float _UDIMDiscardRow3_2;
@@ -20,9 +21,11 @@ uniform float _UDIMDiscardRow0_2;
 uniform float _UDIMDiscardRow0_1;
 uniform float _UDIMDiscardRow0_0;
 #endif
+#endif
 
 namespace b_tile_discard
 {
+	#ifndef BIGI_DISABLE_TILE_DISCARD_COMPLETELY
 	bool ShouldDiscard(const in float2 uv)
 	{
 		// Branchless (stolen from liltoon, inspired by s-ilent)
@@ -48,6 +51,12 @@ namespace b_tile_discard
 		const float threshold = 0.001;
 		return isDiscarded > threshold;
 	}
+	#else
+	bool ShouldDiscard(const in float2 uv)
+	{
+		return false;
+	}
+	#endif
 	
 }
 

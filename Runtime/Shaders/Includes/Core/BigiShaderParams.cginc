@@ -77,6 +77,7 @@ uniform float _DoMirrorThing;
 uniform float _GlobalOutputMax;
 
 #ifndef BIGI_UDIM_DISCARD_DECLARED
+#ifndef BIGI_DISABLE_TILE_DISCARD_COMPLETELY
 #define BIGI_UDIM_DISCARD_DECLARED
 uniform float _UDIMDiscardRow3_3;
 uniform float _UDIMDiscardRow3_2;
@@ -94,6 +95,7 @@ uniform float _UDIMDiscardRow0_3;
 uniform float _UDIMDiscardRow0_2;
 uniform float _UDIMDiscardRow0_1;
 uniform float _UDIMDiscardRow0_0;
+#endif
 #endif
 
 #ifdef UNITY_PASS_FORWARDBASE
