@@ -2,6 +2,7 @@
 #define BIGI_TOONVERT_INCL
 #include <UnityCG.cginc>
 #include <AutoLight.cginc>
+#include <UnityInstancing.cginc>
 
 #include "./Epsilon.cginc"
 #include "./Core/BigiShaderStructs.cginc"
@@ -24,26 +25,29 @@ float4 round_val(const in float4 snapToPixel, const uniform in float rounding)
 	return vt;
 }
 
+#include "./V2GReplacement.cginc"
+
 v2f do_v2fCalc(in v2f o, const in appdata v)
 {
 	#ifdef ROUNDING_VAR_NAME
 	if (ROUNDING_VAR_NAME > Epsilon)
 	{
+		const float4 roundedVertex = round_val(v.vertex, ROUNDING_VAR_NAME);
 		//o.localPos = round_val(v.vertex, ROUNDING_VAR_NAME);
-		o.pos = UnityObjectToClipPos(round_val(v.vertex, ROUNDING_VAR_NAME));
+		o.pos = BIGI_V2G_POSITION_FUNC(roundedVertex);
 		//o.uv1 = float4(v.uv1, v.uv2);
 		float4 rounded_tangent = round_val(v.tangent, ROUNDING_VAR_NAME);
-		o.tangent.xyz = UnityObjectToWorldDir(rounded_tangent).xyz;
+		o.tangent.xyz = BIGI_V2G_TANGENT_FUNC(rounded_tangent).xyz;
 		o.tangent.w = rounded_tangent.w;
-		o.worldPos = mul(unity_ObjectToWorld, round_val(v.vertex, ROUNDING_VAR_NAME));
+		o.worldPos = mul(unity_ObjectToWorld, roundedVertex);
 	}
 	else
 	{
 		#endif
 		//o.localPos = v.vertex;
-		o.pos = UnityObjectToClipPos(v.vertex);
+		o.pos = BIGI_V2G_POSITION_FUNC(v.vertex);
 		//o.uv1 = float4(v.uv1, v.uv2);
-		o.tangent.xyz = UnityObjectToWorldDir(v.tangent);
+		o.tangent.xyz = BIGI_V2G_TANGENT_FUNC(v.tangent).xyz;
 		o.tangent.w = v.tangent.w;
 		o.worldPos = mul(unity_ObjectToWorld, v.vertex);
 		#ifdef ROUNDING_VAR_NAME
@@ -51,7 +55,7 @@ v2f do_v2fCalc(in v2f o, const in appdata v)
 	#endif
 	o.uv.xy = (v.uv0); // * o.pos.w;
 	o.uv.zw = float2(0, 0);
-	o.normal = UnityObjectToWorldNormal(v.normal);
+	o.normal = BIGI_V2G_NORMAL_FUNC(v.normal);
 	o.distance.w = GET_DISTANCE(v.vertex);
 	return o;
 }
