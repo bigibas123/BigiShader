@@ -36,6 +36,8 @@ v2f do_v2fCalc(in v2f o, const in appdata v)
 		//o.localPos = round_val(v.vertex, ROUNDING_VAR_NAME);
 		o.pos = BIGI_V2G_POSITION_FUNC(roundedVertex);
 		//o.uv1 = float4(v.uv1, v.uv2);
+		float3 rounded_normal = round_val(float4(v.normal,1.0), ROUNDING_VAR_NAME).xyz;
+		o.normal = BIGI_V2G_NORMAL_FUNC(rounded_normal);
 		float4 rounded_tangent = round_val(v.tangent, ROUNDING_VAR_NAME);
 		o.tangent.xyz = BIGI_V2G_TANGENT_FUNC(rounded_tangent).xyz;
 		o.tangent.w = rounded_tangent.w;
@@ -47,6 +49,7 @@ v2f do_v2fCalc(in v2f o, const in appdata v)
 		//o.localPos = v.vertex;
 		o.pos = BIGI_V2G_POSITION_FUNC(v.vertex);
 		//o.uv1 = float4(v.uv1, v.uv2);
+		o.normal = BIGI_V2G_NORMAL_FUNC(v.normal);
 		o.tangent.xyz = BIGI_V2G_TANGENT_FUNC(v.tangent).xyz;
 		o.tangent.w = v.tangent.w;
 		o.worldPos = mul(unity_ObjectToWorld, v.vertex);
@@ -55,7 +58,6 @@ v2f do_v2fCalc(in v2f o, const in appdata v)
 	#endif
 	o.uv.xy = (v.uv0); // * o.pos.w;
 	o.uv.zw = float2(0, 0);
-	o.normal = BIGI_V2G_NORMAL_FUNC(v.normal);
 	o.distance.w = GET_DISTANCE(v.vertex);
 	return o;
 }
