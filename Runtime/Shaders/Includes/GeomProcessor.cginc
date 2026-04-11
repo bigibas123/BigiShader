@@ -11,6 +11,24 @@
 // https://developer.download.nvidia.com/SDK/10/direct3d/Source/SolidWireframe/Doc/SolidWireframe.pdf
 // And Catlikecoding: https://catlikecoding.com/unity/tutorials/advanced-rendering/flat-and-wireframe-shading/
 
+#if defined(BIGI_VERT_ONLY_OBJECTSPACE) || defined(BIGI_VERT_ONLY_TO_WORLDSPACE)
+
+void bigi_process_vertex(inout v2f input)
+{
+	#if defined(BIGI_VERT_ONLY_OBJECTSPACE)
+		input.pos = UnityObjectToClipPos(input.pos);
+		input.tangent.xyz = UnityObjectToWorldDir(input.tangent).xyz;
+		input.normal = UnityObjectToWorldNormal(input.normal);
+	#elif defined(BIGI_VERT_ONLY_TO_WORLDSPACE)
+		input.pos = UnityWorldToClipPos(input.pos);
+		// tangent & normal only have to be converted to world and thus are already correct
+	#else
+		#error "Wrong combination of defines for geometry processing to take place!"
+	#endif
+}
+
+#endif
+
 
 #ifndef TRANSPARENT_FORWARD_BASE
 [instance(1)]
@@ -36,6 +54,11 @@ void bigi_geom(triangle v2f input[3],
 	if (!(b_tile_discard::ShouldDiscard(input[0].uv) || b_tile_discard::ShouldDiscard(input[1].uv) || b_tile_discard::ShouldDiscard(input[2].uv)))
 	#endif
 	{
+		#if defined(BIGI_VERT_ONLY_OBJECTSPACE) || defined(BIGI_VERT_ONLY_TO_WORLDSPACE)
+		bigi_process_vertex(input[0]);
+		bigi_process_vertex(input[1]);
+		bigi_process_vertex(input[2]);
+		#endif
 		os.Append(input[0]);
 		os.Append(input[1]);
 		os.Append(input[2]);
