@@ -36,7 +36,7 @@
 
         float get_power(const in float3 pos, const in float offset)
         {
-            return lerp(lerp(0.0, get_random(pos, offset), offset), 1.0, offset);
+            return lerp(lerp(0.0, get_random(pos, offset), offset), 1.1, offset);
         }
         #else
         float get_power(const in float4 pos, const in float offset)
@@ -81,10 +81,13 @@
             #error " BIGI_VERT_ONLY_OBJECTSPACE not defined!"
             #endif
 
-            os.Append(input[0]);
-            os.Append(input[1]);
-            os.Append(input[2]);
-            os.RestartStrip();
+            if (power < 1.0)
+            {
+                os.Append(input[0]);
+                os.Append(input[1]);
+                os.Append(input[2]);
+                os.RestartStrip();
+            }
         }
         ENDHLSL
 
