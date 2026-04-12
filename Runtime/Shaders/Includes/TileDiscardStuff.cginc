@@ -4,6 +4,8 @@
 #ifndef BIGI_UDIM_DISCARD_DECLARED
 #ifndef BIGI_DISABLE_TILE_DISCARD_COMPLETELY
 #define BIGI_UDIM_DISCARD_DECLARED
+#include <HLSLSupport.cginc>
+CBUFFER_START(Bigi_UDIM_TileDiscard)
 uniform float _UDIMDiscardRow3_3;
 uniform float _UDIMDiscardRow3_2;
 uniform float _UDIMDiscardRow3_1;
@@ -20,6 +22,7 @@ uniform float _UDIMDiscardRow0_3;
 uniform float _UDIMDiscardRow0_2;
 uniform float _UDIMDiscardRow0_1;
 uniform float _UDIMDiscardRow0_0;
+CBUFFER_END
 #endif
 #endif
 

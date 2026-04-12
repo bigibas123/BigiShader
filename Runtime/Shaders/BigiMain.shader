@@ -104,6 +104,8 @@ Shader "Bigi/Main"
         _Rounding ("Rounding Factor", Range(0.0,0.05)) = 0.0
         [ToggleUI] _DoMirrorThing ("Voronoi in mirror", Range(0.0,1.0)) = 1.0
         _GlobalOutputMax ("Max output value", Range(-1.0,4.0)) = 1.0
+        [Toggle(ENABLE_DISSOLVE)] _EnableDissolveEffect("Enable geometric dissolve effect (NOT ANIMATABLE)", Float) = 0
+        _DissolveStrength("How geometrically dissolved the mesh is", Range(0.0,1.0)) = 0.0
 
 
         [Header(TV Square)]
@@ -155,6 +157,11 @@ Shader "Bigi/Main"
 
         HLSLINCLUDE
         #define MIRROR_THING
+        #ifdef ENABLE_DISSOLVE
+        #ifndef BIGI_VERT_ONLY_OBJECTSPACE
+            #define BIGI_VERT_ONLY_OBJECTSPACE
+        #endif
+        #endif
         ENDHLSL
 
         Pass
@@ -439,37 +446,42 @@ Shader "Bigi/Main"
             HLSLPROGRAM
             #pragma vertex vert alpha
             #pragma fragment frag alpha
-            //#pragma geometry bigi_geom  alpha
+            #pragma geometry bigi_geom  alpha
+            #include <UnityCG.cginc>
             #include_with_pragmas "./Includes/Pragmas/ShadowCaster.cginc"
             #include_with_pragmas "./Includes/Pragmas/CustomVariants.cginc"
 
             #include "./Includes/Epsilon.cginc"
-
+            #undef BIGI_VERT_ONLY_OBJECTSPACE
             #define BIGI_DEFAULT_V2F_DEFINED
-
-            #include "./Includes/Core/BigiShaderStructs.cginc"
-            #include "./Includes/Core/BigiShaderParams.cginc"
-            //#include "./Includes/GeomProcessor.cginc"
-            #include "./Includes/TileDiscardStuff.cginc"
-            #include <UnityCG.cginc>
-
+            
             struct v2f
             {
                 V2F_SHADOW_CASTER;
                 UNITY_VERTEX_INPUT_INSTANCE_ID UNITY_VERTEX_OUTPUT_STEREO
                 #if defined(UNITY_STANDARD_USE_SHADOW_UVS)
+                #define BIGI_V2F_UV_VAR_NAME tex
                     float2 tex : TEXCOORD1;
 
                 #if defined(_PARALLAXMAP)
-                        half3 viewDirForParallax : TEXCOORD2;
+                    #define BIGI_V2F_NORMAL_VAR_NAME viewDirForParallax
+                    half3 viewDirForParallax : TEXCOORD2;
                 #endif
                 #endif
                 //float4 uv : TEXCOORD0;
             };
+            
 
+            #include "./Includes/Core/BigiShaderStructs.cginc"
+            #include "./Includes/Core/BigiShaderParams.cginc"
+            #include "./Includes/GeomProcessor.cginc"
+            #include "./Includes/TileDiscardStuff.cginc"
+ 
+            
             v2f vert(appdata v)
             {
                 v2f o;
+                UNITY_INITIALIZE_OUTPUT(v2f,o);
                 if (b_tile_discard::ShouldDiscard(v.uv0))
                 {
                     o.pos = asfloat(-1);
@@ -479,7 +491,6 @@ Shader "Bigi/Main"
                 }
                 else
                 {
-                        UNITY_INITIALIZE_OUTPUT(v2f, o);
                     UNITY_SETUP_INSTANCE_ID(v);
                     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
                     UNITY_TRANSFER_INSTANCE_ID(v, o);

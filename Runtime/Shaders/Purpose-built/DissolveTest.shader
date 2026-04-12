@@ -55,11 +55,10 @@
                 length(unity_ObjectToWorld._m01_m11_m21),
                 length(unity_ObjectToWorld._m02_m12_m22)
             );
-            // const float3 scale = 1.0;
-            const float3 totalPos = input[0].pos.xyz + input[1].pos.xyz + input[2].pos.xyz;
-            const float3 normal = ((normalize(totalPos) / 3.0) * scale);
+            const float3 totalNormal = input[0].normal + input[1].normal + input[2].normal;
+            const float3 normal = ((normalize(totalNormal) / 3.0) * scale);
 
-            float power = get_power(totalPos, _Offset);
+            float power = get_power(totalNormal, _Offset);
             input[0].pos.xyz += normal * power;
             input[1].pos.xyz += normal * power;
             input[2].pos.xyz += normal * power;
@@ -119,6 +118,7 @@
             fragOutput frag(v2f i)
             {
                 b_light::setVars();
+                _MinAmbient = 0.0;
                 fixed4 orig_color = GET_TEX_COLOR(i.uv);
                 clip(orig_color.a - Epsilon);
                 fragOutput o;

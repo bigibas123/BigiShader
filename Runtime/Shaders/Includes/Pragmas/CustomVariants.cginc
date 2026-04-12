@@ -11,4 +11,6 @@
 #pragma shader_feature_local_fragment DECAL_2_ENABLED
 #pragma shader_feature_local_fragment DECAL_3_ENABLED
 
+#pragma shader_feature_local ENABLE_DISSOLVE
+
 #endif

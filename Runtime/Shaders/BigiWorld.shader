@@ -104,6 +104,8 @@ Shader "Bigi/World (WIP)"
         _Rounding ("Rounding Factor", Range(0.0,0.05)) = 0.0
         [ToggleUI] _DoMirrorThing ("Voronoi in mirror", Range(0.0,1.0)) = 1.0
         _GlobalOutputMax ("Max output value", Range(-1.0,4.0)) = 1.0
+        [Toggle(ENABLE_DISSOLVE)] _EnableDissolveEffect("Enable geometric dissolve effect (NOT ANIMATABLE)", Float) = 0
+        _DissolveStrength("How geometrically dissolved the mesh is", Range(0.0,1.0)) = 0.0
 
 
         [Header(TV Square)]
@@ -152,6 +154,16 @@ Shader "Bigi/World (WIP)"
         {
             "VRCFallback" = "ToonCutout" "LTCGI"="ALWAYS"
         }
+        
+        HLSLINCLUDE
+        #define MIRROR_THING
+        #ifdef ENABLE_DISSOLVE
+        #ifndef BIGI_VERT_ONLY_OBJECTSPACE
+            #define BIGI_VERT_ONLY_OBJECTSPACE
+        #endif
+        #warning "Enabling dissolve won't work with object baking!
+        #endif
+        ENDHLSL
 
         UsePass "Bigi/Main/OPAQUEFORWARDBASE"
         UsePass "Bigi/Main/TRANSPARENTFORWARDBASE"

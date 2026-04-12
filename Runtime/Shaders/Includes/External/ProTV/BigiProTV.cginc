@@ -20,7 +20,7 @@ namespace b_protv_util
     	#elif defined(BIGI_VERTEX_STAGE) || defined(BIGI_FRAGMENT_STAGE)
     	return tex2D(_Udon_VideoTex,float2(TRANSFORM_TEX(uv, _Udon_VideoTex)));
     	#else
-    	#error "Not supported shader stage"
+    	#error "Not supported shader stage, (ProTv, not SHADER_API_D3D11)"
     	return tex2Dlod(_Udon_VideoTex,float4(TRANSFORM_TEX(uv, _Udon_VideoTex),0.0,0.0));
     	#endif
     }
@@ -44,7 +44,7 @@ namespace b_protv_util
 		#elif defined(BIGI_VERTEX_STAGE) || defined(BIGI_FRAGMENT_STAGE)
 		return UNITY_SAMPLE_TEX2D(_Udon_VideoTex, TRANSFORM_TEX(uv, _Udon_VideoTex));
 		#else
-		#error "Not supported shader stage"
+		#error "Not supported shader stage, (ProTv, SHADER_API_D3D11)"
 		return UNITY_SAMPLE_TEX2D_LOD(_Udon_VideoTex, TRANSFORM_TEX(uv, _Udon_VideoTex),0.0);
 		#endif
 	}

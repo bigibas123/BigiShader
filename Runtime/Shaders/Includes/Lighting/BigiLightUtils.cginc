@@ -188,13 +188,13 @@ namespace b_light
         float4 lightPosX, float4 lightPosY, float4 lightPosZ,
         float3 lightColor0, float3 lightColor1, float3 lightColor2, float3 lightColor3,
         float4 lightAttenSq,
-        float3 pos, float3 normal
+        float3 world_pos, float3 normal
     )
     {
         // to light vectors
-        float4 toLightX = lightPosX - pos.x;
-        float4 toLightY = lightPosY - pos.y;
-        float4 toLightZ = lightPosZ - pos.z;
+        float4 toLightX = lightPosX - world_pos.x;
+        float4 toLightY = lightPosY - world_pos.y;
+        float4 toLightZ = lightPosZ - world_pos.z;
         // squared lengths
         float4 lengthSq = 0;
         lengthSq += toLightX * toLightX;
@@ -227,14 +227,17 @@ namespace b_light
         float4 lightPosX, float4 lightPosY, float4 lightPosZ,
         float3 lightColor0, float3 lightColor1, float3 lightColor2, float3 lightColor3,
         float4 lightAttenSq,
-        float3 pos, float3 normal
+        float3 world_pos, float3 normal
     )
     {
+    	#if defined(BIGI_VERT_ONLY_OBJECTSPACE)
+    	normal = UnityObjectToWorldNormal(normal);
+    	#endif
         float3 ret = 0;
         ret += bigi_Shade4PointLights(
             lightPosX, lightPosY, lightPosZ,
             lightColor0, lightColor1, lightColor2, lightColor3,
-            lightAttenSq, pos, normal);
+            lightAttenSq, world_pos, normal);
         return ret;
     }
 }

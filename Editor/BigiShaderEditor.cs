@@ -88,6 +88,11 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 				}
 			}
 
+			if (mats.All(m => !EnableDissolveEffect.GetBool(m)) && !m_ShowHiddenProps)
+			{
+				materialProperties.RemoveAll(p => p.name == "_" + nameof(DissolveStrength));
+			}
+
 			if (mats.All(m => !(EnableProTVSquare.GetBool(m))) &&
 			    !m_ShowHiddenProps)
 			{
@@ -261,6 +266,12 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 				var tex = SpecSmoothMap.GetTexture(m);
 				SpecGlossMap.Set(m,tex);
 			}
+			
+			m.shader.keywordSpace.FindKeyword("ENABLE_DISSOLVE").Set(m, EnableDissolveEffect.GetBool(m));
+			if (!EnableDissolveEffect.GetBool(m))
+			{
+				DissolveStrength.Set(m, 0.0f);
+			}
 		}
 
 		private static void MakeZTestSafe(Material material, BigiProperty property)
@@ -350,7 +361,7 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 			int propId = prop.GetPropertyId();
 			if (material.HasFloat(propId))
 			{
-				return material.GetFloat(prop.GetPropertyId()) > 0.01;
+				return material.GetFloat(prop.GetPropertyId()) > Single.Epsilon;
 			}
 			else
 			{
@@ -510,6 +521,8 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 		Rounding,
 		DoMirrorThing,
 		GlobalOutputMax,
+		EnableDissolveEffect,
+		DissolveStrength,
 		EnableProTVSquare,
 		TV_Square_Opacity,
 		SquareTVTest,

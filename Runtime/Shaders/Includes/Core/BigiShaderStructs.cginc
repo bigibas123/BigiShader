@@ -54,21 +54,39 @@ struct appdata
 struct v2f
 {
 	UNITY_POSITION(pos); //float4 pos : SV_POSITION;
-
+	
+	#ifndef BIGI_V2F_UV_VAR_NAME
+	#define BIGI_V2F_UV_VAR_NAME uv
 	float4 uv : TEXCOORD0;
-	//float4 uv1 : TEXCOORD1;
+	#endif
+	//float4 uv1 : TEXCOORD1
+	#ifndef BIGI_V2F_NORMAL_VAR_NAME
+	#define BIGI_V2F_NORMAL_VAR_NAME normal
 	float3 normal : TEXCOORD2;
+	#endif
+	#ifndef BIGI_V2F_TANGENT_VAR_NAME
+	#define BIGI_V2F_TANGENT_VAR_NAME tangent
 	float4 tangent : TEXCOORD3;
+	#endif
 	float4 worldPos : TEXCOORD4;
 	float4 lightmapUV : TEXCOORD5;
 	UNITY_FOG_COORDS(6)
 	UNITY_LIGHTING_COORDS(8, 7)
+	#ifndef BIGI_V2F_BITANGENT_VAR_NAME
+	#define BIGI_V2F_BITANGENT_VAR_NAME bitangent
 	float3 bitangent : TEXCOORD9;
+	#endif
+	#ifndef BIGI_V2F_STATIC_TEXTURE_POS_VAR_NAME
+	#define BIGI_V2F_STATIC_TEXTURE_POS_VAR_NAME staticTexturePos
 	float4 staticTexturePos : TEXCOORD10;
+	#endif
 	#ifdef VERTEXLIGHT_ON
 	float3 vertexLighting : TEXCOORD11;
 	#endif
+	#ifndef BIGI_V2F_DISTANCE_VAR_NAME
+	#define BIGI_V2F_DISTANCE_VAR_NAME distance
 	float4 distance : POSITION1; // barycentric coordinates (xyz) and distance from arbitrary point (w)
+	#endif
 
 	#ifdef UNITY_VERTEX_INPUT_INSTANCE_ID
 	UNITY_VERTEX_INPUT_INSTANCE_ID

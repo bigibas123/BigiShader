@@ -76,6 +76,10 @@ uniform float _DoMirrorThing;
 #endif
 uniform float _GlobalOutputMax;
 
+#ifdef ENABLE_DISSOLVE
+uniform float _DissolveStrength;
+#endif
+
 #ifndef BIGI_UDIM_DISCARD_DECLARED
 #ifndef BIGI_DISABLE_TILE_DISCARD_COMPLETELY
 #define BIGI_UDIM_DISCARD_DECLARED

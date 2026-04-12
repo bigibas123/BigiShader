@@ -82,8 +82,8 @@ v2f bigi_toon_vert(appdata v)
 		o = do_v2fCalc(o, v);
 
 		o.uv.zw = v.uv0.zw;
-		const float tangentSign = v.tangent.w * unity_WorldTransformParams.w;
-		o.bitangent = cross(o.normal, o.tangent) * tangentSign;
+		// Calculate tangent sign, and put it in o.bitangent.x for use in geometry
+		o.bitangent.x = v.tangent.w * unity_WorldTransformParams.w;
 
 
 		#if defined(DIRECTIONAL) || defined(POINT) || defined(SPOT) || defined(DIRECTIONAL) || defined(POINT_COOKIE) || defined(DIRECTIONAL_COOKIE)
@@ -93,11 +93,7 @@ v2f bigi_toon_vert(appdata v)
 
 		UNITY_TRANSFER_SHADOW(o, v.uv1)
 		UNITY_TRANSFER_LIGHTING(o, v.uv1)
-		UNITY_TRANSFER_FOG(o, o.pos);
-		o.staticTexturePos = ComputeScreenPos(o.pos);
-		//TODO make this object space relative or something?
-		// Update: Orels has a shader that I can checkout: https://shaders.orels.sh/docs/ui/layered-parallax
-
+		
 		o.lightmapUV.xy = v.uv1.xy; // * unity_LightmapST.xy + unity_LightmapST.zw;
 		o.lightmapUV.zw = v.uv2.xy; // * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
 		BIGI_GETLIGHT_VERTEX(o);

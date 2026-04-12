@@ -22,7 +22,8 @@
 		#elif defined(BIGI_GEOMETRY_STAGE)
 		#define GET_TEX_COLOR_MAINTEX(uv) (UNITY_SAMPLE_TEX2D_LOD(MAINTEX_NAME, TRANSFORM_TEX(uv,MAINTEX_NAME), 0.0))
 		#else
-		#warning "Not supported shader stage"
+		// Warning disabled because unity somtimes compiles without any keywords and the warning triggered was false then
+		//#warning "Not supported shader stage"
 		#define GET_TEX_COLOR_MAINTEX(uv) (UNITY_SAMPLE_TEX2D_LOD(MAINTEX_NAME, uv, 0.0))
 		#endif
 		#endif
@@ -38,7 +39,7 @@
 			#elif defined(BIGI_GEOMETRY_STAGE)
 			#define GET_TEX_COLOR_MAINTEX(uv) (tex2Dlod(MAINTEX_NAME,TRANSFORM_TEX(uv,MAINTEX_NAME),0.0))
 			#else
-			#warning "Not supported shader stage"
+			#warning "Not supported shader stage (Single texture, unity standard input)"
 			#define GET_TEX_COLOR_MAINTEX(uv) (tex2Dlod(MAINTEX_NAME,uv,0.0))
 			#endif
 		#endif
@@ -68,7 +69,7 @@
 			#elif defined(BIGI_GEOMETRY_STAGE)
 				#define GET_TEX_COLOR_MAINTEX(uv) (UNITY_SAMPLE_TEX2DARRAY_LOD(MAINTEX_NAME, float3(TRANSFORM_TEX(uv,MAINTEX_NAME), OTHER_TEXTURE_ID_REF), 0.0))
 			#else
-				#error "Not supported shader stage"
+				#error "Not supported shader stage (Multi texture)"
 			#endif
 		#endif
 
