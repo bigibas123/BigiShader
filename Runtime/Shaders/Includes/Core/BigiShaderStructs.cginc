@@ -69,7 +69,10 @@ struct v2f
 	float4 tangent : TEXCOORD3;
 	#endif
 	float4 worldPos : TEXCOORD4;
+	#ifndef BIGI_V2F_LIGHTMAP_UV_VAR_NAME
+	#define BIGI_V2F_LIGHTMAP_UV_VAR_NAME lightmapUV
 	float4 lightmapUV : TEXCOORD5;
+	#endif
 	UNITY_FOG_COORDS(6)
 	UNITY_LIGHTING_COORDS(8, 7)
 	#ifndef BIGI_V2F_BITANGENT_VAR_NAME

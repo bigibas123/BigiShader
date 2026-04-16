@@ -334,7 +334,7 @@ Shader "Bigi/Main"
 
                 BIGI_GETLIGHT_DEFAULT(lighting);
 
-                o.color = b_effects::apply_effects(i.pos, GETUV,GET_MASK_COLOR(GETUV), orig_color, lighting, i.distance,
+                o.color = b_effects::apply_effects(i.pos, GETUV,GET_MASK_COLOR(GETUV), orig_color, lighting, i.BIGI_V2F_DISTANCE_VAR_NAME,
                                                    i.staticTexturePos);
                 UNITY_APPLY_FOG(i.fogCoord, o.color);
                 return o;
@@ -446,7 +446,7 @@ Shader "Bigi/Main"
             HLSLPROGRAM
             #pragma vertex vert alpha
             #pragma fragment frag alpha
-            #pragma geometry bigi_geom  alpha
+            #pragma geometry bigi_geom alpha
             #include <UnityCG.cginc>
             #include_with_pragmas "./Includes/Pragmas/ShadowCaster.cginc"
             #include_with_pragmas "./Includes/Pragmas/CustomVariants.cginc"
@@ -467,6 +467,11 @@ Shader "Bigi/Main"
                     #define BIGI_V2F_NORMAL_VAR_NAME viewDirForParallax
                     half3 viewDirForParallax : TEXCOORD2;
                 #endif
+                #endif
+                #ifndef BIGI_V2F_NORMAL_VAR_NAME
+                    #define BIGI_V2F_NORMAL_VAR_NAME normal
+                    #define BIGI_SHADOWCASTER_NORMAL_EXTRA
+                    float3 normal: TEXCOORD2;
                 #endif
                 //float4 uv : TEXCOORD0;
             };
@@ -515,6 +520,9 @@ Shader "Bigi/Main"
                         vt.xyz *= snapToPixel.w;
                         o.pos = vt;
                     }
+                    #endif
+                    #ifdef BIGI_SHADOWCASTER_NORMAL_EXTRA
+                    o.BIGI_V2F_NORMAL_VAR_NAME = v.normal;
                     #endif
                     //o.uv = v.texcoord;
                 }

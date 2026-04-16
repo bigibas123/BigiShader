@@ -189,6 +189,7 @@ Shader "Bigi/World (WIP)"
             #include "./Includes/Core/BigiGetColor.cginc"
             #include "./Includes/Effects/BigiEffects.cginc"
             #include "./Includes/TileDiscardStuff.cginc"
+            #include "./Includes/GeomProcessor.cginc"
 
             float4 frag_meta2(v2f_meta i): SV_Target
             {
@@ -227,6 +228,7 @@ Shader "Bigi/World (WIP)"
             }
 
             #pragma vertex vert_meta
+            #pragma geometry bigi_geom
             #pragma fragment frag_meta2
             ENDHLSL
         }

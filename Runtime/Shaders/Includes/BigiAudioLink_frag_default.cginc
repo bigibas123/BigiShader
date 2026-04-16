@@ -20,7 +20,7 @@ namespace b_frag
 		
 		BIGI_GETLIGHT_DEFAULT(lighting);
 
-		o.color = b_effects::apply_effects(i.pos, GETUV,GET_MASK_COLOR(GETUV), orig_color, lighting, i.distance, i.staticTexturePos);
+		o.color = b_effects::apply_effects(i.pos, GETUV,GET_MASK_COLOR(GETUV), orig_color, lighting, i.BIGI_V2F_DISTANCE_VAR_NAME, i.staticTexturePos);
 		UNITY_APPLY_FOG(i.fogCoord, o.color);
 		return o;
 	}

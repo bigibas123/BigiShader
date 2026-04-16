@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -137,7 +137,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -219,7 +219,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -309,7 +309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -399,7 +399,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -489,7 +489,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -579,7 +579,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -709,7 +709,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -799,7 +799,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -879,7 +879,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -969,7 +969,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1300,7 +1300,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1433,7 +1433,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1523,7 +1523,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1569,7 +1569,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1635,7 +1635,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1725,7 +1725,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1803,7 +1803,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1883,7 +1883,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1910,7 +1910,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -2000,7 +2000,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -2080,7 +2080,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -2170,7 +2170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -2260,7 +2260,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -2407,7 +2407,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -2473,7 +2473,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -2563,7 +2563,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -2653,7 +2653,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -2743,7 +2743,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -2833,7 +2833,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -2923,7 +2923,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -3013,7 +3013,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -3103,7 +3103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -3284,7 +3284,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -3374,7 +3374,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -3454,7 +3454,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -3531,7 +3531,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -3621,7 +3621,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -3651,6 +3651,175 @@ MonoBehaviour:
         propertyName: _GlobalOutputMax
         propertyType: 0
         value: -1
+        valueVector: {x: 0, y: 0, z: 0, w: 0}
+        valueColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!1 &4554424070958399093
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5836441618240413151}
+  - component: {fileID: 301132358461216174}
+  - component: {fileID: 8180631488027718516}
+  m_Layer: 0
+  m_Name: Dissolve
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5836441618240413151
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4554424070958399093}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 4320791043289381778}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &301132358461216174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4554424070958399093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e94e501a2d4c95bff3d5601013d923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 3
+  unityVersion: 2022.3.22f1
+  vrcfuryVersion: 1.1298.0
+  somethingIsBroken: 0
+  config:
+    features: []
+  content:
+    rid: 8307838752352371012
+  references:
+    version: 2
+    RefIds:
+    - rid: 8307838752352371012
+      type: {class: Toggle, ns: VF.Model.Feature, asm: VRCFury}
+      data:
+        version: 3
+        name: Shader/Effects/Dissolve
+        state:
+          actions:
+          - rid: 8307838752352371014
+        saved: 0
+        slider: 0
+        sliderInactiveAtZero: 0
+        securityEnabled: 0
+        defaultOn: 0
+        includeInRest: 0
+        exclusiveOffState: 0
+        enableExclusiveTag: 0
+        exclusiveTag: 
+        resetPhysbones: []
+        hasExitTime: 0
+        enableIcon: 0
+        icon:
+          version: 1
+          fileID: 0
+          guid: 
+          id: 
+          objRef: {fileID: 0}
+        enableDriveGlobalParam: 0
+        driveGlobalParam: 
+        separateLocal: 0
+        localState:
+          actions: []
+        hasTransition: 1
+        transitionStateIn:
+          actions: []
+        transitionStateOut:
+          actions: []
+        transitionTimeIn: 5
+        transitionTimeOut: 5
+        localTransitionStateIn:
+          actions: []
+        localTransitionStateOut:
+          actions: []
+        localTransitionTimeIn: 0
+        localTransitionTimeOut: 0
+        simpleOutTransition: 1
+        defaultSliderValue: 0
+        useGlobalParam: 0
+        globalParam: 
+        holdButton: 0
+        invertRestLogic: 0
+        expandIntoTransition: 1
+    - rid: 8307838752352371014
+      type: {class: MaterialPropertyAction, ns: VF.Model.StateAction, asm: VRCFury}
+      data:
+        version: 2
+        desktopActive: 0
+        androidActive: 0
+        localOnly: 0
+        remoteOnly: 0
+        renderer: {fileID: 0}
+        renderer2: {fileID: 0}
+        affectAllMeshes: 1
+        propertyName: _DissolveStrength
+        propertyType: 0
+        value: 1
+        valueVector: {x: 0, y: 0, z: 0, w: 0}
+        valueColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &8180631488027718516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4554424070958399093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e94e501a2d4c95bff3d5601013d923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 3
+  unityVersion: 2022.3.22f1
+  vrcfuryVersion: 1.1298.0
+  somethingIsBroken: 0
+  config:
+    features: []
+  content:
+    rid: 8307838752352371013
+  references:
+    version: 2
+    RefIds:
+    - rid: 8307838752352371013
+      type: {class: ApplyDuringUpload, ns: VF.Model.Feature, asm: VRCFury}
+      data:
+        version: 0
+        action:
+          actions:
+          - rid: 8307838752352371015
+    - rid: 8307838752352371015
+      type: {class: MaterialPropertyAction, ns: VF.Model.StateAction, asm: VRCFury}
+      data:
+        version: 2
+        desktopActive: 0
+        androidActive: 0
+        localOnly: 0
+        remoteOnly: 0
+        renderer: {fileID: 0}
+        renderer2: {fileID: 0}
+        affectAllMeshes: 1
+        propertyName: _DissolveStrength
+        propertyType: 0
+        value: 0
         valueVector: {x: 0, y: 0, z: 0, w: 0}
         valueColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &5884289546494278288
@@ -3702,7 +3871,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -3729,7 +3898,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -3819,7 +3988,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -3909,7 +4078,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -4006,7 +4175,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -4096,7 +4265,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -4186,7 +4355,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -4283,7 +4452,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -4373,7 +4542,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -4419,7 +4588,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -4501,6 +4670,7 @@ Transform:
   - {fileID: 4899026049635988095}
   - {fileID: 7795527692021383845}
   - {fileID: 3188716769487461108}
+  - {fileID: 5836441618240413151}
   m_Father: {fileID: 778328994621869660}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &253460253689914719
@@ -4517,7 +4687,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -4607,7 +4777,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -4697,7 +4867,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -4787,7 +4957,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1286.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []

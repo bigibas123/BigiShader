@@ -58,7 +58,9 @@ v2f do_v2fCalc(in v2f o, const in appdata v)
 	#endif
 	o.uv.xy = (v.uv0); // * o.pos.w;
 	o.uv.zw = float2(0, 0);
-	o.distance.w = GET_DISTANCE(v.vertex);
+	#ifndef BIGI_VERT_ONLY_OBJECTSPACE
+	o.BIGI_V2F_DISTANCE_VAR_NAME.w = GET_DISTANCE(v.vertex);
+	#endif
 	return o;
 }
 
@@ -89,9 +91,7 @@ v2f bigi_toon_vert(appdata v)
 		#if defined(DIRECTIONAL) || defined(POINT) || defined(SPOT) || defined(DIRECTIONAL) || defined(POINT_COOKIE) || defined(DIRECTIONAL_COOKIE)
 		o._ShadowCoord = 0;
 		#endif
-
-
-		UNITY_TRANSFER_SHADOW(o, v.uv1)
+		
 		UNITY_TRANSFER_LIGHTING(o, v.uv1)
 		
 		o.lightmapUV.xy = v.uv1.xy; // * unity_LightmapST.xy + unity_LightmapST.zw;
