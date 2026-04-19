@@ -5,7 +5,7 @@ Shader "Bigi/World (WIP)"
         [MainTexture] _MainTex ("Texture", 2D) = "black" {}
         [Toggle(DO_ALPHA_PLS)] _UsesAlpha("Is transparent (NOT ANIMATABLE)", Float) = 1
         [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Culling", Float) = 2
-        _Alpha_Threshold ("Alpha threshold",Range(-0.01,1.0)) = 0.99
+        _Alpha_Threshold ("Alpha threshold",Range(-0.01,1.0)) = 0.99999
         _Alpha_Multiplier ("Alpha Multiplier", Range(0.0,10.0)) = 1.0
 
         [Header(ZWriteZTest Settings)]
@@ -83,6 +83,7 @@ Shader "Bigi/World (WIP)"
         _LightEnvironmentMultiplier ("Environment Multiplier",Range(0.0,5.0)) = 1.0
         _LightMainMultiplier ("Main Light Multiplier",Range(0.0,5.0)) = 1.0
         _LightAddMultiplier ("Added Pixel Light Multiplier",Range(0.0,5.0)) = 1.0
+        [Toggle(BIGI_LTCGI_ENABLED)] _EnableLTCGI("Enable LTCGI compatibility (NOT ANIMATABLE)", Range(0,1)) = 0
         _LTCGIStrength ("LTCGI Strenght", Range(0.0,5.0)) = 1.0
         _VRCLVStrength ("VRC Light Volumes Strength",Range(0.0,5.0)) = 1.0
 
@@ -135,8 +136,8 @@ Shader "Bigi/World (WIP)"
 
         [Header(Multi Texture)]
         [Space]
-        _MainTexArray ("Other textures", 2DArray) = "" {}
-        [Toggle(MULTI_TEXTURE)] _MultiTexture("Use multi texture (NOT ANIMATABLE)", Float) = 0
+        _MainTexArray ("Other textures, Legacy (Do not use)", 2DArray) = "" {}
+        [Toggle(MULTI_TEXTURE)] _MultiTexture("Use multi texture, Legacy do not use (NOT ANIMATABLE)", Float) = 0
         _OtherTextureId ("Other texture Id", Int) = 0
 
         [Header(Stencil (Not animatable))]
@@ -154,12 +155,12 @@ Shader "Bigi/World (WIP)"
         {
             "VRCFallback" = "ToonCutout" "LTCGI"="ALWAYS"
         }
-        
+
         HLSLINCLUDE
         #define MIRROR_THING
         #ifdef ENABLE_DISSOLVE
         #ifndef BIGI_VERT_ONLY_OBJECTSPACE
-            #define BIGI_VERT_ONLY_OBJECTSPACE
+        #define BIGI_VERT_ONLY_OBJECTSPACE
         #endif
         #warning "Enabling dissolve won't work with object baking!
         #endif
@@ -191,6 +192,23 @@ Shader "Bigi/World (WIP)"
             #include "./Includes/TileDiscardStuff.cginc"
             #include "./Includes/GeomProcessor.cginc"
 
+            v2f_meta vert(VertexInput v)
+            {
+                v2f_meta o;
+                if (!b_tile_discard::ShouldDiscard(v.uv0))
+                {
+                    o = vert_meta(v);
+                }
+                else
+                {
+                        UNITY_INITIALIZE_OUTPUT(v2f_meta, o);
+                    o.pos = asfloat(-1);
+                    o.uv = TexCoords(v);
+                }
+                return o;
+            }
+
+
             float4 frag_meta2(v2f_meta i): SV_Target
             {
                 FragmentCommonData data = UNITY_SETUP_BRDF_INPUT(i.uv);
@@ -206,6 +224,7 @@ Shader "Bigi/World (WIP)"
                 if (b_tile_discard::ShouldDiscard(GETUV))
                 {
                     discard;
+                    return float4(0.0,0.0,0.0,0.0);
                 }
                 float4 orig_color = GET_TEX_COLOR(GETUV);
                 o.Albedo = orig_color.rgb;
@@ -227,7 +246,7 @@ Shader "Bigi/World (WIP)"
                 return UnityMetaFragment(o);
             }
 
-            #pragma vertex vert_meta
+            #pragma vertex vert
             #pragma geometry bigi_geom
             #pragma fragment frag_meta2
             ENDHLSL

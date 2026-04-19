@@ -88,6 +88,11 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 				}
 			}
 
+			if (mats.All(m => !EnableLTCGI.GetBool(m)) && !m_ShowHiddenProps)
+			{
+				materialProperties.RemoveAll(p => p.name == "_" + nameof(LTCGIStrength));
+			}
+
 			if (mats.All(m => !EnableDissolveEffect.GetBool(m)) && !m_ShowHiddenProps)
 			{
 				materialProperties.RemoveAll(p => p.name == "_" + nameof(DissolveStrength));
@@ -271,6 +276,12 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 			if (!EnableDissolveEffect.GetBool(m))
 			{
 				DissolveStrength.Set(m, 0.0f);
+			}
+			
+			m.shader.keywordSpace.FindKeyword("BIGI_LTCGI_ENABLED").Set(m, EnableLTCGI.GetBool(m));
+			if (!EnableLTCGI.GetBool(m))
+			{
+				LTCGIStrength.Set(m, 0.0f);
 			}
 		}
 
@@ -502,6 +513,7 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 		LightEnvironmentMultiplier,
 		LightMainMultiplier,
 		LightAddMultiplier,
+		EnableLTCGI,
 		LTCGIStrength,
 		VRCLVStrength,
 		OcclusionMap,

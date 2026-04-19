@@ -12,5 +12,6 @@
 #pragma shader_feature_local_fragment DECAL_3_ENABLED
 
 #pragma shader_feature_local ENABLE_DISSOLVE
+#pragma shader_feature_local_fragment BIGI_LTCGI_ENABLED
 
 #endif

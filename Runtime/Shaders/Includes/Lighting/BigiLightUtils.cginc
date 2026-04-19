@@ -12,7 +12,9 @@
 #include "../Core/BigiGetColor.cginc"
 
 #include "../External/VRCLV/VRCLightVolumes.cginc"
+#ifdef BIGI_LTCGI_ENABLED
 #include "../External/LTCGI/LTCGI-Functions.cginc"
+#endif
 //#include "../External/VRSL/BigiVRSL.cginc"
 
 namespace b_light
@@ -134,7 +136,9 @@ namespace b_light
     	CreateIndirectLight(unityIndirect, wi, vertexLightColor, vertexEnvMainStrengths.x,vertexEnvMainStrengths.y);
     	
 		GetLightVolumesLighting(wi, unityIndirect);
+    	#ifdef BIGI_LTCGI_ENABLED
     	GetLTCGI(wi, unityIndirect);
+    	#endif
     	// GetVRSLGI(wi, unityIndirect);
 		
     	

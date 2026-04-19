@@ -83,6 +83,7 @@ Shader "Bigi/Main"
         _LightEnvironmentMultiplier ("Environment Multiplier",Range(0.0,5.0)) = 1.0
         _LightMainMultiplier ("Main Light Multiplier",Range(0.0,5.0)) = 1.0
         _LightAddMultiplier ("Added Pixel Light Multiplier",Range(0.0,5.0)) = 1.0
+        [Toggle(BIGI_LTCGI_ENABLED)] _EnableLTCGI("Enable LTCGI compatibility (NOT ANIMATABLE)", Range(0,1)) = 0
         _LTCGIStrength ("LTCGI Strenght", Range(0.0,5.0)) = 1.0
         _VRCLVStrength ("VRC Light Volumes Strength",Range(0.0,5.0)) = 1.0
 
