@@ -88,7 +88,7 @@ namespace bigi_geom_processor
 #endif
 
 
-#ifndef TRANSPARENT_FORWARD_BASE
+#if !defined(TRANSPARENT_FORWARD_BASE)
 [instance(1)]
 [maxvertexcount(3)]
 #endif

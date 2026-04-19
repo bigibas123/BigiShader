@@ -34,10 +34,10 @@ namespace b_sound
 	{
 		x = (x % 1.0);
 		float totalValue = 0;
-		totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 1.0) % 1) * AUDIOLINK_WIDTH, band)).r;
-		// totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 2.0) % 1) * AUDIOLINK_WIDTH, 1)).r;
-		// totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 4.0) % 1) * AUDIOLINK_WIDTH, 2)).r;
-		// totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 8.0) % 1) * AUDIOLINK_WIDTH, 3)).r;
+		totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 1.0) % 1.0) * AUDIOLINK_WIDTH, band)).r;
+		// totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 2.0) % 1.0) * AUDIOLINK_WIDTH, 1)).r;
+		// totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 4.0) % 1.0) * AUDIOLINK_WIDTH, 2)).r;
+		// totalValue += AudioLinkLerp(ALPASS_AUDIOLINK + float2(((x * 8.0) % 1.0) * AUDIOLINK_WIDTH, 3)).r;
 
 		return totalValue;
 	}
@@ -69,19 +69,21 @@ namespace b_sound
 				                            RGBToHSV(color3.rgb * color3.a).z, RGBToHSV(color4.rgb * color4.a).z);
 
 				float4 finalColor;
-				if (intensities.w > (Epsilon * 3.0))
+				
+				const float valueMinimum = 0.05;
+				if (intensities.w > valueMinimum)
 				{
 					finalColor = color4;
 				}
-				else if (intensities.z > (Epsilon * 3.0))
+				else if (intensities.z > valueMinimum)
 				{
 					finalColor = color3;
 				}
-				else if (intensities.y > (Epsilon * 3.0))
+				else if (intensities.y > valueMinimum)
 				{
 					finalColor = color2;
 				}
-				else if (intensities.x > (Epsilon * 3.0))
+				else if (intensities.x > valueMinimum)
 				{
 					finalColor = color1;
 				}
@@ -117,6 +119,14 @@ namespace b_sound
 	half4 GetThemeColor(const uint ccindex)
 	{
 		return AudioLinkData(ALPASS_THEME_COLOR0 + uint2(ccindex, 0));
+	}
+	
+	// Lerp between the two theme colors
+	half4 GetThemeColor(const float ccindex)
+	{
+		const float4 color1 = AudioLinkData(ALPASS_THEME_COLOR0 + uint2(glsl_mod(ccindex, 4.0), 0));
+		const float4 color2 = AudioLinkData(ALPASS_THEME_COLOR0 + uint2(glsl_mod(ccindex+1.0, 4.0), 0));
+		return lerp(color1, color2, frac(ccindex));
 	}
 
 	float GetTime()

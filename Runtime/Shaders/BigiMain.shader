@@ -326,16 +326,23 @@ Shader "Bigi/Main"
 
             fragOutput frag(v2f i)
             {
-                const fixed4 orig_color = GET_TEX_COLOR(GETUV);
+                
                 fragOutput o;
                 UNITY_SETUP_INSTANCE_ID(i);
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-                RECALC_NORMALS();
+                if(!b_tile_discard::ShouldDiscard(i.uv))
+                {
+                    RECALC_NORMALS();
+                    const fixed4 orig_color = GET_TEX_COLOR(GETUV);
+                    BIGI_GETLIGHT_DEFAULT(lighting);
 
-                BIGI_GETLIGHT_DEFAULT(lighting);
-
-                o.color = b_effects::apply_effects(i.pos, GETUV,GET_MASK_COLOR(GETUV), orig_color, lighting, i.BIGI_V2F_DISTANCE_VAR_NAME,
-                                                   i.staticTexturePos);
+                    o.color = b_effects::apply_effects(i.pos, GETUV,GET_MASK_COLOR(GETUV), orig_color, lighting, i.BIGI_V2F_DISTANCE_VAR_NAME,
+                                                       i.staticTexturePos);
+                }else
+                {
+                    discard;
+                    o.color = float4(0.0,0.0,0.0,1.0);
+                }
                 UNITY_APPLY_FOG(i.fogCoord, o.color);
                 return o;
             }
@@ -353,9 +360,10 @@ Shader "Bigi/Main"
                 "Lightmode" = "Always"
             }
             Cull [_Cull]
-            ZWrite Off
+            ZWrite On
             ZTest [_ZTestOL]
             AlphaToMask On
+            Blend One OneMinusSrcAlpha
             // Check if Stencil bits are set right and do not draw on those bits
             // Can't use my own bit as a flag since vrslgi needs 148 exactly to not draw over the avatar
             Stencil
@@ -389,21 +397,18 @@ Shader "Bigi/Main"
             {
                 v2f o;
                 UNITY_INITIALIZE_OUTPUT(v2f, o);
-                if (AudioLinkIsAvailable())
+                if (AudioLinkIsAvailable() && (_OutlineWidth > Epsilon) && (!b_tile_discard::ShouldDiscard(v.uv0)))
                 {
-                    float4 distance = float4(1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0,GET_DISTANCE(v.vertex));
                     float3 offset = (normalize(v.normal.xyz) * 2.0)
                         * (_OutlineWidth * 0.01)
-                        * b_sound::GetWaves(distance.w);
-
+                        * b_sound::GetWaves(GET_DISTANCE(v.vertex));
                     offset = lerp(0.0, offset, smoothstep(0.0, Epsilon, _OutlineWidth));
                     v.vertex = v.vertex + float4(offset, 0.0);
                     o = bigi_toon_vert(v);
-
-                    GET_SOUND_SETTINGS(bsoundSet);
-                    bsoundSet.AL_Mode = b_sound::AudioLinkMode::ALM_Flat;
-                        GET_SOUND_COLOR_CALL(bsoundSet, scol);
-                    o.staticTexturePos = scol;
+                }else
+                {
+                    o.pos.xyzw = asfloat(-1);
+		            o.uv = v.uv0;
                 }
                 return o;
             }
@@ -413,12 +418,20 @@ Shader "Bigi/Main"
                 fragOutput o;
                 UNITY_SETUP_INSTANCE_ID(i);
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-                if (AudioLinkIsAvailable())
+                if (AudioLinkIsAvailable() && (!b_tile_discard::ShouldDiscard(i.uv)))
                 {
                     clip(_OutlineWidth - Epsilon);
                     clip(i.staticTexturePos.a - Epsilon);
-                    o.color = half4(i.staticTexturePos.rgb * i.staticTexturePos.a,
-                                    smoothstep(0.0, 0.05, i.staticTexturePos.a));
+                    float4 BIGI_V2F_DISTANCE_VAR_NAME = i.BIGI_V2F_DISTANCE_VAR_NAME;
+                    GET_SOUND_SETTINGS(bsoundSet);
+                    bsoundSet.AL_Mode = b_sound::AudioLinkMode::ALM_Flat;
+                    GET_SOUND_COLOR_CALL(bsoundSet, scol);
+                    
+                    //float3 color = b_sound::GetThemeColor(BIGI_V2F_DISTANCE_VAR_NAME.w);
+                    // maybe one day replace scol.rgb with color.rgb but for now keep the same color as the wireframe
+                    
+                    o.color = half4(scol.rgb *scol.a,
+                                    smoothstep(0.0, 0.05, scol.a));
                     clip(o.color.a - Epsilon);
                 }
                 else

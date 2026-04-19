@@ -63,10 +63,8 @@
 					if (AudioLinkIsAvailable())
 					{
 						const float soundTime = b_sound::GetTime();
-						const half themeColorIndex = (((i.color.r + soundTime) * 3.0f) % 3.0f);
-						const half4 c1 = b_sound::GetThemeColor(themeColorIndex);
-						const half4 c2 = b_sound::GetThemeColor((themeColorIndex + 1) % 3);
-						col = lerp(c1, c2, frac(themeColorIndex));
+						const float themeColorIndex = (((i.color.r + soundTime) * 3.0f) % 3.0f);
+						col = b_sound::GetThemeColor(themeColorIndex);
 					}
 					else { col = half4(HSVToRGB(half3(_Hue, 1.0, 1.0)), 1.0); }
 
