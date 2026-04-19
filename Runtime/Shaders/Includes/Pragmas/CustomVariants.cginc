@@ -3,15 +3,20 @@
 
 #include_with_pragmas "./StageDefines.cginc"
 
+#pragma shader_feature_local_vertex DO_ALPHA_PLS
+#pragma shader_feature_local_geometry DO_ALPHA_PLS
+#pragma shader_feature_local_fragment DO_ALPHA_PLS
+
 #pragma shader_feature_local_fragment NORMAL_MAPPING
 #pragma shader_feature_local_fragment NORMAL_2ND_MAPPING
 #pragma shader_feature_local_fragment MULTI_TEXTURE
-#pragma shader_feature_local DO_ALPHA_PLS
 #pragma shader_feature_local_fragment DECAL_1_ENABLED
 #pragma shader_feature_local_fragment DECAL_2_ENABLED
 #pragma shader_feature_local_fragment DECAL_3_ENABLED
 
-#pragma shader_feature_local ENABLE_DISSOLVE
+#pragma shader_feature_local_vertex ENABLE_DISSOLVE
+#pragma shader_feature_local_geometry ENABLE_DISSOLVE
+
 #pragma shader_feature_local_fragment BIGI_LTCGI_ENABLED
 
 #endif
