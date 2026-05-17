@@ -93,6 +93,7 @@ v2f bigi_toon_vert(appdata v)
 		#endif
 		
 		UNITY_TRANSFER_LIGHTING(o, v.uv1)
+		UNITY_TRANSFER_FOG(o, o.pos);
 		
 		o.lightmapUV.xy = v.uv1.xy; // * unity_LightmapST.xy + unity_LightmapST.zw;
 		o.lightmapUV.zw = v.uv2.xy; // * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
