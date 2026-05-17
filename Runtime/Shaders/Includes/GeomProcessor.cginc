@@ -40,8 +40,8 @@ namespace bigi_geom_processor
 		v.uv1 = input.BIGI_V2F_LIGHTMAP_UV_VAR_NAME.xy;
 		v.uv2 = input.BIGI_V2F_LIGHTMAP_UV_VAR_NAME.zw;
 		#endif
-		UNITY_TRANSFER_INSTANCE_ID(input,v);
-		
+		UNITY_TRANSFER_INSTANCE_ID(input, v);
+
 		#if defined(BIGI_VERT_ONLY_OBJECTSPACE)
 		input.pos = UnityObjectToClipPos(input.pos.xyz);
 		#ifdef BIGI_V2F_NORMAL_VAR_NAME
@@ -50,14 +50,14 @@ namespace bigi_geom_processor
 		#ifdef BIGI_V2F_TANGENT_VAR_NAME
 		input.BIGI_V2F_TANGENT_VAR_NAME.xyz = UnityObjectToWorldDir(input.BIGI_V2F_TANGENT_VAR_NAME);
 		#endif
-		
+
 		#elif defined(BIGI_VERT_ONLY_WORLDSPACE)
 		input.pos = UnityWorldToClipPos(input.pos);
 		// tangent & normal only have to be converted to world and thus are already correct
 		#else
 		// NOOP
 		#endif
-		
+
 		#ifdef BIGI_V2F_BITANGENT_VAR_NAME
 		input.BIGI_V2F_BITANGENT_VAR_NAME = cross(input.normal, input.tangent) * input.BIGI_V2F_BITANGENT_VAR_NAME.x;
 		#endif
@@ -67,7 +67,7 @@ namespace bigi_geom_processor
 		//TODO make this object space relative or something?
 		// Update: Orels has a shader that I can checkout: https://shaders.orels.sh/docs/ui/layered-parallax
 		#endif
-		
+
 		UNITY_TRANSFER_LIGHTING(input, v.uv1)
 	}
 }
@@ -99,7 +99,8 @@ void bigi_geom(triangle v2f input[3],
 )
 {
 	#if defined(BIGI_UDIM_DISCARD_DECLARED) && !defined(BIGI_DISABLE_TILE_DISCARD) && defined(BIGI_V2F_UV_VAR_NAME)
-	if (!(b_tile_discard::ShouldDiscard(input[0].BIGI_V2F_UV_VAR_NAME) || b_tile_discard::ShouldDiscard(input[1].BIGI_V2F_UV_VAR_NAME) ||
+	if (!(b_tile_discard::ShouldDiscard(input[0].BIGI_V2F_UV_VAR_NAME) || b_tile_discard::ShouldDiscard(
+			input[1].BIGI_V2F_UV_VAR_NAME) ||
 		b_tile_discard::ShouldDiscard(input[2].BIGI_V2F_UV_VAR_NAME)))
 	#endif
 	{
@@ -110,10 +111,11 @@ void bigi_geom(triangle v2f input[3],
 			length(unity_ObjectToWorld._m01_m11_m21),
 			length(unity_ObjectToWorld._m02_m12_m22)
 		);
-		
-		const float3 totalNormal = input[0].BIGI_V2F_NORMAL_VAR_NAME.xyz + input[1].BIGI_V2F_NORMAL_VAR_NAME.xyz + input[2].BIGI_V2F_NORMAL_VAR_NAME.xyz;
+
+		const float3 totalNormal = input[0].BIGI_V2F_NORMAL_VAR_NAME.xyz + input[1].BIGI_V2F_NORMAL_VAR_NAME.xyz + input
+			[2].BIGI_V2F_NORMAL_VAR_NAME.xyz;
 		const float3 normal = ((normalize(totalNormal) / 3.0) * scale);
-		
+
 		const float power = bigi_geom_processor::get_power(totalNormal, _DissolveStrength);
 		input[0].pos.xyz += normal * power;
 		input[1].pos.xyz += normal * power;
@@ -125,29 +127,28 @@ void bigi_geom(triangle v2f input[3],
 		#else
 		const float power = 0.0f;
 		#endif
-		
-		#ifdef BIGI_V2F_DISTANCE_VAR_NAME
-		#ifdef BIGI_UNIFORMS_DMXAL
-		if (_AL_Mode == b_sound::AudioLinkMode::ALM_WireFrame)
-		#endif
-		{
-			input[0].BIGI_V2F_DISTANCE_VAR_NAME.xyz = float3(1, 0, 0);
-			input[1].BIGI_V2F_DISTANCE_VAR_NAME.xyz = float3(0, 1, 0);
-			input[2].BIGI_V2F_DISTANCE_VAR_NAME.xyz = float3(0, 0, 1);
-		}
-		#if defined(BIGI_VERT_ONLY_OBJECTSPACE)
-		input[0].BIGI_V2F_DISTANCE_VAR_NAME.w = GET_DISTANCE(input[0].pos);
-		input[1].BIGI_V2F_DISTANCE_VAR_NAME.w = GET_DISTANCE(input[1].pos);
-		input[2].BIGI_V2F_DISTANCE_VAR_NAME.w = GET_DISTANCE(input[2].pos);
-		#endif
-		#endif
-
-		
-		bigi_geom_processor::bigi_process_vertex(input[0]);
-		bigi_geom_processor::bigi_process_vertex(input[1]);
-		bigi_geom_processor::bigi_process_vertex(input[2]);
 		if (power < 1.0f)
 		{
+			#ifdef BIGI_V2F_DISTANCE_VAR_NAME
+			#ifdef BIGI_UNIFORMS_DMXAL
+			if (_AL_Mode == b_sound::AudioLinkMode::ALM_WireFrame)
+			#endif
+			{
+				input[0].BIGI_V2F_DISTANCE_VAR_NAME.xyz = float3(1, 0, 0);
+				input[1].BIGI_V2F_DISTANCE_VAR_NAME.xyz = float3(0, 1, 0);
+				input[2].BIGI_V2F_DISTANCE_VAR_NAME.xyz = float3(0, 0, 1);
+			}
+			#if defined(BIGI_VERT_ONLY_OBJECTSPACE)
+			input[0].BIGI_V2F_DISTANCE_VAR_NAME.w = GET_DISTANCE(input[0].pos);
+			input[1].BIGI_V2F_DISTANCE_VAR_NAME.w = GET_DISTANCE(input[1].pos);
+			input[2].BIGI_V2F_DISTANCE_VAR_NAME.w = GET_DISTANCE(input[2].pos);
+			#endif
+			#endif
+
+
+			bigi_geom_processor::bigi_process_vertex(input[0]);
+			bigi_geom_processor::bigi_process_vertex(input[1]);
+			bigi_geom_processor::bigi_process_vertex(input[2]);
 			os.Append(input[0]);
 			os.Append(input[1]);
 			os.Append(input[2]);
