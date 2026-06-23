@@ -2,6 +2,7 @@
 #define H_BIGI_VRC_LIGHT_VOLUMES_INCL
 // Query VRC Lightvolumes (by RED_SIM) for light volumes
 #ifdef UNITY_PASS_FORWARDBASE
+#include <UnityCG.cginc>
 #include <Packages/red.sim.lightvolumes/Shaders/LightVolumes.cginc>
 
 #include "../../Core/BigiShaderStructs.cginc"
@@ -13,14 +14,15 @@ namespace b_light
 	void GetLightVolumesLighting(const in world_info wi, inout UnityIndirect result)
 	{
 		#ifdef UNITY_PASS_FORWARDBASE
-		if (_UdonLightVolumeEnabled && _UdonLightVolumeCount > 0 && _VRCLVStrength > Epsilon)
+		[branch] if (_UdonLightVolumeEnabled && _UdonLightVolumeCount> 0.0f && _VRCLVStrength > 0.0f &&
+			_UdonLightVolumeVersion >= VRCLV_MIN_SUPPORTED_VERSION)
 		{
 			float3 L0 = float3(0, 0, 0);
 			float3 L1r = float3(0, 0, 0);
 			float3 L1g = float3(0, 0, 0);
 			float3 L1b = float3(0, 0, 0);
 
-			LightVolumeSH(wi.worldPos, L0, L1r, L1g, L1b);
+			LightVolumeSH(wi.worldPos, L0, L1r, L1g, L1b, 0, wi.normal);
 
 			float3 specular = LightVolumeSpecular(wi.albedo, wi.smoothness, wi.normal, wi.viewDir,
 			                                      L0, L1r, L1g, L1b);
