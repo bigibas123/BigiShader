@@ -17,6 +17,4 @@
 #pragma shader_feature_local_vertex ENABLE_DISSOLVE
 #pragma shader_feature_local_geometry ENABLE_DISSOLVE
 
-#pragma shader_feature_local_fragment BIGI_LTCGI_ENABLED
-
 #endif

@@ -101,7 +101,6 @@ uniform float _UDIMDiscardRow0_0;
 #endif
 
 #ifdef UNITY_PASS_FORWARDBASE
-uniform float _LTCGIStrength;
 uniform float _VRCLVStrength;
 #endif
 

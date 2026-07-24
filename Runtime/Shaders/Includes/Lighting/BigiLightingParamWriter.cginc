@@ -46,7 +46,6 @@ namespace b_light
 		IFZEROAPPLY(_LightSteps, 128);
 		IFZEROAPPLY(_GlobalOutputMax, 10.0);
 		#if defined(UNITY_PASS_FORWARDBASE)
-		IFZEROAPPLY(_LTCGIStrength, 1.0);
 		IFZEROAPPLY(_VRCLVStrength, 1.0);
 		#ifdef BIGI_VRSLGI_ENABLED
 		IFZEROAPPLY(_VRSLGIStrength, 0.0);
