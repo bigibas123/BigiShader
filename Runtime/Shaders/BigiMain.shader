@@ -70,7 +70,7 @@ Shader "Bigi/Main"
         [Space]
         [Header(Lighting)]
         [Space]
-        _LightSmoothness ("Shadow smoothness",Range(0.0,1.0)) = 1.0
+        _LightSmoothness ("Shadow smoothness",Range(0.0,3.0)) = 1.0
         [IntRange] _LightSteps ("Light steps", Range(0,256)) = 1
         [Space]
         _MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.005

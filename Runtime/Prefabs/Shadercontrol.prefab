@@ -1209,7 +1209,7 @@ MonoBehaviour:
         localTransitionTimeIn: 0
         localTransitionTimeOut: 0
         simpleOutTransition: 1
-        defaultSliderValue: 1
+        defaultSliderValue: 0.333333333
         useGlobalParam: 0
         globalParam: 
         holdButton: 0
@@ -1228,7 +1228,7 @@ MonoBehaviour:
         affectAllMeshes: 1
         propertyName: _LightSmoothness
         propertyType: 0
-        value: 1
+        value: 3
         valueVector: {x: 0, y: 0, z: 0, w: 0}
         valueColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &2262993911418863795
