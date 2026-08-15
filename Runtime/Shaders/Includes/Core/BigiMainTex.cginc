@@ -101,14 +101,8 @@
 	uniform float _Decal##num##_Opacity; \
 	uniform float4 _Decal##num##_Position; \
 
-#ifdef DECAL_1_ENABLED
 DECAL_PARAMS(1)
-#endif
-#ifdef DECAL_2_ENABLED
 DECAL_PARAMS(2)
-#endif
-#ifdef DECAL_3_ENABLED
 DECAL_PARAMS(3)
-#endif
 
 #endif

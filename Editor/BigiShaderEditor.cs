@@ -46,9 +46,6 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 						nameof(UsesAlpha)
 							or nameof(UsesNormalMap)
 							or nameof(Uses2ndNormalMap)
-							or nameof(Decal1Enabled)
-							or nameof(Decal2Enabled)
-							or nameof(Decal3Enabled)
 							or nameof(MultiTexture)
 							or nameof(SpecSmoothMap)
 							=> true,
@@ -62,30 +59,21 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 				materialProperties.RemoveAll(p => p.name == "_" + nameof(Alpha_Threshold));
 			}
 
-			if (mats.All(m => !Decal1Enabled.GetBool(m)) && !m_ShowHiddenProps)
+			if (mats.All(m => !((Decal1.TexturePresent(m) && Decal1.GetTexture(m) is not null))) && !m_ShowHiddenProps)
 			{
 				materialProperties.RemoveAll(p =>
-					p.name == "_" + nameof(Decal1Enabled) || p.name.StartsWith("_" + nameof(Decal1) + "_"));
+					p.name.StartsWith("_" + nameof(Decal1) + "_"));
 			}
 
-			if (mats.All(m => !Decal2Enabled.GetBool(m)) && !m_ShowHiddenProps)
+			if (mats.All(m => !((Decal2.TexturePresent(m) && Decal2.GetTexture(m) is not null))) && !m_ShowHiddenProps)
 			{
 				materialProperties.RemoveAll(p =>
-					p.name == "_" + nameof(Decal2Enabled) || p.name.StartsWith("_" + nameof(Decal2) + "_"));
-				if (mats.All(m => !Decal1Enabled.GetBool(m)))
-				{
-					materialProperties.RemoveAll(p => p.name == "_" + nameof(Decal2));
-				}
+					 p.name.StartsWith("_" + nameof(Decal2) + "_"));
 			}
 
-			if (mats.All(m => !Decal3Enabled.GetBool(m)) && !m_ShowHiddenProps)
+			if (mats.All(m => !((Decal3.TexturePresent(m) && Decal3.GetTexture(m) is not null))) && !m_ShowHiddenProps)
 			{
-				materialProperties.RemoveAll(p =>
-					p.name == "_" + nameof(Decal3Enabled) || p.name.StartsWith("_" + nameof(Decal3) + "_"));
-				if (mats.All(m => !Decal2Enabled.GetBool(m)))
-				{
-					materialProperties.RemoveAll(p => p.name == "_" + nameof(Decal3));
-				}
+				materialProperties.RemoveAll(p => p.name.StartsWith("_" + nameof(Decal3) + "_"));
 			}
 
 			if (mats.All(m => !EnableDissolveEffect.GetBool(m)) && !m_ShowHiddenProps)
@@ -253,13 +241,10 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 			{
 				ZWriteTFWB.Set(m, false);
 			}
-
-			Decal1Enabled.Set(m, Decal1.TexturePresent(m) && Decal1.GetTexture(m) is not null);
-			Decal2Enabled.Set(m, Decal2.TexturePresent(m) && Decal2.GetTexture(m) is not null);
-			Decal3Enabled.Set(m, Decal3.TexturePresent(m) && Decal3.GetTexture(m) is not null);
-			m.shader.keywordSpace.FindKeyword("DECAL_1_ENABLED").Set(m, Decal1Enabled.GetBool(m));
-			m.shader.keywordSpace.FindKeyword("DECAL_2_ENABLED").Set(m, Decal2Enabled.GetBool(m));
-			m.shader.keywordSpace.FindKeyword("DECAL_3_ENABLED").Set(m, Decal3Enabled.GetBool(m));
+			
+			Decal1_Opacity.Set(m, (Decal1.TexturePresent(m) && Decal1.GetTexture(m) is not null) ? Decal1_Opacity.GetFloat(m) : 0.0f);
+			Decal2_Opacity.Set(m, (Decal2.TexturePresent(m) && Decal2.GetTexture(m) is not null) ? Decal2_Opacity.GetFloat(m) : 0.0f);
+			Decal3_Opacity.Set(m, (Decal3.TexturePresent(m) && Decal3.GetTexture(m) is not null) ? Decal3_Opacity.GetFloat(m) : 0.0f);
 
 			if (SpecSmoothMap.TexturePresent(m) && !SpecGlossMap.TexturePresent(m))
 			{
@@ -548,7 +533,6 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 		MainTexArray_HDR,
 		MultiTexture,
 		OtherTextureId,
-		Decal1Enabled,
 		Decal1,
 		Decal1_BlendMode,
 		Decal1_Opacity,
@@ -556,7 +540,6 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 		Decal1_ST,
 		Decal1_TexelSize,
 		Decal1_HDR,
-		Decal2Enabled,
 		Decal2,
 		Decal2_BlendMode,
 		Decal2_Opacity,
@@ -564,7 +547,6 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 		Decal2_ST,
 		Decal2_TexelSize,
 		Decal2_HDR,
-		Decal3Enabled,
 		Decal3,
 		Decal3_BlendMode,
 		Decal3_Opacity,

@@ -40,19 +40,16 @@ Shader "Bigi/Main"
         [Space]
         [Header(Decals)]
         _Decal1 ("Decal 1", 2D) = "black" {}
-        [Toggle(DECAL_1_ENABLED)] _Decal1Enabled ("Enable decal 1 (NOT ANIMATABLE)", Float) = 0
         [Enum(Replace,0,Multiply,1,Screen,2,Add,3,Subtract,4)] _Decal1_BlendMode ("Decal 1 blend mode",Range(0,4)) = 0
         _Decal1_Opacity ("Decal 1 opacity", Range(0.0,1.0)) = 1.0
         _Decal1_Position ("Decal 1 Position & Size", Vector) = (0.0,0.0,1.0,1.0)
         [Space]
         _Decal2 ("Decal 2", 2D) = "black" {}
-        [Toggle(DECAL_2_ENABLED)] _Decal2Enabled ("Enable decal 2 (NOT ANIMATABLE)", Float) = 0
         [Enum(Replace,0,Multiply,1,Screen,2,Add,3,Subtract,4)] _Decal2_BlendMode ("Decal 2 blend mode",Range(0,4)) = 0
         _Decal2_Opacity ("Decal 2 opacity", Range(0.0,1.0)) = 1.0
         _Decal2_Position ("Decal 2 Position & Size", Vector) = (0.0,0.0,1.0,1.0)
         [Space]
         _Decal3 ("Decal 3", 2D) = "black" {}
-        [Toggle(DECAL_3_ENABLED)] _Decal3Enabled ("Enable decal 3 (NOT ANIMATABLE)", Float) = 0
         [Enum(Replace,0,Multiply,1,Screen,2,Add,3,Subtract,4)] _Decal3_BlendMode ("Decal 3 blend mode",Range(0,4)) = 0
         _Decal3_Opacity ("Decal 3 opacity", Range(0.0,1.0)) = 1.0
         _Decal3_Position ("Decal 3 Position & Size", Vector) = (0.0,0.0,1.0,1.0)

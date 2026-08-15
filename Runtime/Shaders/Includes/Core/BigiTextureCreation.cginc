@@ -78,27 +78,21 @@ namespace bigi_texture
 		#if defined(DO_ALPHA_PLS)
 		color.a *= _Alpha_Multiplier;
 		#endif
-		#ifdef DECAL_1_ENABLED
 		if ((_Decal1_Opacity > Epsilon) && (IsInsidePos(_Decal1_Position, uv)))
 		{
 			const float4 decalColor = b_decal::GetTexColorDecal1(CalcDecalUv(_Decal1_Position, uv));
 			color = DoMix(color, decalColor, _Decal1_Opacity, _Decal1_BlendMode);
 		}
-		#endif
-		#ifdef DECAL_2_ENABLED
 		if ((_Decal2_Opacity > Epsilon) && (IsInsidePos(_Decal2_Position, uv)))
 		{
 			const float4 decalColor = b_decal::GetTexColorDecal2(CalcDecalUv(_Decal2_Position, uv));
 			color = DoMix(color, decalColor, _Decal2_Opacity, _Decal2_BlendMode);
 		}
-		#endif
-		#ifdef DECAL_3_ENABLED
 		if ((_Decal3_Opacity > Epsilon) && (IsInsidePos(_Decal3_Position, uv)))
 		{
 			const float4 decalColor = b_decal::GetTexColorDecal3(CalcDecalUv(_Decal3_Position, uv));
 			color = DoMix(color, decalColor, _Decal3_Opacity, _Decal3_BlendMode);
 		}
-		#endif
 		#if defined(BIGI_PROTV_OPACITY_VAR) && defined(BIGI_PROTV_POSITION_VAR) && defined(BIGI_PROTV_ON_VAR)
 		#ifndef BIGI_PROTV_TEST_VAR
 		#define BIGI_PROTV_TEST_VAR (false)

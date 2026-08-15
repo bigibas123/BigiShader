@@ -12,7 +12,7 @@
 #include_with_pragmas "./StageDefines.cginc"
 
 #pragma fragmentoption ARB_precision_hint_fastest
-#pragma multi_compile_instancing
+// #pragma multi_compile_instancing
 #include <UnityShaderVariables.cginc>
 #include <UnityShaderUtilities.cginc>
 #include <UnityInstancing.cginc>
