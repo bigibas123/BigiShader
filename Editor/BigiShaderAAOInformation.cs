@@ -42,7 +42,7 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 
         private void RegisterDecalIfEnabled(MaterialInformationCallback matInfo, string decalName)
         {
-            var decalEnabled = matInfo.GetFloat(decalName + "Enabled");
+            var decalEnabled = matInfo.GetInt(decalName + "_BlendMode");
             if (decalEnabled is > 0)
             {
                 var textureSt = matInfo.GetVector(decalName + "_ST");

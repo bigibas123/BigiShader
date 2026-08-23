@@ -242,9 +242,9 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 				ZWriteTFWB.Set(m, false);
 			}
 			
-			Decal1_Opacity.Set(m, (Decal1.TexturePresent(m) && Decal1.GetTexture(m) is not null) ? Decal1_Opacity.GetFloat(m) : 0.0f);
-			Decal2_Opacity.Set(m, (Decal2.TexturePresent(m) && Decal2.GetTexture(m) is not null) ? Decal2_Opacity.GetFloat(m) : 0.0f);
-			Decal3_Opacity.Set(m, (Decal3.TexturePresent(m) && Decal3.GetTexture(m) is not null) ? Decal3_Opacity.GetFloat(m) : 0.0f);
+			Decal1_BlendMode.Set(m, (Decal1.TexturePresent(m) && Decal1.GetTexture(m) is not null) ? Decal1_BlendMode.GetInt(m) : 0);
+			Decal2_BlendMode.Set(m, (Decal2.TexturePresent(m) && Decal2.GetTexture(m) is not null) ? Decal2_BlendMode.GetInt(m) : 0);
+			Decal3_BlendMode.Set(m, (Decal3.TexturePresent(m) && Decal3.GetTexture(m) is not null) ? Decal3_BlendMode.GetInt(m) : 0);
 
 			if (SpecSmoothMap.TexturePresent(m) && !SpecGlossMap.TexturePresent(m))
 			{
