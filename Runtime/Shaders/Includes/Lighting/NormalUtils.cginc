@@ -23,8 +23,8 @@ namespace b_normalutils
         float3x3 TBN = float3x3(normalize(tangent), normalize(bi_tangent), normalize(standard_normal));
         TBN = transpose(TBN);
         float3 world_normal_1 = normalize(lerp(standard_normal,mul(TBN, UnpackNormal(normal_map)), normalStrength1));
-        float3 world_normal_2 = lerp(world_normal_1, mul(TBN, UnpackNormal(normal_2nd_map)), normalStrength2);
-        return world_normal_2;
+        float3 world_normal_2 = normalize(lerp(standard_normal, mul(TBN, UnpackNormal(normal_2nd_map)), normalStrength2));
+        return mixNormals(world_normal_1,world_normal_2);
     }
 }
 
