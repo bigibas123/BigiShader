@@ -201,6 +201,7 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 					                 Alpha_Multiplier.GetFloat(m) < 1-float.Epsilon 
 				                  || Alpha_Multiplier.GetFloat(m) > 1+float.Epsilon
 				                  );
+				Debug.Log(usingAlpha);
 				UsesAlpha.Set(m, usingAlpha);
 				m.shader.keywordSpace.FindKeyword("DO_ALPHA_PLS").Set(m, usingAlpha);
 
@@ -242,6 +243,16 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 				ZWriteTFWB.Set(m, false);
 			}
 			
+			
+			if ((!MatCapTex.TexturePresent(m) || MatCapTex.GetTexture(m) is null))
+			{
+				var matcapColor = MatCapColor.GetColor(m);
+				if (matcapColor.a > 0.0f)
+				{
+					MatCapColor.Set(m, new Color(matcapColor.r, matcapColor.g, matcapColor.b, 0.0f));
+				}
+			}
+
 			Decal1_BlendMode.Set(m, (Decal1.TexturePresent(m) && Decal1.GetTexture(m) is not null) ? Decal1_BlendMode.GetInt(m) : 0);
 			Decal2_BlendMode.Set(m, (Decal2.TexturePresent(m) && Decal2.GetTexture(m) is not null) ? Decal2_BlendMode.GetInt(m) : 0);
 			Decal3_BlendMode.Set(m, (Decal3.TexturePresent(m) && Decal3.GetTexture(m) is not null) ? Decal3_BlendMode.GetInt(m) : 0);
@@ -375,6 +386,16 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 		public static int GetInt(this BigiProperty prop, Material material)
 		{
 			return material.GetInt(prop.GetPropertyId());
+		}
+
+		public static void Set(this BigiProperty prop, Material material, Color value)
+		{
+			material.SetColor(prop.GetPropertyId(), value);
+		}
+
+		public static Color GetColor(this BigiProperty prop, Material material)
+		{
+			return material.GetColor(prop.GetPropertyId());
 		}
 
 		public static bool Present(this BigiProperty prop, Material material)
@@ -533,6 +554,11 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 		MainTexArray_HDR,
 		MultiTexture,
 		OtherTextureId,
+		MatCapTex,
+		MatCapTex_ST,
+		MatCapTex_TexelSize,
+		MatCapTex_HDR,
+		MatCapColor,
 		Decal1,
 		Decal1_BlendMode,
 		Decal1_Opacity,

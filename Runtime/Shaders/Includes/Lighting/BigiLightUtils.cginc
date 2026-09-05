@@ -164,19 +164,33 @@ namespace b_light
     float4 get_lighting(in float4 albedo, in float3 normal, in float3 worldPos, in float3 vertexLightColor, in fixed ambientOcclusion,
                         in half occlusionStrength, in half attenuation, in float4 shadowMapUv,
                         in half minAmbient, in half transmissivity, in half lightSmoothness,
-                        in uint lightSteps, in half4 specSmooth, in half3 vertexEnvMainStrengths, in float finalMultiply)
+                        in uint lightSteps, in half4 specSmooth, in half3 vertexEnvMainStrengths, in float4 matCapTex, in float finalMultiply)
     {
-        const half scaledAO = lerp(1, ambientOcclusion, occlusionStrength);
-        attenuation = attenuation * scaledAO;
-
-    	world_info wi = setup_world(albedo, worldPos, attenuation, normal, shadowMapUv, specSmooth, scaledAO);
+	    const half scaledAO = lerp(1, ambientOcclusion, occlusionStrength);
+    	attenuation = attenuation * scaledAO;
     	
-        float4 total = _get_lighting(wi,vertexLightColor, vertexEnvMainStrengths);
-        if (transmissivity > Epsilon)
-        {
-        	wi.normal = wi.normal * -1.0;
-            total += _get_lighting(wi,vertexLightColor, vertexEnvMainStrengths) * transmissivity;
-        }
+    	float4 total = float4(0.0,0.0,0.0,0.0);
+    	
+    	float matCapStrength = (matCapTex.a);
+    	float normalLightStrength = (1.0 - matCapStrength);
+    	if (normalLightStrength >= Epsilon)
+    	{
+    		world_info wi = setup_world(albedo, worldPos, attenuation, normal, shadowMapUv, specSmooth, scaledAO);
+    	
+    		total += _get_lighting(wi,vertexLightColor, vertexEnvMainStrengths) * normalLightStrength;;
+    		
+    		if (transmissivity > Epsilon)
+    		{
+    			wi.normal = wi.normal * -1.0;
+    			total += (_get_lighting(wi,vertexLightColor, vertexEnvMainStrengths) * transmissivity) * normalLightStrength;
+    		}
+		}
+    	
+    	if (matCapStrength >= Epsilon)
+    	{
+    		total += float4(matCapTex.rgb, 1.0) * matCapStrength;	
+    	}
+    	
     	total.rgb = total.rgb * finalMultiply;
         total = doStep(total, lightSmoothness, lightSteps);
         total.rgba = float4(

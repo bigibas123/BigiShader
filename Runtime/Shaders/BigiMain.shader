@@ -37,6 +37,9 @@ Shader "Bigi/Main"
         [Toggle(NORMAL_2ND_MAPPING)] _Uses2ndNormalMap("Enable second normal map (NOT ANIMATABLE)", Float) = 0
         _Bump2ndScale ("2nd Normal Map Scale", Range(-10,10)) = 1.0
         [Space]
+        _MatCapTex ("MatCap", 2D) = "black" {}
+        [HDR] _MatCapColor ("MatCapColor", Color) = (1,1,1,0)
+        [Space]
         [Space]
         [Header(Decals)]
         _Decal1 ("Decal 1", 2D) = "black" {}

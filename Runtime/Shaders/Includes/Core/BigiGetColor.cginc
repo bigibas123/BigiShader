@@ -15,7 +15,7 @@
 		sampler2D _Mask;
 	#endif
 	float4 _Mask_ST;
-	#define GET_MASK_COLOR(uv) SAMPLE_TEX2D(_Mask, TRANSFORM_TEX(uv,_Mask))
+	#define GET_MASK_COLOR(uv) SAMPLE_TEX2D(_Mask, TRANSFORM_TEX((uv),_Mask))
 #endif
 
 #ifndef GET_AO
@@ -24,7 +24,7 @@
 		UNITY_DECLARE_TEX2D_NOSAMPLER(_OcclusionMap);
 	#endif
 	#include "./BigiMainTex.cginc"
-	#define GET_AO(uv) (SAMPLE_TEX2D(_OcclusionMap,uv).g)
+	#define GET_AO(uv) (SAMPLE_TEX2D(_OcclusionMap,(uv)).g)
 #endif
 
 #ifndef GET_NORMAL
@@ -40,7 +40,7 @@
 		UNITY_DECLARE_TEX2D_NOSAMPLER(_BumpMap);
 		float4 _BumpMap_ST;
 		#include "./BigiMainTex.cginc"
-		#define GET_NORMAL(uv) (SAMPLE_TEX2D(_BumpMap, TRANSFORM_TEX(uv,_BumpMap)))
+		#define GET_NORMAL(uv) (SAMPLE_TEX2D(_BumpMap, TRANSFORM_TEX((uv),_BumpMap)))
 	#endif
 #endif
 
@@ -55,9 +55,11 @@
 		#include <UnityCG.cginc>
 		UNITY_DECLARE_TEX2D_NOSAMPLER(_Bump2ndMap);
 		float4 _Bump2ndMap_ST;
-		#define GET_2NDNORMAL(uv) (SAMPLE_TEX2D(_Bump2ndMap, TRANSFORM_TEX(uv,_Bump2ndMap)))
+		#define GET_2NDNORMAL(uv) (SAMPLE_TEX2D(_Bump2ndMap, TRANSFORM_TEX((uv),_Bump2ndMap)))
 	#endif
 #endif
+
+#include "./MatCapTexture.cginc"
 
 #ifndef GET_SPEC_GLOSS
 	#include "./BigiShaderParams.cginc"
@@ -67,7 +69,7 @@
 	#endif
 	float4 _SpecGlossMap_ST;
 	#include "./BigiMainTex.cginc"
-	#define GET_SPEC_GLOSS(uv) (SAMPLE_TEX2D(_SpecGlossMap, TRANSFORM_TEX(uv,_SpecGlossMap)))
+	#define GET_SPEC_GLOSS(uv) (SAMPLE_TEX2D(_SpecGlossMap, TRANSFORM_TEX((uv),_SpecGlossMap)))
 #endif
 
 #else
@@ -80,6 +82,7 @@
 	#define GET_SPEC_GLOSS(uv) (half4(0, 0, 0, 0))
 #endif
 
+
 #endif
 
 #ifndef GET_SPACEY
@@ -87,7 +90,7 @@
 	UNITY_DECLARE_TEX2D(_Spacey);
 	float4 _Spacey_ST;
 	#include <UnityCG.cginc>
-	#define GET_SPACEY(uv) UNITY_SAMPLE_TEX2D(_Spacey, TRANSFORM_TEX((uv.xy / uv.w), _Spacey))
+	#define GET_SPACEY(uv) UNITY_SAMPLE_TEX2D(_Spacey, TRANSFORM_TEX(((uv).xy / (uv).w), _Spacey))
 #endif
 
 #endif

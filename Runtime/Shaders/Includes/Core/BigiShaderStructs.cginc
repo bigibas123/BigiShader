@@ -86,6 +86,10 @@ struct v2f
 	#ifdef VERTEXLIGHT_ON
 	float3 vertexLighting : TEXCOORD11;
 	#endif
+	#ifndef BIGI_V2F_MATCAP_NORMAL_NAME
+	#define BIGI_V2F_MATCAP_NORMAL_NAME matcapNormal
+	float3 matcapNormal: TEXCOORD12;
+	#endif
 	#ifndef BIGI_V2F_DISTANCE_VAR_NAME
 	#define BIGI_V2F_DISTANCE_VAR_NAME distance
 	float4 distance : POSITION1; // barycentric coordinates (xyz) and distance from arbitrary point (w)

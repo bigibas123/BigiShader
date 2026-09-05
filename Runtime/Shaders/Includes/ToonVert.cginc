@@ -25,6 +25,18 @@ float4 round_val(const in float4 snapToPixel, const uniform in float rounding)
 	return vt;
 }
 
+float3 getMatCapNormal(const in float3 objectNormal, const in float4 objectPos)
+{
+	float3 worldNorm = UnityObjectToWorldNormal(objectNormal);
+	float3 viewNorm = mul((float3x3)UNITY_MATRIX_V, worldNorm);
+	float3 viewPos = UnityObjectToViewPos(objectPos);
+	float3 viewDir = normalize(viewPos);
+	float3 viewCross = cross(viewDir, viewNorm);
+	viewNorm = float3(-viewCross.y, viewCross.x, 0.0);
+	
+	return viewNorm;
+}
+
 #include "./V2GReplacement.cginc"
 
 v2f do_v2fCalc(in v2f o, const in appdata v)
@@ -38,6 +50,9 @@ v2f do_v2fCalc(in v2f o, const in appdata v)
 		//o.uv1 = float4(v.uv1, v.uv2);
 		float3 rounded_normal = round_val(float4(v.normal,1.0), ROUNDING_VAR_NAME).xyz;
 		o.normal = BIGI_V2G_NORMAL_FUNC(rounded_normal);
+		#ifdef BIGI_V2F_MATCAP_NORMAL_NAME
+		o.BIGI_V2F_MATCAP_NORMAL_NAME = getMatCapNormal(rounded_normal,roundedVertex);
+		#endif
 		float4 rounded_tangent = round_val(v.tangent, ROUNDING_VAR_NAME);
 		o.tangent.xyz = BIGI_V2G_TANGENT_FUNC(rounded_tangent).xyz;
 		o.tangent.w = rounded_tangent.w;
@@ -50,6 +65,9 @@ v2f do_v2fCalc(in v2f o, const in appdata v)
 		o.pos = BIGI_V2G_POSITION_FUNC(v.vertex);
 		//o.uv1 = float4(v.uv1, v.uv2);
 		o.normal = BIGI_V2G_NORMAL_FUNC(v.normal);
+		#ifdef BIGI_V2F_MATCAP_NORMAL_NAME
+		o.BIGI_V2F_MATCAP_NORMAL_NAME = getMatCapNormal(v.normal, v.vertex);
+		#endif
 		o.tangent.xyz = BIGI_V2G_TANGENT_FUNC(v.tangent).xyz;
 		o.tangent.w = v.tangent.w;
 		o.worldPos = mul(unity_ObjectToWorld, v.vertex);
