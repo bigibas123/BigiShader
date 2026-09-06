@@ -4,6 +4,7 @@
 #define LTCGI_API_V2
 
 #include <UnityLightingCommon.cginc>
+#include "../../Epsilon.cginc"
 #include "../../Core/BigiShaderStructs.cginc"
 #include <Packages/at.pimaker.ltcgi/Shaders/LTCGI_structs.cginc>
 
@@ -42,19 +43,22 @@ void callback_specular(inout LTCGI_V2_CUSTOM_INPUT acc, in ltcgi_output output)
 void GetLTCGI(const in b_light::world_info wi, inout LTCGI_V2_CUSTOM_INPUT result)
 {
 	#ifdef UNITY_PASS_FORWARDBASE
-	LTCGI_V2_CUSTOM_INPUT acc;
-	acc.specular = 0.0;
-	acc.diffuse = 0.0;
-	LTCGI_Contribution(
-		acc, // our accumulator
-		wi.worldPos, // world position of the shaded point
-		wi.normal, // world space normal
-		wi.viewDir, // view vector to shaded point, normalized
-		1.0f - wi.smoothness, // roughness
-		wi.shadowmapUvs.xy // shadowmap coordinates (the normal Unity ones, they should be in sync with LTCGI maps)
-	);
-	result.specular += (acc.specular * _LTCGIStrength);
-	result.diffuse += ((acc.diffuse * wi.albedo) * _LTCGIStrength);
+	[branch] if (_LTCGIStrength > Epsilon)
+	{
+		LTCGI_V2_CUSTOM_INPUT acc;
+		acc.specular = 0.0;
+		acc.diffuse = 0.0;
+		LTCGI_Contribution(
+			acc, // our accumulator
+			wi.worldPos, // world position of the shaded point
+			wi.normal, // world space normal
+			wi.viewDir, // view vector to shaded point, normalized
+			1.0f - wi.smoothness, // roughness
+			wi.shadowmapUvs.xy // shadowmap coordinates (the normal Unity ones, they should be in sync with LTCGI maps)
+		);
+		result.specular += (acc.specular * _LTCGIStrength);
+		result.diffuse += ((acc.diffuse * wi.albedo) * _LTCGIStrength);
+	}
 	#endif
 }
 

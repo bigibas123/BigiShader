@@ -19,7 +19,7 @@
 
 namespace b_light
 {
-    world_info setup_world(in float4 albedo, in float3 worldPos, in fixed attenuation, in float3 normal, in float4 shadowmapUV, float4 specularTint, float ambientOcclusion)
+    world_info setup_world(const in float4 albedo, const in float3 worldPos, const in fixed attenuation, const in float3 normal, const in float4 shadowmapUV, float4 specularTint, const float ambientOcclusion)
     {
         world_info wi;
 
@@ -78,52 +78,54 @@ namespace b_light
     	const in half vertexStrength, const in half envStrength)
     {
         indirectLight.diffuse += (vertexLightColor * vertexStrength);
+		[branch]  if (envStrength > Epsilon)
+		{
+			#ifdef UNITY_PASS_FORWARDBASE
+			if ((!_UdonLightVolumeEnabled) || (_UdonLightVolumeCount <= 0))
+			{
+				// No VRC light volumes active
+				indirectLight.diffuse += (max(0, ShadeSH9(float4(wi.normal, 1))) * envStrength);
+			}else
+			{
+				// VRC Light volumes active
+				// Unsure if I should use this Since VRCLV only samples unity_SHA and not unity_SHB or unity_SHC
+				//indirectLight.diffuse += (max(0, ShadeSH3Order(float4(wi.normal, 1))) * envStrength);
+			}
 
-        #ifdef UNITY_PASS_FORWARDBASE
-    	if ((!_UdonLightVolumeEnabled) || (_UdonLightVolumeCount <= 0))
-    	{
-    		// No VRC light volumes active
-    		indirectLight.diffuse += (max(0, ShadeSH9(float4(wi.normal, 1))) * envStrength);
-    	}else
-    	{
-    		// VRC Light volumes active
-    		// Unsure if I should use this Since VRCLV only samples unity_SHA and not unity_SHB or unity_SHC
-    		//indirectLight.diffuse += (max(0, ShadeSH3Order(float4(wi.normal, 1))) * envStrength);
-    	}
-
-		float3 reflectionDir = reflect(-wi.viewDir, wi.normal);
-		Unity_GlossyEnvironmentData envData;
-		envData.roughness = 1 - wi.smoothness;
-		envData.reflUVW = BoxProjection(
-			reflectionDir, wi.worldPos,
-			unity_SpecCube0_ProbePosition,
-			unity_SpecCube0_BoxMin, unity_SpecCube0_BoxMax
-		);
-		float3 probe0 = Unity_GlossyEnvironment(
-			UNITY_PASS_TEXCUBE(unity_SpecCube0), unity_SpecCube0_HDR, envData
-		);
-		envData.reflUVW = BoxProjection(
-			reflectionDir, wi.worldPos,
-			unity_SpecCube1_ProbePosition,
-			unity_SpecCube1_BoxMin, unity_SpecCube1_BoxMax
-		);
-        #if UNITY_SPECCUBE_BLENDING
-		float interpolator = unity_SpecCube0_BoxMin.w;
-		UNITY_BRANCH
-		if (interpolator < 0.99999) {
-			float3 probe1 = Unity_GlossyEnvironment(
-				UNITY_PASS_TEXCUBE_SAMPLER(unity_SpecCube1, unity_SpecCube0),
-				unity_SpecCube0_HDR, envData
+			float3 reflectionDir = reflect(-wi.viewDir, wi.normal);
+			Unity_GlossyEnvironmentData envData;
+			envData.roughness = 1 - wi.smoothness;
+			envData.reflUVW = BoxProjection(
+				reflectionDir, wi.worldPos,
+				unity_SpecCube0_ProbePosition,
+				unity_SpecCube0_BoxMin, unity_SpecCube0_BoxMax
 			);
-			indirectLight.specular += (lerp(probe1, probe0, interpolator) * envStrength);
-		}
-		else {
+			float3 probe0 = Unity_GlossyEnvironment(
+				UNITY_PASS_TEXCUBE(unity_SpecCube0), unity_SpecCube0_HDR, envData
+			);
+			envData.reflUVW = BoxProjection(
+				reflectionDir, wi.worldPos,
+				unity_SpecCube1_ProbePosition,
+				unity_SpecCube1_BoxMin, unity_SpecCube1_BoxMax
+			);
+			#if UNITY_SPECCUBE_BLENDING
+			float interpolator = unity_SpecCube0_BoxMin.w;
+			UNITY_BRANCH
+			if (interpolator < 0.99999) {
+				float3 probe1 = Unity_GlossyEnvironment(
+					UNITY_PASS_TEXCUBE_SAMPLER(unity_SpecCube1, unity_SpecCube0),
+					unity_SpecCube0_HDR, envData
+				);
+				indirectLight.specular += (lerp(probe1, probe0, interpolator) * envStrength);
+			}
+			else {
+				indirectLight.specular += (probe0 * envStrength);
+			}
+			#else
 			indirectLight.specular += (probe0 * envStrength);
+			#endif
+			#endif
 		}
-        #else
-		indirectLight.specular += (probe0 * envStrength);
-        #endif
-        #endif
         return indirectLight;
     }
 
@@ -164,31 +166,22 @@ namespace b_light
     float4 get_lighting(in float4 albedo, in float3 normal, in float3 worldPos, in float3 vertexLightColor, in fixed ambientOcclusion,
                         in half occlusionStrength, in half attenuation, in float4 shadowMapUv,
                         in half minAmbient, in half transmissivity, in half lightSmoothness,
-                        in uint lightSteps, in half4 specSmooth, in half3 vertexEnvMainStrengths, in float4 matCapTex, in float finalMultiply)
+                        in uint lightSteps, in half4 specSmooth, in half3 vertexEnvMainStrengths, in float finalMultiply)
     {
 	    const half scaledAO = lerp(1, ambientOcclusion, occlusionStrength);
     	attenuation = attenuation * scaledAO;
     	
     	float4 total = float4(0.0,0.0,0.0,0.0);
+
+    	const world_info wi = setup_world(albedo, worldPos, attenuation, normal, shadowMapUv, specSmooth, scaledAO);
+    
+    	total += _get_lighting(wi,vertexLightColor, vertexEnvMainStrengths);
     	
-    	float matCapStrength = (matCapTex.a);
-    	float normalLightStrength = (1.0 - matCapStrength);
-    	if (normalLightStrength >= Epsilon)
+    	if (transmissivity > Epsilon)
     	{
-    		world_info wi = setup_world(albedo, worldPos, attenuation, normal, shadowMapUv, specSmooth, scaledAO);
-    	
-    		total += _get_lighting(wi,vertexLightColor, vertexEnvMainStrengths) * normalLightStrength;;
-    		
-    		if (transmissivity > Epsilon)
-    		{
-    			wi.normal = wi.normal * -1.0;
-    			total += (_get_lighting(wi,vertexLightColor, vertexEnvMainStrengths) * transmissivity) * normalLightStrength;
-    		}
-		}
-    	
-    	if (matCapStrength >= Epsilon)
-    	{
-    		total += float4(matCapTex.rgb, 1.0) * matCapStrength;	
+    		world_info twi = wi;
+    		twi.normal = wi.normal * -1.0;
+    		total += (_get_lighting(twi,vertexLightColor, vertexEnvMainStrengths) * transmissivity);
     	}
     	
     	total.rgb = total.rgb * finalMultiply;

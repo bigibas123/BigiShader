@@ -233,7 +233,8 @@ Shader "Bigi/World (WIP)"
                     orig_color,
                     fixed4(0.0, 0.0, 0.0, 0.0),
                     float4(1.0, 1.0, 1.0, 1.0),
-                    float4(0.0, 0.0, 0.0, 1.0)
+                    float4(0.0, 0.0, 0.0, 1.0),
+                    float4(0,0,0,0)
                 );
                 o.SpecularColor = data.specColor;
                 #ifdef EDITOR_VISUALIZATION

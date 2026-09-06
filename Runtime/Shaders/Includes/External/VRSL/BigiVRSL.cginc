@@ -25,7 +25,7 @@ namespace b_light
 		// had issues with the stencil mask not being overwritten by other avatars making this shader show through others
 		#ifdef UNITY_PASS_FORWARDBASE
 		#ifdef BIGI_VRSLGI_ENABLED
-		if (_VRSLGIStrength > Epsilon)
+		[branch] if (_VRSLGIStrength > Epsilon)
 		{
 			b_vrslgi::setParams();
 			result.diffuse += VRSLGI(wi.worldPos, wi.normal, 1.0 - wi.smoothness, wi.viewDir, wi.albedo,

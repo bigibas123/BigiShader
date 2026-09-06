@@ -51,12 +51,13 @@ namespace b_effects
 	                     const in fixed4 orig_color,
 	                     const in fixed4 lighting,
 	                     const in float4 distance,
-	                     const in float4 staticTexturePos
+	                     const in float4 staticTexturePos,
+	                     const in float4 matCapTex
 	)
 	{
 		BEffectsTracker mix;
 		mix.totalWeight = 1.0;
-		mix.totalColor = orig_color.rgb * (lighting.rgb * lighting.a);
+		mix.totalColor = (orig_color.rgb + (matCapTex.rgb * matCapTex.a)) * (lighting.rgb * lighting.a);
 		//AudioLink
 		{
 			GET_SOUND_COLOR(soundC);

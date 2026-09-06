@@ -41,7 +41,6 @@ unity_4LightAtten0, o.worldPos, o.normal \
     _LightSteps,\
     GET_SPEC_GLOSS(GETUV),\
     half3(_LightVertexMultiplier, _LightEnvironmentMultiplier, BIGI_LIGHT_MAIN_MULTI),\
-    GET_MATCAP((((i.BIGI_V2F_MATCAP_NORMAL_NAME) * 0.5) + 0.5)),\
     _FinalLightMultiply\
     )
 #endif
