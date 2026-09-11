@@ -201,7 +201,6 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 					                 Alpha_Multiplier.GetFloat(m) < 1-float.Epsilon 
 				                  || Alpha_Multiplier.GetFloat(m) > 1+float.Epsilon
 				                  );
-				Debug.Log(usingAlpha);
 				UsesAlpha.Set(m, usingAlpha);
 				m.shader.keywordSpace.FindKeyword("DO_ALPHA_PLS").Set(m, usingAlpha);
 
