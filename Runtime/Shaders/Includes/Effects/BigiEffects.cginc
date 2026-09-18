@@ -57,7 +57,7 @@ namespace b_effects
 	{
 		BEffectsTracker mix;
 		mix.totalWeight = 1.0;
-		mix.totalColor = (orig_color.rgb + (matCapTex.rgb * matCapTex.a)) * (lighting.rgb * lighting.a);
+		mix.totalColor = lerp(orig_color.rgb, matCapTex.rgb * 2.0, matCapTex.a / 2.0) * (lighting.rgb * lighting.a);
 		//AudioLink
 		{
 			GET_SOUND_COLOR(soundC);
