@@ -12,11 +12,14 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
         static BigiShaderAAOInformation()
         {
             // Register with shader GUID (recommended for shader assets)
-            string shaderGuid = "8a99ff97b2650d7429bac9b889aac4e2";
-            ShaderInformationRegistry.RegisterShaderInformationWithGUID(
-                shaderGuid,
-                new BigiShaderAAOInformation()
-            );
+            string[] shaderGuids = {"8a99ff97b2650d7429bac9b889aac4e2","18482853820e4132ab4234d39d54c2a7"};
+            foreach (string shaderGuid in shaderGuids)
+            {
+                ShaderInformationRegistry.RegisterShaderInformationWithGUID(
+                    shaderGuid,
+                    new BigiShaderAAOInformation()
+                );
+            }
         }
 
         public override ShaderInformationKind SupportedInformationKind =>
@@ -103,6 +106,7 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
             {
                 RegisterTextureUsage(matInfo, "_Bump2ndMap");
             }
+            RegisterTextureUsage(matInfo, "_MatCapTex");
             
             RegisterDecalIfEnabled(matInfo, "_Decal1");
             RegisterDecalIfEnabled(matInfo, "_Decal2");
