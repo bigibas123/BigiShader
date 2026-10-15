@@ -106,7 +106,7 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
             {
                 RegisterTextureUsage(matInfo, "_Bump2ndMap");
             }
-            RegisterTextureUsage(matInfo, "_MatCapTex");
+            RegisterTextureUsage(matInfo, "_MatCapTex",null, UsingUVChannels.NonMesh);
             
             RegisterDecalIfEnabled(matInfo, "_Decal1");
             RegisterDecalIfEnabled(matInfo, "_Decal2");
