@@ -16,11 +16,11 @@ namespace b_frag
 		UNITY_SETUP_INSTANCE_ID(i);
 		UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
 
-		RECALC_NORMALS();
+		RECALC_NORMALS(matCapUV);
 		
 		BIGI_GETLIGHT_DEFAULT(lighting);
 
-		o.color = b_effects::apply_effects(i.pos, GETUV,GET_MASK_COLOR(GETUV), orig_color, lighting, i.BIGI_V2F_DISTANCE_VAR_NAME, i.staticTexturePos, GET_MATCAP((((i.BIGI_V2F_MATCAP_NORMAL_NAME) * 0.5) + 0.5)));
+		o.color = b_effects::apply_effects(i.pos, GETUV,GET_MASK_COLOR(GETUV), orig_color, lighting, i.BIGI_V2F_DISTANCE_VAR_NAME, i.staticTexturePos, GET_MATCAP(matCapUV));
 		UNITY_APPLY_FOG(i.fogCoord, o.color);
 		return o;
 	}
