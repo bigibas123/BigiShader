@@ -21,7 +21,7 @@
 		#include "../Core/BigiGetColor.cginc"
 		#include "./NormalUtils.cginc"
 		#define RECALC_NORMALS(matCapUV) \
-			i.normal = b_normalutils::recalculate_normals(i.normal, GET_2NDNORMAL(GETUV), i.tangent, i.bitangent, NORMAL_2ND_SCALE_VAR) \
+			i.normal = b_normalutils::recalculate_normals(i.normal, GET_2NDNORMAL(GETUV), i.tangent, i.bitangent, NORMAL_2ND_SCALE_VAR); \
 			float2 matCapUV = b_normalutils::calculateMatCapUv(i.normal, i.worldPos)
 			
 
