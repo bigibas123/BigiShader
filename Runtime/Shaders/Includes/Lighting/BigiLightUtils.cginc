@@ -6,6 +6,7 @@
 #include <UnityStandardUtils.cginc>
 #include <UnityLightingCommon.cginc>
 #include <AutoLight.cginc>
+#include <Packages/lygia/color/space/rgb2YPbPr.hlsl>
 
 #include "../Epsilon.cginc"
 #include "../Core/BigiShaderStructs.cginc"
@@ -163,6 +164,20 @@ namespace b_light
         return smoothedPart + steppedPart;
     }
 
+	float4 applyMinBrightness(const in float4 startColor, const in float min_ambient)
+    {
+    	float lum = (rgb2YPbPr(startColor.rgb).x);
+    	if (lum >= min_ambient)
+    	{
+    		return float4(startColor.rgb, 1.0);
+    	}
+	    if (lum > Epsilon)
+	    {
+		    return float4(startColor.rgb * (min_ambient / lum), 1.0);
+	    }
+	    return float4(min_ambient, min_ambient, min_ambient, 1.0);
+    }
+
     float4 get_lighting(in float4 albedo, in float3 normal, in float3 worldPos, in float3 vertexLightColor, in fixed ambientOcclusion,
                         in half occlusionStrength, in half attenuation, in float4 shadowMapUv,
                         in half minAmbient, in half transmissivity, in half lightSmoothness,
@@ -186,10 +201,7 @@ namespace b_light
     	
     	total.rgb = total.rgb * finalMultiply;
         total = doStep(total, lightSmoothness, lightSteps);
-        total.rgba = float4(
-            clamp(total.rgb, minAmbient, 5.0),
-            clamp(total.a, 1.0, 1.0)
-        );
+    	total.rgba = applyMinBrightness(total.rgba, minAmbient);
         return total;
     }
 
