@@ -34,7 +34,8 @@ namespace b_light
 		#endif
 		IFZEROAPPLY(_EmissionStrength, 0.5);
 		#ifndef NO_RESET_MINAMBIENT
-		IFZEROAPPLY(_MinAmbient, 0.20);
+		IFZEROAPPLY(_MinAmbient, 0.10);
+		IFZEROAPPLY(_MinAmbientColor, 0.20);
 		#endif
 		IFZEROAPPLY(_Transmissivity, 0.0);
 		IFZEROAPPLY(_OcclusionStrength, 0.0);

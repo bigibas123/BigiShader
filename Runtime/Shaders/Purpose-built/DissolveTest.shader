@@ -119,6 +119,7 @@
             {
                 b_light::setVars();
                 _MinAmbient = 0.0;
+                _MinAmbientColor = 0.0;
                 fixed4 orig_color = GET_TEX_COLOR(i.uv);
                 clip(orig_color.a - Epsilon);
                 fragOutput o;

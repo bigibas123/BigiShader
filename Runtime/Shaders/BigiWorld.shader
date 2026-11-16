@@ -75,7 +75,8 @@ Shader "Bigi/World (WIP)"
         _LightSmoothness ("Shadow smoothness",Range(0.0,3.0)) = 1.0
         [IntRange] _LightSteps ("Light steps", Range(0,256)) = 1
         [Space]
-        _MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.005
+        _MinAmbient ("Minimum ambient intensity", Range(0.0,1.0)) = 0.001
+        _MinAmbientColor ("Minimum color-derived ambient intensity", Range(0.0,1.0)) = 0.005
         _Transmissivity ("Transmission of light through the material", Range(0.0,1.0)) = 0.2
 
         [Header(Lighting System strengths)]

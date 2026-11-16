@@ -501,6 +501,7 @@ namespace cc.dingemans.bigibas123.bigishader.Editor
 		LightSmoothness,
 		LightSteps,
 		MinAmbient,
+		MinAmbientColor,
 		Transmissivity,
 		FinalLightMultiply,
 		LightVertexMultiplier,

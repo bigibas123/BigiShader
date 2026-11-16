@@ -36,6 +36,7 @@ unity_4LightAtten0, o.worldPos, o.normal \
     shadowAtt,\
     i.lightmapUV,\
     _MinAmbient,\
+    _MinAmbientColor, \
     _Transmissivity,\
     _LightSmoothness,\
     _LightSteps,\

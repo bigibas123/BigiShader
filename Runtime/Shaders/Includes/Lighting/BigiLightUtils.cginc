@@ -164,23 +164,24 @@ namespace b_light
         return smoothedPart + steppedPart;
     }
 
-	float4 applyMinBrightness(const in float4 startColor, const in float min_ambient)
+    float4 applyMinBrightness(const in float4 startColor, const in float min_ambient_color, const in float min_ambient)
     {
-    	float lum = (rgb2YPbPr(startColor.rgb).x);
-    	if (lum >= min_ambient)
-    	{
-    		return float4(startColor.rgb, 1.0);
-    	}
-	    if (lum > Epsilon)
-	    {
-		    return float4(startColor.rgb * (min_ambient / lum), 1.0);
-	    }
-	    return float4(min_ambient, min_ambient, min_ambient, 1.0);
+        float lum = (rgb2YPbPr(startColor.rgb).x);
+        float3 endColor = startColor.rgb;
+        if ((lum > 0.0) && (lum <= min_ambient_color))
+        {
+            endColor = max(endColor, startColor.rgb * (min_ambient_color / lum));
+        }
+        if (lum <= min_ambient)
+        {
+            endColor = max(endColor, float3(min_ambient, min_ambient, min_ambient));
+        }
+        return float4(endColor, startColor.a);
     }
 
     float4 get_lighting(in float4 albedo, in float3 normal, in float3 worldPos, in float3 vertexLightColor, in fixed ambientOcclusion,
                         in half occlusionStrength, in half attenuation, in float4 shadowMapUv,
-                        in half minAmbient, in half transmissivity, in half lightSmoothness,
+                        in half minAmbient, in half minAmbientColor, in half transmissivity, in half lightSmoothness,
                         in uint lightSteps, in half4 specSmooth, in half3 vertexEnvMainStrengths, in float finalMultiply)
     {
 	    const half scaledAO = lerp(1, ambientOcclusion, occlusionStrength);
@@ -201,7 +202,7 @@ namespace b_light
     	
     	total.rgb = total.rgb * finalMultiply;
         total = doStep(total, lightSmoothness, lightSteps);
-    	total.rgba = applyMinBrightness(total.rgba, minAmbient);
+        total.rgba = applyMinBrightness(total.rgba, minAmbientColor, minAmbient);
         return total;
     }
 
