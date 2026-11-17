@@ -6,7 +6,6 @@
 #include <UnityStandardUtils.cginc>
 #include <UnityLightingCommon.cginc>
 #include <AutoLight.cginc>
-#include <Packages/lygia/color/space/rgb2YPbPr.hlsl>
 
 #include "../Epsilon.cginc"
 #include "../Core/BigiShaderStructs.cginc"
@@ -166,16 +165,13 @@ namespace b_light
 
     float4 applyMinBrightness(const in float4 startColor, const in float min_ambient_color, const in float min_ambient)
     {
-        float lum = (rgb2YPbPr(startColor.rgb).x);
+        float size = length(startColor.rgb);
         float3 endColor = startColor.rgb;
-        if ((lum > 0.0) && (lum <= min_ambient_color))
+        if (size > 0.0)
         {
-            endColor = max(endColor, startColor.rgb * (min_ambient_color / lum));
+            endColor = max(endColor, (startColor.rgb/size) * min_ambient_color);
         }
-        if (lum <= min_ambient)
-        {
-            endColor = max(endColor, float3(min_ambient, min_ambient, min_ambient));
-        }
+        endColor = max(endColor, float3(min_ambient,min_ambient,min_ambient));
         return float4(endColor, startColor.a);
     }
 
